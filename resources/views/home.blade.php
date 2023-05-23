@@ -22,7 +22,7 @@
     
       <!-- Navbar links -->
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto">s
           <li class="nav-item">
             <a class="nav-link" href="#">Home</a>
           </li>
