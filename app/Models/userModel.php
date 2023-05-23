@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class user extends Authenticatable
+class userModel extends Authenticatable
 {
     use HasFactory;
 
     protected $guard = 'userModel';
 
-    protected $table = 'user';
+    protected $table = 'userTable';
     
     protected $guard_name = 'web';
 
@@ -25,8 +24,10 @@ class user extends Authenticatable
         'firstname',
         'middlename',
         'extention',
-        'phoneNumber',
         'email',
+        'phoneNumber',
+        'birthday',
+        'age',
         'password',
         'is_active',
         'is_admin'

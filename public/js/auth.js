@@ -127,7 +127,7 @@ $(document).ready(function(){
                           toast.addEventListener('mouseleave', Swal.resumeTimer)
                         },
                         didClose: () =>{
-                            window.location = "/adminDashboardRoutes";
+                            window.location = "/adminDashboard";
                         }
                       })
                       Toast.fire({

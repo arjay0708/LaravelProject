@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-   
-    
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     @include('cdn')
     <title>HarborView Beach Resort</title>
 </head>
@@ -36,7 +35,7 @@
             <a class="nav-link" href="#">Contact Us</a>
           </li> 
           <li class="nav-item">
-            <a class="nav-link" href="#">Log In</a>
+            <a class="nav-link" href="/login">Log In</a>
           </li> 
         
         </ul>

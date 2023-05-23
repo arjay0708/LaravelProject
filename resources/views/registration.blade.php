@@ -31,27 +31,29 @@
     {{-- NAVBAR --}}
 
     {{-- MAIN  --}}
-        <form name="registrationForm" id="registrationForm">
-            @csrf
-            <p class="title mt-lg-3">CREATE ACCOUNT</p>
-            <div class="mb-3">
-                <input type="email" class="form-control " required id="userEmail" name="userEmail" placeholder="Email">
-            </div>
-            <div class="mb-3">
-                <input type="password" class="form-control " required id="userPassword" name="userPassword" placeholder="Password">
-            </div>
-            <div class="mb-3">
-                <input type="password" class="form-control " required id="userConPassword" name="userConPassword" placeholder="Confirm Password">
-            </div>
-            <div class="mb-3 checkBox">
-                <input type="checkbox" class="form-check-input ms-1" onclick="seePassword()">
-                <label class="form-check-label">Show Password</label>
-            </div>
-                <button type="submit" class="btn btn-primary">SUBMIT</button>
-            <ul class="navbar-nav text-center">
-                <li class="nav-item"><a href="/login" class="nav-link bottomLink">Already Have an Account?</a></li>
-            </ul>
-        </form>
+        <div class="container">
+            <form name="registrationForm" id="registrationForm">
+                @csrf
+                <p class="title mt-lg-3">CREATE ACCOUNT</p>
+                <div class="mb-3">
+                    <input type="email" class="form-control " required id="userEmail" name="userEmail" placeholder="Email">
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control " required id="userPassword" name="userPassword" placeholder="Password">
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control " required id="userConPassword" name="userConPassword" placeholder="Confirm Password">
+                </div>
+                <div class="mb-3 checkBox ms-1">
+                    <input type="checkbox" class="form-check-input ms-1" onclick="seePassword()">
+                    <label class="form-check-label ms-4">Show Password</label>
+                </div>
+                    <button type="submit" class="btn btn-primary">SUBMIT</button>
+                <ul class="navbar-nav text-center">
+                    <li class="nav-item"><a href="/login" class="nav-link bottomLink">Already Have an Account?</a></li>
+                </ul>
+            </form>
+        </div>
     {{-- MAIN  --}}
 
     {{-- JS --}}

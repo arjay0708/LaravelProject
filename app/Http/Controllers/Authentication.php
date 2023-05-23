@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
-use App\Models\user;
+use App\Models\userModel;
 use Auth;    
 use Session;
        
@@ -27,12 +27,12 @@ class Authentication extends Controller
 
     // FUNCTION FOR REGISTRATION 
         public function registrationFunction(Request $request){
-            $existingEmail = user::select('email')->where('email','=',$request->email)->get();
+            $existingEmail = userModel::select('email')->where('email','=',$request->email)->get();
             if($existingEmail->isNotEmpty()){
                 return response()->json(2); // CHOOSE ANOTHER EMAIL
             }else{
-                $registration = user::create([
-                    'photos' => '/storage/customer/defaultImage.png',
+                $registration = userModel::create([
+                    'photos' => '/storage/userPhotos/defaultImage.png',
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'is_active' => 1,
@@ -76,4 +76,16 @@ class Authentication extends Controller
             }
         }
     // FUNCTION FOR LOGIN
+
+    // LOGOUT FUNCTION
+        public function logoutFunction(){
+            $updateUtilized = userModel::where('user_id', '=', auth()->guard('userModel')->user()->user_id)
+            ->update(array('updated_at' => now()));
+            if($updateUtilized){
+                Session::flush();
+                Auth::logout();
+                return response()->json(1);
+            }
+        }
+    // LOGOUT FUNCTION
 }

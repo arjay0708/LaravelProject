@@ -18,14 +18,28 @@ return [
             'provider' => 'userModel',
         ],
 
+        'roomModel' => [
+            'driver' => 'session',
+            'provider' => 'roomModel',
+        ],
+
     ],
 
     'providers' => [
-        'userModel' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\user::class,
+            'model' => App\Models\User::class,
         ],
 
+        'userModel' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\userModel::class,
+        ],
+
+        'roomModel' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\roomModel::class,
+        ],
     ],
 
     'passwords' => [
