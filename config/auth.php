@@ -23,6 +23,11 @@ return [
             'provider' => 'roomModel',
         ],
 
+        'reservationModel' => [
+            'driver' => 'session',
+            'provider' => 'reservationModel',
+        ],
+
     ],
 
     'providers' => [
@@ -39,6 +44,11 @@ return [
         'roomModel' => [
             'driver' => 'eloquent',
             'model' => App\Models\roomModel::class,
+        ],
+
+        'reservationModel' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\reservationModel::class,
         ],
     ],
 

@@ -149,7 +149,7 @@ $(document).ready(function(){
                       toast.addEventListener('mouseleave', Swal.resumeTimer)
                     },
                     didClose: () =>{
-                        window.location = "/customerDashboardRoutes";
+                        window.location = "/customerDashboard";
                     }
                   })
                   Toast.fire({

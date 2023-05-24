@@ -50,14 +50,13 @@
                                     <a class="nav-link active" href="/adminNotAvailableRoom">Not Available Room</a>
                                 </li>
                             </ul>
-                            {{-- INFO --}}
-                                <form id="updateAdminAccountForm" name="updateAdminAccountForm">
+                                <form id="addRoomDetailsForm" name="addRoomDetailsForm">
                                     @csrf
                                     <div class="row gap-0 mt-3">
                                         <div class="col-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Image of Room</label>
-                                                <input required class="form-control shadow-sm bg-body rounded-0" type="file" name="userProfile" accept="image/png, image/jpg, image/jpeg, image/gif, image/svg">
+                                                <input required class="form-control shadow-sm bg-body rounded-0" type="file" name="roomPhoto" accept="image/png, image/jpg, image/jpeg, image/gif, image/svg">
                                             </div>
                                         </div>
                                     </div>
@@ -65,15 +64,15 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Room Number:</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="" name="">
+                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="roomNumber" name="roomNumber">
                                             </div>
                                         </div>
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Floor:</label>
-                                                <select required class="form-select shadow-sm rounded-0" aria-label="Default select example" id="" name="">
+                                                <select required class="form-select shadow-sm rounded-0" aria-label="Default select example" id="roomFloor" name="roomFloor">
                                                     <option value="First Floor" selected>First Floor</option>
-                                                    <option value="Second Floor">First Floor</option>
+                                                    <option value="Second Floor">Second Floor</option>
                                                     <option value="Third Floor">Third Floor</option>
                                                     <option value="Fourth Floor">Fourth Floor</option>
                                                 </select>
@@ -82,7 +81,7 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Type of Room:</label>
-                                                <select class="form-select shadow-sm rounded-0" aria-label="Default select example" id="" name="">
+                                                <select class="form-select shadow-sm rounded-0" aria-label="Default select example" id="roomType" name="roomType">
                                                     <option value="Single Room" selected>Single Room</option>
                                                     <option value="Twin Room">Twin Room</option>
                                                     <option value="Double Room">Double Room</option>
@@ -95,26 +94,26 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Number of Bed:</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="number" min="0" max="0"  id=""  name="" >
+                                                <input required class="form-control shadow-sm rounded-0" type="number" min="0" max="5"  id="bedNumber"  name="bedNumber" >
                                             </div>
                                         </div>
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Max Person</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="number" min="0" max="0"  id="" name="">
+                                                <input required class="form-control shadow-sm rounded-0" type="number" min="0" max="10"  id="maxPerson" name="maxPerson">
                                             </div>
                                         </div>
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Price Per Hour</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="" name="">
+                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="pricePerHour" name="pricePerHour">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row gap-0">
                                         <div class="col-12">
                                                 <label class="form-label">Details of Room:</label>
-                                                <textarea required class="form-control shadow-sm rounded-0"  style="height:80px; resize: none;"></textarea>
+                                                <textarea required class="form-control shadow-sm rounded-0"  style="height:80px; resize: none;" id="detailsOfRoom" name="detailsOfRoom"></textarea>
                                         </div>
                                     </div>
                                     <div class="row mt-4">

@@ -41,11 +41,30 @@ use App\Http\Controllers\Customer;
         Route::get('/getUserInfo', [Admin::class,'getUserInfo'])->name('getUserInfo');
         Route::get('/getAvailableRoom', [Admin::class,'getAvailableRoom'])->name('getAvailableRoom');
         Route::get('/getNotAvailableRoom', [Admin::class,'getNotAvailableRoom'])->name('getNotAvailableRoom');
+        Route::post('/addRoom', [Admin::class,'addRoom'])->name('addRoom');
     // FUNCTION
 // ADMIN DASHBOARD
     
 // CUSTOMER DASHBOARD
-    Route::get('/customerDashboardRoutes', [Customer::class,'customerDashboardRoutes'])->name('customerDashboardRoutes');
+    // ROUTES
+        Route::get('/customerDashboard', [Customer::class,'customerDashboard'])->name('customerDashboard');
+        Route::get('/customerRoom', [Customer::class,'customerRoom'])->name('customerRoom');
+        Route::get('/customerReservation', [Customer::class,'customerReservation'])->name('customerReservation');
+        Route::get('/customerAcceptReservation', [Customer::class,'customerAcceptReservation'])->name('customerAcceptReservation');
+        Route::get('/customerDeclinedReservation', [Customer::class,'customerDeclinedReservation'])->name('customerDeclinedReservation');
+        Route::get('/customerCompleted', [Customer::class,'customerCompleted'])->name('customerReservation');
+        Route::get('/customerAccount', [Customer::class,'customerAccount'])->name('customerReservation');
+    // ROUTES
+
+    // FUNCTION 
+        Route::get('/getCustomerRoom', [Customer::class,'getCustomerRoom'])->name('getCustomerRoom');
+        Route::post('/bookReservation', [Customer::class,'bookReservation'])->name('bookReservation');
+        Route::get('/cancelReservation', [Customer::class,'cancelReservation'])->name('cancelReservation');
+        Route::get('/getBookPerUser', [Customer::class,'getBookPerUser'])->name('getBookPerUser');
+        Route::get('/getAcceptBookPerUser', [Customer::class,'getAcceptBookPerUser'])->name('getAcceptBookPerUser');
+        Route::get('/getDeclineBookPerUser', [Customer::class,'getDeclineBookPerUser'])->name('getDeclineBookPerUser');
+        Route::get('/getCompleteBookPerUser', [Customer::class,'getCompleteBookPerUser'])->name('getCompleteBookPerUser');
+    // FUNCTION
 // CUSTOMER DASHBOARD
 
 
