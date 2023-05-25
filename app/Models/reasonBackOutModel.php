@@ -5,27 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class reservationModel extends Model
+class reasonBackOutModel extends Model
 {
     use HasFactory;
 
-    protected $guard = 'reservationModel';
+    protected $guard = 'reasonBackOutModel';
 
-    protected $table = 'reservationTable';
+    protected $table = 'reasonBackOutTable';
     
     protected $guard_name = 'web';
 
-    protected $primaryKey  = 'reservation_id';
+    protected $primaryKey  = 'reasonBackOut_id';
 
     protected $fillable = [
+        'reservation_id',
         'user_id',
-        'room_id',
-        'start_dataTime',
-        'end_dateTime',
-        'status',
-        'is_archived',
+        'reason',
+        'set_by_admin',
     ];
     protected $hidden = [
         'token',
     ];
+
 }

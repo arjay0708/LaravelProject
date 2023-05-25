@@ -5,25 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class reservationModel extends Model
+class reasonDeclineModel extends Model
 {
     use HasFactory;
 
-    protected $guard = 'reservationModel';
+    protected $guard = 'reasonDeclineModel';
 
-    protected $table = 'reservationTable';
+    protected $table = 'reasonDeclineTable';
     
     protected $guard_name = 'web';
 
-    protected $primaryKey  = 'reservation_id';
+    protected $primaryKey  = 'reasonDecline_id ';
 
     protected $fillable = [
+        'reservation_id',
         'user_id',
-        'room_id',
-        'start_dataTime',
-        'end_dateTime',
-        'status',
-        'is_archived',
+        'reason',
     ];
     protected $hidden = [
         'token',

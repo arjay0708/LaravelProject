@@ -8,6 +8,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Models\userModel;
 use App\Models\roomModel;
+use App\Models\reservationModel;
+use App\Models\reasonDeclineModel;
+use App\Models\reasonBackOutModel;
 
 class Admin extends Controller
 {
@@ -27,6 +30,18 @@ class Admin extends Controller
         public function adminReservation(){
             return view('admin/reservation');
         }   
+        public function adminAcceptReservation(){
+            return view('admin/acceptReservation');
+        }   
+        public function adminOnGoingReservation(){
+            return view('admin/ongoingReservation');
+        }   
+        public function adminDeclineReservation(){
+            return view('admin/declineReservation');
+        }  
+        public function adminBackOutReservation(){
+            return view('admin/backOutReservation');
+        }  
         public function adminCompleted(){
             return view('admin/completed');
         }   
@@ -106,5 +121,192 @@ class Admin extends Controller
                     exit();
                 }
             // ADD ROOM FUNCTION
+
+            // ALL PENDING RESERVATION
+                public function getAllPendingReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Pending']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id', 'userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename',
+                        'userTable.extention','roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    return response()->json($data);
+                }
+            // ALL PENDING RESERVATION
+
+            // ALL ACCEPT RESERVATION
+                public function getAllAcceptReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Accept']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                        'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    return response()->json($data);
+                }
+            // ALL ACCEPT RESERVATION
+            
+            // ALL DECLINE RESERVATION
+                public function getAllDeclineReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Decline']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                        'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime'
+                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    return response()->json($data);
+                }
+            // ALL DECLINE RESERVATION
+
+            // ALL ON GOING RESERVATION
+                public function getAllOnGoingReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'OnGoing']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                        'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    return response()->json($data);
+                }  
+            // ALL ON GOING RESERVATION
+
+            // ALL COMPLETED RESERVATION
+                public function getAllCompletedReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Complete']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                        'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.end_dateTime' , 'ASC')->get();
+                    return response()->json($data);
+                }
+            // ALL COMPLETED RESERVATION
+
+            // ALL BACK OUT RESERVATION
+                public function getAllBackOutReservation(Request $request){ 
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
+                    ->where([['reservationTable.status', '=', 'BackOut'], ['reasonBackOutTable.set_by_admin', '=', 0]
+                    ])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                        'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime'
+                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    return response()->json($data);
+                }
+            // ALL BACK OUT RESERVATION
+
+            // ACCEPT RESERVATION
+                public function acceptReservation(Request $request){ 
+                    $acceptReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+                    ->update(['status' => 'Accept']);
+                    return response()->json(1);
+                }
+            // ACCEPT RESERVATION
+
+            // ON-GOING RESERVATION
+                public function ongoingReservation(Request $request){ 
+                    date_default_timezone_set('Asia/Manila');
+                    $currentDate = date('m-d-Y h:i A', strtotime(now()));
+                    $data = reservationModel::where([['reservation_id', '=', $request->reservationId]])->first();
+                    $checkInDateTime = date('m-d-Y h:i A',strtotime($data->start_dataTime));
+                    $checkOutDateTime = date('m-d-Y h:i A',strtotime($data->end_dateTime));
+                    if($currentDate >= $checkInDateTime && $currentDate <= $checkOutDateTime){
+                        $ongoingReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'OnGoing']);
+                        if($ongoingReservation){
+                            $notAvailableRoom = roomModel::where([['room_id', '=', $request->roomId]])
+                            ->update(['is_available' => 0]);
+                            return response()->json($notAvailableRoom ? 1 : 0);
+                        }
+                    }else{
+                        return response()->json(2);
+                    }
+                }
+            // ON-GOING RESERVATION
+
+            // DECLINE RESERVATION
+                public function declineReservation(Request $request){ 
+                    $declineReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+                    ->update(['status' => 'Decline']);
+                    if($declineReservation){
+                        $declineReason = reasonDeclineModel::create([
+                            'reservation_id' => $request->reservationId,
+                            'user_id' => $request->userId,
+                            'reason' => $request->reason,
+                        ]);
+                        return response()->json($declineReason ? 1 : 0);
+                    }
+                }
+            // DECLINE RESERVATION
+
+            // COMPLETE RESERVATION
+                public function completeReservation(Request $request){ 
+                    date_default_timezone_set('Asia/Manila');
+                    $currentDate = date('m-d-Y h:i A', strtotime("+1 hours", strtotime(now())));
+                    $data = reservationModel::where([['reservation_id', '=', $request->reservationId]])->first();
+                    $checkOutDateTime = date('m-d-Y h:i A',strtotime($data->end_dateTime));
+                    if($currentDate > $checkOutDateTime){
+                        $completeReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'Complete']);
+                        $availableRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 1]);
+                        return response()->json($completeReservation ? 1 : 0);
+                    }else{
+                        return response()->json(2);
+                    }
+                }
+            // COMPLETE RESERVATION
+
+            // BACK OUT RESERVATION
+                public function backOutReservation(Request $request){ 
+                    $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+                    ->update(['status' => 'BackOut']);
+                    if($backOutReservation){
+                        $backOutReason = reasonBackOutModel::create([
+                            'reservation_id' => $request->reservationId,
+                            'user_id' => $request->userId,
+                            'reason' => $request->reason,
+                            'set_by_admin' => 1,
+                        ]);
+                        return response()->json($backOutReason ? 1 : 0);
+                    }
+                }
+            // BACK OUT RESERVATION
+
+            // TOTAL PENDING RESERVATION
+                public function totalPendingReservation(Request $request){
+                    $data = reservationModel::where([['status', '=' ,'Pending']])->get();
+                    $countData = $data->count();
+                    return response()->json($countData != '' ? $countData : '0');
+                }
+            // TOTAL PENDING RESERVATION
+
+            // TOTAL ON-GOING RESERVATION
+                public function totalOnGoingReservation(Request $request){
+                    $data = reservationModel::where([['status', '=' ,'OnGoing']])->get();
+                    $countData = $data->count();
+                    return response()->json($countData != '' ? $countData : '0');
+                }
+            // TOTAL ON-GOING RESERVATION
+
+            // TOTAL COMPLETED RESERVATION
+                public function totalCompletedReservation(Request $request){
+                    $data = reservationModel::where([['status', '=' ,'Completed']])->get();
+                    $countData = $data->count();
+                    return response()->json($countData != '' ? $countData : '0');
+                }
+            // TOTAL COMPLETED RESERVATION
+
+            // TOTAL CUSTOMER
+                public function totalCustomer(Request $request){
+                    $data = userModel::where([['is_active', '=' ,1], ['is_admin', '=' ,0]])->get();
+                    $countData = $data->count();
+                    return response()->json($countData != '' ? $countData : '0');
+                }
+            // TOTAL CUSTOMER
     // FUNCTION
 }

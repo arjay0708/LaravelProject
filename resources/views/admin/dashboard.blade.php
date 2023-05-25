@@ -49,7 +49,7 @@
                                                 <i class="bi bi-briefcase"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id=""></p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalPendingReservation"></p>
                                                 <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">PENDING RESERVATION</p>
                                             </div>
                                         </div>
@@ -64,7 +64,7 @@
                                                 <i class="bi bi-calendar-check"></i>
                                             </div>
                                             <div class="col-9 text-start" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold text-center pe-4" style="font-size: 2rem; color:#303030;" id=""></p>
+                                                <p class="card-text fw-bold text-center pe-4" style="font-size: 2rem; color:#303030;" id="totalOnGoingReservation"></p>
                                                 <p class="card-text fw-bold" style="font-size: 12px; color:#303030;">ON-GOING RESERVATION</p>
                                             </div>
                                         </div>
@@ -79,7 +79,7 @@
                                                 <i class="bi bi-person-workspace"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id=""></p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCompletedReservation"></p>
                                                 <p class="card-text fw-bold" style="font-size: 12px; color:#303030;">COMPLETED RESERVATION</p>
                                             </div>
                                         </div>
@@ -94,7 +94,7 @@
                                                 <i class="bi bi-people-fill"></i> 
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold pe-2" style="font-size: 2rem; color:#303030;" id=""></p>
+                                                <p class="card-text fw-bold pe-2" style="font-size: 2rem; color:#303030;" id="totalCustomer"></p>
                                                 <p class="card-text fw-bold" style="font-size: 13px; letter-spacing:1px; color:#303030;">TOTAL CUSTOMER</p>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
     </div>
 
         <!-- JS -->
-            {{-- <script src="{{ asset('/js/administrator/dashboard.js') }}"></script> --}}
+            <script src="{{ asset('/js/admin/dashboard.js') }}"></script>
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->

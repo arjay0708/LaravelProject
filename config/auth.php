@@ -28,6 +28,16 @@ return [
             'provider' => 'reservationModel',
         ],
 
+        'reasonDeclineModel' => [
+            'driver' => 'session',
+            'provider' => 'reasonDeclineModel',
+        ],
+
+        'reasonBackOutModel' => [
+            'driver' => 'session',
+            'provider' => 'reasonBackOutModel',
+        ],
+
     ],
 
     'providers' => [
@@ -49,6 +59,16 @@ return [
         'reservationModel' => [
             'driver' => 'eloquent',
             'model' => App\Models\reservationModel::class,
+        ],
+
+        'reasonDeclineModel' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\reasonDeclineModel::class,
+        ],
+
+        'reasonBackOutModel' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\reasonBackOutModel::class,
         ],
     ],
 

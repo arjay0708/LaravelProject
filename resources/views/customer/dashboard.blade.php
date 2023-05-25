@@ -52,8 +52,8 @@
                                                 <i class="fa-solid fa-ship icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="#">0</p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">ROOM AVAILABLE</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalPendingReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">PENDING RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -67,8 +67,8 @@
                                                 <i class="fa-solid fa-inbox icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="#">0</p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">PENDING RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalDeclineReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">DECLINE RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -82,8 +82,8 @@
                                                 <i class="fa-solid fa-calendar-days icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="#">0</p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">APPROVED RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalAcceptReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">ACCEPT RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -97,7 +97,7 @@
                                                 <i class="fa-regular fa-square-check icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="#">0</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCompleteReservation"></p>
                                                 <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">COMPLETE RESERVATION</p>
                                             </div>
                                         </div>
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         <div class="mb-3 mt-2 border-2 shadow">
-                            <div class="card p-lg-4 p-0 rounded-0" id="fetchAllInvitation"></div>
+                            <div class="card p-lg-4 p-0 rounded-0" id="fetchAllBackOut"></div>
                         </div>
                     </div>
                 {{-- MAIN CONTENT --}}
@@ -115,6 +115,7 @@
     </div>
 
     {{-- JS --}}
+        <script src="{{ asset('/js/customer/dashboard.js') }}"></script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>
     {{-- END JS --}}

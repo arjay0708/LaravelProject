@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservationTable', function (Blueprint $table) {
-            $table->id('reservation_id');
+        Schema::create('reasonBackOutTable', function (Blueprint $table) {
+            $table->id('reasonBackOut_id');
+            $table->integer('reservation_id');
             $table->integer('user_id');
-            $table->integer('room_id');
-            $table->datetime('start_dataTime');
-            $table->datetime('end_dateTime');
-            $table->string('status');
-            $table->string('is_archived');
+            $table->string('reason');
+            $table->integer('set_by_admin');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         //

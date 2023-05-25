@@ -37,11 +37,25 @@
                             </div>
                         </div>
                     </nav>              
-                <!-- NAV BAR -->
+                <!-- NAV BAR -->            
 
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
-                       
+                        <div class="container-fluid">
+                            <div class="container-fluid px-5 py-4 bg-body rounded shadow-lg">
+                            <table id="completedReservationTable" class="table table-sm table-bordered text-center align-middle">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Customer Name</th>
+                                        <th class="text-center">Room</th>
+                                        <th class="text-center">Check In</th>
+                                        <th class="text-center">Check Out</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            </div>
+                        </div>
                     </div>
                 <!-- MAIN CONTENT -->
             </div>
@@ -49,7 +63,7 @@
     </div>
 
         <!-- JS -->
-            {{-- <script src="{{ asset('/js/administrator/dashboard.js') }}"></script> --}}
+            <script src="{{ asset('/js/admin/reservation.js') }}"></script>
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->

@@ -28,7 +28,13 @@ $(document).ready(function(){
         },
         "columns":[
             {"data":"user_id"},
-            {"data":"firstname"},
+            { "mData": function (data, type, row) {
+                if(data.extention != null){
+                    return data.firstname+ " " +data.lastname+ " " +data.extention;
+                }else{
+                    return data.firstname+ " " +data.lastname;
+                }
+            }},
             {"data":"email"},
             {"data":"phoneNumber"},
             {"data": "user_id",
@@ -68,8 +74,13 @@ $(document).ready(function(){
             },
             "columns":[
                 {"data":"user_id"},
-                {"data":"firstname"},
-                {"data":"email"},
+                { "mData": function (data, type, row) {
+                    if(data.extention != null){
+                        return data.firstname+ " " +data.lastname+ " " +data.extention;
+                    }else{
+                        return data.firstname+ " " +data.lastname;
+                    }
+                }},                {"data":"email"},
                 {"data":"phoneNumber"},
                 {"data": "user_id",
                     mRender: function (data, type, row) {

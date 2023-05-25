@@ -45,6 +45,7 @@ $(document).ready(function(){
                             if(response == 1){
                                 showTotalRoom();
                                 $("#bookReservationForm").trigger("reset");
+                                $('#reservationModal').modal('hide')
                                 Swal.fire({
                                     position: 'center',
                                     icon: 'success',

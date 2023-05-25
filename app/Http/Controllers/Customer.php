@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\userModel;
 use App\Models\roomModel;
 use App\Models\reservationModel;
+use App\Models\reasonBackOutModel;
 
 class Customer extends Controller
 {
@@ -85,19 +86,7 @@ class Customer extends Controller
                                                     </div>    
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
-                                                ";
-                                                $checkStatus = reservationModel::where([['user_id', '=',  auth()->guard('userModel')->user()->user_id],
-                                                ['room_id' ,'=', $item->room_id],['status' ,'=', 'Pending']])->get();
-                                                if(!$checkStatus->isEmpty()){
-                                                    echo"
-                                                        <button onclick='cancelReservation($item->room_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
-                                                    ";
-                                                }else{
-                                                    echo"
-                                                        <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
-                                                    ";
-                                                }
-                                                echo"
+                                                    <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -158,8 +147,7 @@ class Customer extends Controller
 
         // CANCEL RESERVATION
             public function cancelReservation(Request $request){
-                $cancelReservation = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],
-                ['room_id', '=', $request->reservationID]])->delete();
+                $cancelReservation = reservationModel::where([['reservation_id', '=', $request->reservationID]])->delete();
                 return response()->json($cancelReservation ? 1 : 0);
             }  
         // CANCEL RESERVATION
@@ -239,19 +227,7 @@ class Customer extends Controller
                                                     </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
-                                                ";
-                                                $checkStatus = reservationModel::where([['user_id', '=',  auth()->guard('userModel')->user()->user_id],
-                                                ['room_id' ,'=', $item->room_id],['status' ,'=', 'Pending']])->get();
-                                                if(!$checkStatus->isEmpty()){
-                                                    echo"
-                                                        <button onclick='cancelReservation($item->room_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
-                                                    ";
-                                                }else{
-                                                    echo"
-                                                        <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
-                                                    ";
-                                                }
-                                                echo"
+                                                    <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -347,19 +323,7 @@ class Customer extends Controller
                                                     </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
-                                                ";
-                                                $checkStatus = reservationModel::where([['user_id', '=',  auth()->guard('userModel')->user()->user_id],
-                                                ['room_id' ,'=', $item->room_id],['status' ,'=', 'Pending']])->get();
-                                                if(!$checkStatus->isEmpty()){
-                                                    echo"
-                                                        <button onclick='cancelReservation($item->room_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
-                                                    ";
-                                                }else{
-                                                    echo"
-                                                        <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
-                                                    ";
-                                                }
-                                                echo"
+                                                    <button onclick='backOutReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -455,19 +419,7 @@ class Customer extends Controller
                                                     </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
-                                                ";
-                                                $checkStatus = reservationModel::where([['user_id', '=',  auth()->guard('userModel')->user()->user_id],
-                                                ['room_id' ,'=', $item->room_id],['status' ,'=', 'Pending']])->get();
-                                                if(!$checkStatus->isEmpty()){
-                                                    echo"
-                                                        <button onclick='cancelReservation($item->room_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
-                                                    ";
-                                                }else{
-                                                    echo"
-                                                        <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
-                                                    ";
-                                                }
-                                                echo"
+                                                    <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -580,5 +532,113 @@ class Customer extends Controller
                 }
             }
         // COMPLETE RESERVATION PER USER
+
+        // COUNT ROOM AVAILABLE
+            public function totalAvailableRoom(Request $request){
+                $data = roomModel::where('is_available', '=', 1)->get();
+                $countData = $data->count();
+                return response()->json($countData != '' ? $countData : '0');
+            }
+        // COUNT ROOM AVAILABLE
+
+        // TOTAL PENDING RESERVATION
+            public function totalPendingReservation(Request $request){
+                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],
+                ['status', '=' ,'Pending']])->get();
+                $countData = $data->count();
+                return response()->json($countData != '' ? $countData : '0');
+            }
+        // TOTAL PENDING RESERVATION
+
+        // TOTAL ACCEPT RESERVATION
+            public function totalAcceptReservation(Request $request){
+                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],
+                ['status', '=' ,'Accept']])->get();
+                $countData = $data->count();
+                return response()->json($countData != '' ? $countData : '0');
+            }
+        // TOTAL ACCEPT RESERVATION
+
+        // TOTAL DECLINE RESERVATION
+            public function totalDeclineReservation(Request $request){
+                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],
+                ['status', '=' ,'Decline']])->get();
+                $countData = $data->count();
+                return response()->json($countData != '' ? $countData : '0');
+            }
+        // TOTAL DECLINE RESERVATION
+
+        // TOTAL COMPLETE RESERVATION
+            public function totalCompleteReservation(Request $request){
+                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],
+                ['status', '=' ,'Complete']])->get();
+                $countData = $data->count();
+                return response()->json($countData != '' ? $countData : '0');
+            }
+        // TOTAL COMPLETE RESERVATION
+
+        // BACK OUT CONTENT
+            public function getBackOutContent(Request $request){
+                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
+                ->where([['reservationTable.status', '=', 'BackOut'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]
+                ,['reservationTable.is_archived', '=', 0],['reasonBackOutTable.set_by_admin', '=', 1]])
+                ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime','reservationTable.end_dateTime', 
+                'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                $customer = auth()->guard('userModel')->user()->firstname.' '.
+                auth()->guard('userModel')->user()->lastname.' '.auth()->guard('userModel')->user()->extention;
+                if($data->isNotEmpty()){
+                    foreach($data as $item){
+                        $newStartDate = date('F d, Y - h:i: A',strtotime($item->start_dataTime));
+                        $newEndDate = date('F d, Y - h:i: A',strtotime($item->end_dateTime));
+                        echo"
+                            <div class='col-12'>
+                                <div class='card mb-2 shadow'>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>Dear $customer,</h5>
+                                        <p class='card-text mb-3'>Your Reservation for <span class='fw-bold'>$item->floor Room Number $item->room_number From
+                                        $newStartDate to $newEndDate </span> has been cancelled due to $item->reason. We apologize for the inconvenience i hope you understand. 
+                                        Please book another room, Thank You And God Bless.</p>
+                                        <button onclick=noteBackOutContent('$item->reservation_id') class='btn btn-success btn-sm px-3 rounded-0'>Noted</button>
+                                    </div>
+                                </div>
+                            </div>
+                        ";
+                    }
+                }else{
+                    echo "
+                    <div class='row applicantNoSched' style='margin-top:1.5rem; color: #303030;'>
+                        <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
+                            NO CANCELLED RESERVATION
+                        </div>
+                    </div>
+                    ";
+                }
+            } 
+        // BACK OUT CONTENT
+
+        // ARCHIVED CANCELLED RESERVATION
+            public function archivedCancelledReservation(Request $request){
+                $archive = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+                ->update(['is_archived' => 1]);
+                return response()->json($archive ? 1 : 0);
+            }
+        // ARCHIVED CANCELLED RESERVATION
+
+        // CANCEL THE ACCEPTED RESERVATION
+            public function backOutReservation(Request $request){ 
+                $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+                ->update(['status' => 'BackOut']);
+                if($backOutReservation){
+                    $backOutReason = reasonBackOutModel::create([
+                        'reservation_id' => $request->reservationId,
+                        'user_id' => auth()->guard('userModel')->user()->user_id,
+                        'reason' => $request->reason,
+                        'set_by_admin' => 0,
+                    ]);
+                    return response()->json($backOutReason ? 1 : 0);
+                }
+            }
+        // CANCEL THE ACCEPTED RESERVATION
     // FUNCTION
 }
