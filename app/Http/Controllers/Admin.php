@@ -219,11 +219,7 @@ class Admin extends Controller
                     $checkOutDateTime = date('m-d-Y h:i A',strtotime($data->end_dateTime));
                     if($currentDate >= $checkInDateTime && $currentDate <= $checkOutDateTime){
                         $ongoingReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'OnGoing']);
-                        if($ongoingReservation){
-                            $notAvailableRoom = roomModel::where([['room_id', '=', $request->roomId]])
-                            ->update(['is_available' => 0]);
-                            return response()->json($notAvailableRoom ? 1 : 0);
-                        }
+                        return response()->json($ongoingReservation ? 1 : 0);
                     }else{
                         return response()->json(2);
                     }
@@ -253,7 +249,6 @@ class Admin extends Controller
                     $checkOutDateTime = date('m-d-Y h:i A',strtotime($data->end_dateTime));
                     if($currentDate > $checkOutDateTime){
                         $completeReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'Complete']);
-                        $availableRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 1]);
                         return response()->json($completeReservation ? 1 : 0);
                     }else{
                         return response()->json(2);
@@ -262,7 +257,7 @@ class Admin extends Controller
             // COMPLETE RESERVATION
 
             // BACK OUT RESERVATION
-                public function backOutReservation(Request $request){ 
+                public function adminBackOutReservationFunction(Request $request){ 
                     $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
                     ->update(['status' => 'BackOut']);
                     if($backOutReservation){
@@ -270,7 +265,7 @@ class Admin extends Controller
                             'reservation_id' => $request->reservationId,
                             'user_id' => $request->userId,
                             'reason' => $request->reason,
-                            'set_by_admin' => 1,
+                            'set_by_admin' => 1
                         ]);
                         return response()->json($backOutReason ? 1 : 0);
                     }
@@ -308,5 +303,137 @@ class Admin extends Controller
                     return response()->json($countData != '' ? $countData : '0');
                 }
             // TOTAL CUSTOMER
+
+            // VIEW DETAILS OF ROOM
+                public function viewRoomDetails(Request $request){
+                    $data = roomModel::where([['room_id', '=' ,$request->roomId]])->first();
+                    return response()->json($data);
+                }
+                
+            // VIEW DETAILS OF ROOM
+
+            // UPDATE ROOM 
+                public function updateRoom(Request $request){  
+                    if ($request->hasFile('roomPhoto')) {
+                        $filename = $request->file('roomPhoto');
+                        $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
+                        $path = $request->file('roomPhoto')->storeAs('roomPhotos', $imageName, 'public');
+                        $imageData['roomPhoto'] = '/storage/'.$path;
+                            $update = roomModel::find($request->room_id);
+                            $update->photos=$imageData['roomPhoto'];
+                            $update->room_number=$request->input('roomNumber');
+                            $update->floor=$request->input('roomFloor');
+                            $update->type_of_room=$request->input('roomType');
+                            $update->number_of_bed=$request->input('roomBedNumber');
+                            $update->details=$request->input('detailsOfRoom');
+                            $update->max_person=$request->input('roomMaxPerson');
+                            $update->price_per_hour=$request->input('roomPricePerHour');
+                            $update->save();
+                            return response()->json(1);
+                    }else{
+                        $update = roomModel::find($request->room_id);
+                        $update->room_number=$request->input('roomNumber');
+                        $update->floor=$request->input('roomFloor');
+                        $update->type_of_room=$request->input('roomType');
+                        $update->number_of_bed=$request->input('roomBedNumber');
+                        $update->details=$request->input('detailsOfRoom');
+                        $update->max_person=$request->input('roomMaxPerson');
+                        $update->price_per_hour=$request->input('roomPricePerHour');
+                        $update->save();
+                        return response()->json(1);
+                    }
+                }  
+            // UPDATE ROOM 
+
+            // DEACTIVATE ROOM
+                public function deactivateRoom(Request $request){ 
+                    $deactivateRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 0]);
+                    return response()->json(1);
+                }
+            // DEACTIVATE ROOM
+
+            // ACTIVATE ROOM
+                public function activateRoom(Request $request){ 
+                    $activateRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 1]);
+                    return response()->json(1);
+                } 
+            // ACTIVATE ROOM
+
+            // GET ALL BACK OUT RESERVATION
+                public function getBackOutContentForAdmin(Request $request){
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
+                    ->join('userTable', 'reasonBackOutTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'BackOut'],['reservationTable.is_archived', '=', 0],
+                    ['reasonBackOutTable.set_by_admin', '=', 0]])
+                    ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime',
+                    'reservationTable.end_dateTime', 'userTable.lastname',  'userTable.firstname', 'userTable.extention',
+                    'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                    if($data->isNotEmpty()){
+                        foreach($data as $item){
+                            $newStartDate = date('F d, Y - h:i: A',strtotime($item->start_dataTime));
+                            $newEndDate = date('F d, Y - h:i: A',strtotime($item->end_dateTime));
+                            $customer = $item->firstname.''.$item->lastname.''.$item->extention;
+                            echo"
+                                <div class='col-12'>
+                                    <div class='card mb-2 shadow'>
+                                        <div class='card-body'>
+                                            <h5 class='card-title'>Dear Admin,</h5>
+                                            <p class='card-text mb-3'><span class='fw-bold'> Mr/Ms. $customer </span> has been cancelled the reservation for <span class='fw-bold'>$item->floor Room Number $item->room_number From
+                                            $newStartDate to $newEndDate </span> due to $item->reason.</p>
+                                            <button onclick=noteBackOutContent('$item->reservation_id') class='btn btn-success btn-sm px-3 rounded-0'>Noted</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ";
+                        }
+                    }else{
+                        echo "
+                        <div class='row' style='margin-top:1.5rem; color: #303030;'>
+                            <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
+                                NO CANCELLED RESERVATION
+                            </div>
+                        </div>
+                        ";
+                    }
+                } 
+            // GET ALL BACK OUT RESERVATION
+
+            // FETCH THE DECLINE REASON
+                public function viewReasonDecline(Request $request){ 
+                    $data = reasonDeclineModel::where([['reservation_id', '=', $request->reservationId]])->
+                    select('reason')->first();
+                    return response()->json($data);
+                }
+            // FETCH THE DECLINE REASON
+
+            // FETCH THE BACK OUT REASON
+                public function viewReasonBackOut(Request $request){ 
+                    $data = reasonBackOutModel::where([['reservation_id', '=', $request->reservationId]])->
+                    select('reason')->first();
+                    return response()->json($data);
+                }
+            // FETCH THE BACK OUT REASON
+
+            // DEACTIVATE CUSTOMER
+                public function deactivateCustomer(Request $request){ 
+                    $deactivateCustomer = userModel::where([['user_id', '=', $request->customerId]])->update(['is_active' => 0]);
+                    return response()->json(1);
+                }
+            // DEACTIVATE CUSTOMER
+
+            // ACTIVATE CUSTOMER
+                public function activateCustomer(Request $request){ 
+                    $activateCustomer = userModel::where([['user_id', '=', $request->customerId]])->update(['is_active' => 1]);
+                    return response()->json(1);
+                }
+            // ACTIVATE CUSTOMER
+
+            // VIEW CUSTOMER
+                public function viewCustomer(Request $request){ 
+                    $viewCustomer = userModel::where([['user_id', '=', $request->customerId]])->first();
+                    return response()->json($viewCustomer);
+                }
+            // VIEW CUSTOMER
     // FUNCTION
 }

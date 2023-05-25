@@ -55,11 +55,22 @@ use App\Http\Controllers\Customer;
         Route::get('/declineReservation', [Admin::class,'declineReservation'])->name('declineReservation');
         Route::get('/ongoingReservation', [Admin::class,'ongoingReservation'])->name('ongoingReservation');
         Route::get('/completeReservation', [Admin::class,'completeReservation'])->name('completeReservation');
-        Route::get('/backOutReservation', [Admin::class,'backOutReservation'])->name('backOutReservation');
+        Route::get('/adminBackOutReservationFunction', [Admin::class,'adminBackOutReservationFunction'])->name('adminBackOutReservationFunction');
         Route::get('/totalPendingReservation', [Admin::class,'totalPendingReservation'])->name('totalPendingReservation');
         Route::get('/totalOnGoingReservation', [Admin::class,'totalOnGoingReservation'])->name('totalOnGoingReservation');
         Route::get('/totalCompletedReservation', [Admin::class,'totalCompletedReservation'])->name('totalCompletedReservation');
         Route::get('/totalCustomer', [Admin::class,'totalCustomer'])->name('totalCustomer');
+        Route::get('/viewRoomDetails', [Admin::class,'viewRoomDetails'])->name('viewRoomDetails');
+        Route::post('/updateRoom', [Admin::class,'updateRoom'])->name('updateRoom');
+        Route::get('/deactivateRoom', [Admin::class,'deactivateRoom'])->name('deactivateRoom');
+        Route::get('/activateRoom', [Admin::class,'activateRoom'])->name('activateRoom');
+        Route::get('/getBackOutContentForAdmin', [Admin::class,'getBackOutContentForAdmin'])->name('getBackOutContentForAdmin');
+        Route::get('/viewReasonDecline', [Admin::class,'viewReasonDecline'])->name('viewReasonDecline');
+        Route::get('/viewReasonBackOut', [Admin::class,'viewReasonBackOut'])->name('viewReasonBackOut');
+        Route::get('/deactivateCustomer', [Admin::class,'deactivateCustomer'])->name('deactivateCustomer');
+        Route::get('/activateCustomer', [Admin::class,'activateCustomer'])->name('activateCustomer');
+        Route::get('/viewCustomer', [Admin::class,'viewCustomer'])->name('viewCustomer');
+        
     // FUNCTION
 // ADMIN DASHBOARD
     
@@ -89,6 +100,8 @@ use App\Http\Controllers\Customer;
         Route::get('/getBackOutContent', [Customer::class,'getBackOutContent'])->name('getBackOutContent');
         Route::get('/archivedCancelledReservation', [Customer::class,'archivedCancelledReservation'])->name('archivedCancelledReservation');
         Route::get('/backOutReservation', [Customer::class,'backOutReservation'])->name('backOutReservation');
+        Route::get('/getUserInfo', [Customer::class,'getUserInfo'])->name('getUserInfo');
+        Route::post('/updateUserAccount', [Customer::class,'updateUserAccount'])->name('updateUserAccount');
     // FUNCTION
 // CUSTOMER DASHBOARD
 

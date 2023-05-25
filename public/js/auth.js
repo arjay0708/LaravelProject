@@ -8,8 +8,8 @@ $(document).ready(function(){
 
 // FUNCTION FOR PASSWORD ENABLE
     function seePassword() {
-        var x = document.getElementById("userPassword");
-        var a = document.getElementById("userConPassword");
+        var x = document.getElementById("userRegisterPassword");
+        var a = document.getElementById("userRegisterConPassword");
         if (x.type === 'password' && a.type === 'password'){
             x.type ="text";
             a.type ="text";
@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 // FUNCTION FOR PASSWORD ENABLE
     function seePassword2() {
-        var x = document.getElementById("userPassword");
+        var x = document.getElementById("userLoginPassword");
         if (x.type === 'password'){
             x.type ="text";
         }else{
@@ -32,7 +32,6 @@ $(document).ready(function(){
         
     }
 // FUNCTION FOR PASSWORD ENABLE
-
 
 // SIGN UP FUNCTION
     $('#registrationForm').on( 'submit' , function(e){
@@ -173,3 +172,11 @@ $(document).ready(function(){
             });
     });
 // LOGIN FUNCTION
+
+
+// LISTENER
+    var sideButtons = document.querySelectorAll('.bottomLink');
+        sideButtons.forEach(btn => btn.addEventListener('click', () => {
+        document.body.classList.toggle('signup');
+    }))
+// LISTENER

@@ -34,7 +34,7 @@ class Authentication extends Controller
                 $registration = userModel::create([
                     'photos' => '/storage/userPhotos/defaultImage.png',
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
+                    'password' => Hash::make($request->userRegisterPassword),
                     'is_active' => 1,
                     'is_admin' => 0,
                 ]);
@@ -48,7 +48,7 @@ class Authentication extends Controller
         protected function userCredentials(Request $request){
             return [
                 'email' => request()->{$this->userEmail()},
-                'password' => request()->userPassword,
+                'password' => request()->userLoginPassword,
             ];
         }
 

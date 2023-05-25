@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>HarborView Beach Resort</title>
+    <title>Harbor View</title>
         <!-- CSS -->
             <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">

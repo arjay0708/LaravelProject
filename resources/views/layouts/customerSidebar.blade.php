@@ -5,7 +5,7 @@
     </div>
     <div class="list-group list-group-flush recruiterLink">
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerDashboard"><i class="fa-solid fa-chart-line pe-3"></i> Details</a>
-        <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerRoom"><i class="fa-solid fa-ship pe-3"></i> View Room</a>
+        <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerRoom"><i class="bi bi-box pe-3"></i> View Room</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerReservation"><i class="fa-regular fa-calendar pe-3"></i> My Reservation</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerCompleted"><i class="fa-solid fa-circle-check pe-3"></i> Complete Transaction</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerAccount"><i class="bi bi-pencil-square pe-3"></i> Manage Account</a>

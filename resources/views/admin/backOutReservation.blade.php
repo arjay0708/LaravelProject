@@ -85,5 +85,17 @@
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->
+
+        {{-- MODAL --}}
+            <div class="modal fade" id="backOutReasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body text-center mt-3">
+                        <p id="backOutReason"></p>                   
+                    </div>
+                </div>
+                </div>
+            </div>
+        {{-- MODAL --}}
 </body>
 </html>

@@ -3,10 +3,10 @@ $(document).ready(function(){
     totalOnGoingReservation();
     totalCompletedReservation();
     totalCustomer();
+    getBackOutContent();
 });
 
 
-// FUNCTION FOR SHOW TOTAL UPCOMING OPERATION
     function totalPendingReservation(){
         $.ajax({
             url: '/totalPendingReservation',
@@ -16,9 +16,7 @@ $(document).ready(function(){
             }
         })
     }
-// FUNCTION FOR SHOW TOTAL UPCOMING OPERATION
 
-// FUNCTION FOR SHOW TOTAL COMPLETED OPERATION
     function totalOnGoingReservation(){
         $.ajax({
             url: '/totalOnGoingReservation',
@@ -28,9 +26,7 @@ $(document).ready(function(){
             }
         })
     }
-// FUNCTION FOR SHOW TOTAL COMPLETED OPERATION
 
-// FUNCTION FOR SHOW TOTAL APPLICANTS
     function totalCompletedReservation(){
         $.ajax({
             url: '/totalCompletedReservation',
@@ -40,9 +36,7 @@ $(document).ready(function(){
             }
         })
     }
-// FUNCTION FOR SHOW TOTAL APPLICANTS
 
-// FUNCTION FOR SHOW TOTAL FOREMAN
     function totalCustomer(){
         $.ajax({
             url: '/totalCustomer',
@@ -52,4 +46,45 @@ $(document).ready(function(){
             }
         })
     }
-// FUNCTION FOR SHOW TOTAL FOREMAM
+
+    function getBackOutContent(){
+        $.ajax({
+            url: '/getBackOutContentForAdmin',
+            method: 'GET',
+            success : function(data) {
+                $("#fetchAllBackOut").html(data);
+            }
+        })
+    }
+
+    function noteBackOutContent(id){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to NOTE this LETTER?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Note it'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+            url: '/archivedCancelledReservation',
+            type: 'GET',
+            dataType: 'json',
+            data: {reservationId: id},
+        });
+        Swal.fire({
+            title: 'ACCEPT BOOKING',
+            text: "Reservation was accept successfully",
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+        }).then((result) => {
+        if (result) {
+            getBackOutContent();        
+        }
+        });
+        }
+        });
+    } 

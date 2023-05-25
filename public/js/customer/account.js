@@ -8,36 +8,45 @@ $(document).ready(function(){
 });
 
 // MANAGE EMPLOYEES
-    $('#updateAdminAccountForm').on( 'submit' , function(e){
+    $('#updateUserAccount').on( 'submit' , function(e){
         e.preventDefault();
-        var currentForm = $('#updateAdminAccountForm')[0];
-        var data = new FormData(currentForm);
-            $.ajax({
-                url: "/updateAdminAccount",
-                type:"post",
-                method:"post",
-                dataType: "text",
-                data:data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success:function(response){
-                    if(response == 1){
-                        manageAccount();
-                        $("#updateAdminAccountForm").trigger("reset");
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'INFORMATION HAS BEEN UPDATE SUCCESSFULLY',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
+        console.log(document.getElementById("userAge").value);
+        if(document.getElementById("userAge").value < 5){
+            Swal.fire(
+                'Update Failed',
+                'Sorry Invalid Age',
+                'error'
+            )
+        }else{
+            var currentForm = $('#updateUserAccount')[0];
+            var data = new FormData(currentForm);
+                $.ajax({
+                    url: "/updateUserAccount",
+                    type:"post",
+                    method:"post",
+                    dataType: "text",
+                    data:data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+                        if(response == 1){
+                            manageAccount();
+                            $("#updateUserAccount").trigger("reset");
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'INFORMATION HAS BEEN UPDATE SUCCESSFULLY',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    },
+                    error:function(error){
+                        console.log(error)
                     }
-                },
-                error:function(error){
-                    console.log(error)
-                }
             }) 
+        }
     });
 // MANAGE EMPLOYEES
 
@@ -74,7 +83,7 @@ $(document).ready(function(){
 
 // GENERATE AGE 
     function calculateAge() {
-        var birthDate = new Date(document.getElementById("updateEmployeeBirthday").value); 
+        var birthDate = new Date($('#userBirthday').val()); 
         var birthDateDay = birthDate.getDate();
         var birthDateMonth = birthDate.getMonth();
         var birthDateYear = birthDate.getFullYear();
@@ -90,7 +99,7 @@ $(document).ready(function(){
         else calculateAge = todayYear - birthDateYear - 1; 
 
         var outputValue = calculateAge;
-        document.getElementById("updateEmployeeAge").value = calculateAge;
+        document.getElementById("userAge").value = calculateAge;
     }
 // GENERATE AGE 
 
@@ -111,48 +120,3 @@ $(document).ready(function(){
         
     }
 // FUNCTION FOR PASSWORD ENABLE
-$('#usersPasswordForm').on( 'submit' , function(e){
-    e.preventDefault();
-    var currentForm = $('#usersPasswordForm')[0];
-    var data = new FormData(currentForm);
-    if( $("#newPassword").val() !=  $("#confirmPassword").val()){
-        Swal.fire(
-            'UPDATE FAILED',
-            'Sorry new password and confirm password not matched',
-            'error'
-        )
-    }else{
-        $.ajax({
-            url: "/updateUsersPassword",
-            type:"post",
-            method:"post",
-            dataType: "text",
-            data:data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success:function(response){
-                if(response == 1){
-                    $("#usersPasswordForm").trigger("reset");
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'PASSWORD HAS BEEN UPDATE SUCCESSFULLY',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }else if(response == 0){
-                    Swal.fire(
-                        'UPDATE FAILED',
-                        'Sorry current password was not correct',
-                        'error'
-                    )   
-                }
-            },
-            error:function(error){
-                console.log(error)
-            }
-        }) 
-    }
-
-});

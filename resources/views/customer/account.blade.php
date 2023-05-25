@@ -54,7 +54,7 @@
                                 </li>
                             </ul>
                             {{-- INFO --}}
-                                <form id="updateAdminAccountForm" name="updateAdminAccountForm">
+                                <form id="updateUserAccount" name="updateUserAccount">
                                     @csrf
                                     <div class="row gap-0">
                                         <div class="col-9 pt-5" >
@@ -107,16 +107,16 @@
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label">Birthday: </label>
-                                            <input required type="date" class="form-control shadow-sm rounded-0" id="userBirthday" name="userBirthday">
+                                            <input type="date" class="form-control shadow-sm rounded-0" onchange="calculateAge()"  id="userBirthday" name="userBirthday">
                                         </div>
                                         <div class="col-2">
                                             <label class="form-label">Age:</label>
-                                            <input required type="number" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge">
+                                            <input type="number" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge">
                                         </div>
                                     </div>
                                     <div class="row mt-4">
                                         <div class="col-3 d-flex ms-auto">
-                                            <button type="submit" class="btn btn-primary px-3 py-2 rounded-0">Save Changes</button>
+                                            <button type="submit" readonly class="btn btn-primary px-3 py-2 rounded-0">Save Changes</button>
                                         </div>
                                     </div>
                                 </form>

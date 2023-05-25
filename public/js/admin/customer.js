@@ -39,7 +39,7 @@ $(document).ready(function(){
             {"data":"phoneNumber"},
             {"data": "user_id",
                 mRender: function (data, type, row) {
-                return '<button type="button" data-title="View Applicant?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewApplicants('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateApplicants('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Applicant?"><i class="bi bi-trash3"></i></button>'
+                return '<button type="button" data-title="View Customer?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewCustomer('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateCustomer('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Customer?"><i class="bi bi-trash3"></i></button>'
             }
             }
         ],
@@ -84,7 +84,7 @@ $(document).ready(function(){
                 {"data":"phoneNumber"},
                 {"data": "user_id",
                     mRender: function (data, type, row) {
-                    return '<button type="button" data-title="View Applicant?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewApplicants('+data+') class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateApplicants('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Applicant?"><i class="bi bi-trash3"></i></button>'
+                    return '<button type="button" data-title="View Customer?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewCustomer('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=activateCustomer('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-success btn-sm py-2 px-3" data-title="Activate Customer?"><i class="bi bi-check2-square"></i></button>'
                 }
                 }
             ],
@@ -100,43 +100,33 @@ $(document).ready(function(){
 // INACTIVE APPLICANTS FOR TABLE
 
 // FETCH DATA FOR UPDATE OPERATION
-    function viewApplicants(id){
-        $('#viewApplicantsDetails').modal('show')
+    function viewCustomer(id){
+        $('#viewCustomerDetails').modal('show')
         $.ajax({
-            url: '/viewApplicants',
+            url: '/viewCustomer',
             type: 'GET',
             dataType: 'json',
-            data: {applicantId: id},
+            data: {customerId: id},
         })
         .done(function(response) {
-            if(response.photos != ''){
-                $('#applicantsPhoto').attr("src",response.photos)
-            }else{
-                $('#applicantsPhoto').attr("src","/assets/applicants/defaultImage.png")
-            }
-            $('#applicantsLastname').val(response.lastname)           
-            $('#applicantsFirstname').val(response.firstname)           
-            $('#applicantsMiddlename').val(response.middlename)
-            $('#applicantsExt').val(response.extention)           
-            $('#applicantsPosition').val(response.position)           
-            $('#applicantsStatus').val(response.status)           
-            $('#applicantsSex').val(response.Gender)           
-            $('#applicantsAge').val(response.age)           
-            $('#applicantsBirthday').val(response.birthday)           
-            $('#applicantsAddress').val(response.address)           
-            $('#applicantsPnumber').val(response.phoneNumber)           
-            $('#applicantsEmail').val(response.emailAddress)           
-            $('#applicantsNationality').val(response.nationality)           
-            $('#applicantsReligion').val(response.religion)           
+            $('#photo').attr("src",response.photos)
+            $('#lastname').val(response.lastname)           
+            $('#firstname').val(response.firstname)           
+            $('#middlename').val(response.middlename)
+            $('#extention').val(response.extention)           
+            $('#age').val(response.age)           
+            $('#birthdate').val(response.birthday)           
+            $('#phone').val(response.phoneNumber)           
+            $('#email').val(response.email)           
         })
     }
 // FETCH DATA FOR UPDATE OPERATION
 
 // DEACTIVATE APPLICANTS ACCOUNT
-    function deactivateApplicants(id){
+    function deactivateCustomer(id){
         Swal.fire({
         title: 'Are you sure?',
-        text: "Do you want to DEACTIVATE this applicant?",
+        text: "Do you want to DEACTIVATE this customer?",
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -145,20 +135,20 @@ $(document).ready(function(){
         }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-            url: '/deactivateApplicants',
+            url: '/deactivateCustomer',
             type: 'GET',
             dataType: 'json',
-            data: {applicantId: id},
+            data: {customerId: id},
         });
         Swal.fire({
             title: 'Change Status',
-            text: "Applicants was DEACTIVATE successfully",
+            text: "Customer was DEACTIVATE successfully",
             icon: 'success',
             showConfirmButton: false,
             timer: 1500,
         }).then((result) => {
         if (result) {
-            $('#applicants').DataTable().ajax.reload();
+            $('#activeCustomer').DataTable().ajax.reload();
         }
         });
         }
@@ -167,10 +157,10 @@ $(document).ready(function(){
 // DEACTIVATE APPLICANTS ACCOUNT
 
 // ACTIVATE APPLICANTS ACCOUNT
-    function activateApplicants(id){
+    function activateCustomer(id){
         Swal.fire({
         title: 'Are you sure?',
-        text: "Do you want to activate this applicant?",
+        text: "Do you want to ACTIVATE this customer?",
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -179,20 +169,20 @@ $(document).ready(function(){
         }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-            url: '/activateApplicant',
+            url: '/activateCustomer',
             type: 'GET',
             dataType: 'json',
-            data: {applicantId: id},
+            data: {customerId: id},
         });
         Swal.fire({
             title: 'Change Status',
-            text: "Applicants was deactivate successfully",
+            text: "Customer was deactivate successfully",
             icon: 'success',
             showConfirmButton: false,
             timer: 1500,
         }).then((result) => {
         if (result) {
-            $('#inactiveApplicants').DataTable().ajax.reload();
+            $('#inactiveCustomer').DataTable().ajax.reload();
         }
         });
         }

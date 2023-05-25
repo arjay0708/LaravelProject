@@ -169,7 +169,7 @@ $(document).ready(function(){
                 "targets": 1
                 },
                 { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="Complete Transaction?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="completeTransaction('+data.room_number+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
+                    return '<button type="button" data-title="Complete Transaction?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="completeTransaction('+data.reservation_id+' , '+data.roomId+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
                 }},
             ],
             order: [[1, 'asc']],
@@ -339,7 +339,7 @@ $(document).ready(function(){
                 "targets": 1
                 },
                 { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewReasonOfDecline('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
+                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewReasonOfBackOut('+data.reservation_id+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
                 }},
             ],
             order: [[1, 'asc']],
@@ -391,7 +391,7 @@ $(document).ready(function(){
                                     timer: 1000,
                                 }).then((result) => {
                                 if (result) {
-                                    pendingReservationTable();
+                                    $('#pendingReservationTable').DataTable().ajax.reload();
                                 }
                                 });
                             }else if(response == 0){
@@ -557,7 +557,7 @@ $(document).ready(function(){
                 })
                 if(reason){
                     $.ajax({
-                        url: '/backOutReservation',
+                        url: '/adminBackOutReservationFunction',
                         type: 'GET',
                         dataType: 'text',
                         data: {reason: reason, reservationId: reservationId,  userId: userId},
@@ -588,5 +588,36 @@ $(document).ready(function(){
         });
     } 
 // BACK OUT RESERVATION
+
+// VIEW DECLINE REASON
+    function viewReasonOfDecline(id){
+        $('#declineReasonModal').modal('show')
+        $.ajax({
+            url: '/viewReasonDecline',
+            type: 'GET',
+            dataType: 'json',
+            data: {reservationId: id},
+        })
+        .done(function(response) {
+            $('#declinedReason').text(response.reason); 
+        })
+    } 
+// VIEW DECLINE REASON
+
+// VIEW BACK OUT REASON
+    function viewReasonOfBackOut(id){
+        $('#backOutReasonModal').modal('show')
+        $.ajax({
+            url: '/viewReasonBackOut',
+            type: 'GET',
+            dataType: 'json',
+            data: {reservationId: id},
+        })
+        .done(function(response) {
+            $('#backOutReason').text(response.reason); 
+        })
+    } 
+// VIEW BACK OUT REASON
+
 
 

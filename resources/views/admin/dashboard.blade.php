@@ -102,6 +102,9 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="mb-3 mt-2 border-2 shadow">
+                            <div class="card p-lg-4 p-0 rounded-0" id="fetchAllBackOut"></div>
+                        </div>  
                     </div>
                 <!-- MAIN CONTENT -->
             </div>

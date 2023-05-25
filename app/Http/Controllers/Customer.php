@@ -583,7 +583,8 @@ class Customer extends Controller
                 ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
                 ->where([['reservationTable.status', '=', 'BackOut'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]
                 ,['reservationTable.is_archived', '=', 0],['reasonBackOutTable.set_by_admin', '=', 1]])
-                ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime','reservationTable.end_dateTime', 
+                ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime',
+                'reservationTable.end_dateTime', 
                 'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
                 $customer = auth()->guard('userModel')->user()->firstname.' '.
                 auth()->guard('userModel')->user()->lastname.' '.auth()->guard('userModel')->user()->extention;
@@ -640,5 +641,45 @@ class Customer extends Controller
                 }
             }
         // CANCEL THE ACCEPTED RESERVATION
+
+        // FETCH ACCOUNT PER USER
+            public function getUserInfo(Request $request){  
+                $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
+                return response()->json($data);
+            }  
+        // FETCH ACCOUNT PER USER
+
+        // FETCH UPDATE ACCOUNT PER USER
+            public function updateUserAccount(Request $request){  
+                if ($request->hasFile('userProfile')) {
+                    $filename = $request->file('userProfile');
+                    $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
+                    $path = $request->file('userProfile')->storeAs('userPhotos', $imageName, 'public');
+                    $imageData['userProfile'] = '/storage/'.$path;
+                        $update = userModel::find($request->userUniqueId);
+                        $update->photos=$imageData['userProfile'];
+                        $update->lastname=$request->input('userLastName');
+                        $update->firstname=$request->input('userFirstName');
+                        $update->middlename=$request->input('userMiddleName');
+                        $update->extention=$request->input('userExtention');
+                        $update->phoneNumber=$request->input('userPhoneNumber');
+                        $update->birthday=$request->input('userBirthday');
+                        $update->age=$request->input('userAge');
+                        $update->save();
+                        return response()->json(1);
+                }else{
+                        $update = userModel::find($request->userUniqueId);
+                        $update->lastname=$request->input('userLastName');
+                        $update->firstname=$request->input('userFirstName');
+                        $update->middlename=$request->input('userMiddleName');
+                        $update->extention=$request->input('userExtention');
+                        $update->phoneNumber=$request->input('userPhoneNumber');
+                        $update->birthday=$request->input('userBirthday');
+                        $update->age=$request->input('userAge');
+                        $update->save();
+                        return response()->json(1);
+                    }
+            }  
+        // FETCH UPDATE ACCOUNT PER USER
     // FUNCTION
 }

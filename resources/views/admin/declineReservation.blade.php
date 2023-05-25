@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>HarborView Beach Resort</title>
+    <title>Harbor View</title>
         <!-- CSS -->
             <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
@@ -85,5 +85,17 @@
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->
+
+        {{-- MODAL --}}
+            <div class="modal fade" id="declineReasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body text-center mt-3">
+                        <p id="declinedReason"></p>                   
+                    </div>
+                </div>
+                </div>
+            </div>
+        {{-- MODAL --}}
 </body>
 </html>

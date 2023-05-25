@@ -31,10 +31,12 @@ $(document).ready(function(){
             {"data":"room_number"},
             {"data":"floor"},
             {"data":"type_of_room"},
-            {"data":"price_per_hour"},
+            { "mData": function (data, type, row) {
+                return '₱'+data.price_per_hour+'.00'
+            }},
             {"data": "room_id",
                 mRender: function (data, type, row) {
-                return '<button type="button" data-title="View Details?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewDetails('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateRoom('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Room?"><i class="bi bi-trash3"></i></button>'
+                return '<button type="button" data-title="View Details?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewRoomDetails('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateRoom('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Room?"><i class="bi bi-trash3"></i></button>'
             }
             }
         ],
@@ -75,8 +77,8 @@ $(document).ready(function(){
             {"data":"price_per_hour"},
             {"data": "room_id",
                 mRender: function (data, type, row) {
-                return '<button type="button" data-title="View Applicant?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewApplicants('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=deactivateApplicants('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Deactivate Applicant?"><i class="bi bi-trash3"></i></button>'
-            }
+                    return '<button type="button" data-title="View Details?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewRoomDetails('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-pencil-square"></i></button> <button type="button" onclick=activateRoom('+data+') class="btn rounded-0 ROUNDED-0 btn-outline-success btn-sm py-2 px-3" data-title="Activate Room?"><i class="bi bi-check2-square"></i></button>'
+                }
             }
         ],
         order: [[1, 'asc']],
@@ -130,3 +132,132 @@ $(document).ready(function(){
         });
     });
 // ADD ROOM
+
+// VIEW DETAILS OF ROOM
+    function viewRoomDetails(id){
+        $('#updateRoomModal').modal('show')
+        $.ajax({
+            url: '/viewRoomDetails',
+            type: 'GET',
+            dataType: 'json',
+            data: {roomId: id},
+        })
+        .done(function(response) {
+            $('#room_id').val(response.room_id),           
+            $('#roomNumber').val(response.room_number),           
+            $('#roomFloor').val(response.floor)           
+            $('#roomStart').val(response.room_number)           
+            $('#roomEnd').val(response.room_number)           
+            $('#roomPricePerHour').val(response.price_per_hour)           
+            $('#roomType').val(response.type_of_room)           
+            $('#roomBedNumber').val(response.number_of_bed)           
+            $('#roomMaxPerson').val(response.max_person)           
+            $('#detailsOfRoom').val(response.details)           
+            $('#roomPhoto').attr("src",response.photos)
+        })
+    }
+// VIEW DETAILS OF ROOM
+
+// UPDATE ROOM 
+    $(document).ready(function () {
+        $('#updateRoomForm').on( 'submit' , function(e){
+            e.preventDefault();
+            var currentForm = $('#updateRoomForm')[0];
+            var data = new FormData(currentForm);
+            $.ajax({
+                url: "/updateRoom",
+                type:"post",
+                method:"post",
+                dataType: "text",
+                data:data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success:function(response){
+                    if(response == 1){
+                        $('#availableRoom').DataTable().ajax.reload();
+                        $('#notAvailableRoom').DataTable().ajax.reload();
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'ROOM HAS BEEN UPDATE SUCCESSFULLY',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                error:function(error){
+                    console.log(error)
+                }
+            }) 
+        });
+    });
+// UPDATE ROOM 
+
+// DEACTIVATE ROOM
+    function deactivateRoom(id){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to DEACTIVATE this ROOM?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d72323',
+            confirmButtonText: 'Yes, Continue'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                url: '/deactivateRoom',
+                type: 'GET',
+                dataType: 'json',
+                data: {roomId: id},
+            });
+            Swal.fire({
+                title: 'DEACTIVATE SUCCESSFULLY',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000,
+            }).then((result) => {
+            if (result) {
+                $('#availableRoom').DataTable().ajax.reload();
+            }
+            });
+            }
+        });
+    }
+// DEACTIVATE ROOM
+
+// ACTIVATE ROOM
+    function activateRoom(id){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to ACTIVATE this ROOM?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d72323',
+        confirmButtonText: 'Yes, Continue'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+            url: '/activateRoom',
+            type: 'GET',
+            dataType: 'json',
+            data: {roomId: id},
+        });
+        Swal.fire({
+            title: 'ACTIVATE SUCCESSFULLY',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1000,
+        }).then((result) => {
+        if (result) {
+            $('#notAvailableRoom').DataTable().ajax.reload();
+        }
+        });
+        }
+    });
+    }
+// ACTIVATE ROOM
+
+

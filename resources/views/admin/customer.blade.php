@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>HarborView Beach Resort</title>
+    <title>Harbor View</title>
         <!-- CSS -->
             <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
@@ -75,5 +75,65 @@
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->
+
+        {{-- MODAL --}}
+            <div class="modal fade" id="viewCustomerDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-11">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Customer Details</h1>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div class="row g-0 mt-3 text-center">
+                                <img src="" class="rounded mx-auto d-block" id="photo" style="height: 120px; width:25%; padding:0 !important;">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <label class="form-label">Last Name:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="lastname" name="lastname">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label">First Name:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="firstname" name="firstname">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label">Middle Name:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="middlename" name="middlename">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <label class="form-label">Extention:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="extention" name="extention">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label">Birthdate:</label>
+                                    <input readonly type="date" class="form-control shadow-sm bg-body rounded" required id="birthdate" name="birthdate">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label">Age:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="age" name="age">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label class="form-label">Email:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="email" name="email">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Phone:</label>
+                                    <input readonly type="text" class="form-control shadow-sm bg-body rounded" required id="phone" name="phone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{-- MODAL --}}
 </body>
 </html>
