@@ -13,9 +13,9 @@
 <body>
         {{-- CONTENT --}}
             <div class="back-image">
-                <img src="./img/background.png" alt="background image">
+                <img src="./img/img1.png" alt="background image">
             </div>
-        
+
         {{-- FOR REGISTRATION --}}
             <section class="left">
                 <section class="main register">
@@ -26,7 +26,7 @@
                         <form name="registrationForm" id="registrationForm">
                             @csrf
                             <div class="mb-3">
-                                <input type="email" class="form-control rounded-pill" required id="userEmail" name="userEmail" placeholder="Email">
+                                <input type="email" class="form-control rounded-pill" required id="userRegisterEmail" name="userRegisterEmail" placeholder="Email">
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control rounded-pill" required id="userRegisterPassword" name="userRegisterPassword" placeholder="Password">

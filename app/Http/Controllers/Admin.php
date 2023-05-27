@@ -17,91 +17,91 @@ class Admin extends Controller
     // ROUTES
         public function adminDashboard(){
             return view('admin/dashboard');
-        }   
+        }
         public function adminRoom(){
             return view('admin/room');
-        }   
+        }
         public function adminNotAvailableRoom(){
             return view('admin/notAvailableRoom');
-        }   
+        }
         public function addNewRoom(){
             return view('admin/addNewRoom');
-        }   
+        }
         public function adminReservation(){
             return view('admin/reservation');
-        }   
+        }
         public function adminAcceptReservation(){
             return view('admin/acceptReservation');
-        }   
+        }
         public function adminOnGoingReservation(){
             return view('admin/ongoingReservation');
-        }   
+        }
         public function adminDeclineReservation(){
             return view('admin/declineReservation');
-        }  
+        }
         public function adminBackOutReservation(){
             return view('admin/backOutReservation');
-        }  
+        }
         public function adminCompleted(){
             return view('admin/completed');
-        }   
+        }
         public function adminCustomer(){
             return view('admin/customer');
-        }   
+        }
         public function adminInActiveCustomer(){
             return view('admin/inactiveCustomer');
-        }   
+        }
         public function adminAccount(){
             return view('admin/account');
-        }   
+        }
     // ROUTES
 
     // FUNCTION
             // ACTIVE USER DATA FOR TABLE
-                   public function getActiveCustomer(Request $request){  
+                   public function getActiveCustomer(Request $request){
                     $data = userModel::where([['is_active', '=', 1],['is_admin', '=', 0],['lastname', '!=', 'NULL']])->select(
                         'user_id','lastname','firstname','middlename','extention','email','phoneNumber'
                     )->get();
                     return response()->json($data);
-                }  
+                }
             // ACTIVE USER DATA FOR TABLE
 
             // ACTIVE USER DATA FOR TABLE
-                public function getInActiveCustomer(Request $request){  
+                public function getInActiveCustomer(Request $request){
                     $data = userModel::where([['is_active', '=', 0],['is_admin', '=', 0],['lastname', '!=', 'NULL']])->select(
                         'user_id','lastname','firstname','middlename','extention','email','phoneNumber'
                     )->get();
                     return response()->json($data);
-                }  
+                }
             // ACTIVE USER DATA FOR TABLE
 
             // PERSONAL INFORMATION FOR ACCOUNT
-                public function getUserInfo(Request $request){  
+                public function getUserInfo(Request $request){
                     $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
                     return response()->json($data);
-                }  
+                }
             // PERSONAL INFORMATION FOR ACCOUNT
 
             // AVAILABLE ROOM FOR TABLE
-                public function getAvailableRoom(Request $request){  
+                public function getAvailableRoom(Request $request){
                     $data = roomModel::where([['is_available', '=', 1]])->select(
                         'room_id','room_number','floor','type_of_room','price_per_hour'
                     )->get();
                     return response()->json($data);
-                } 
+                }
             // AVAILABLE ROOM FOR TABLE
 
             // NOT AVAILABLE ROOM FOR TABLE
-                public function getNotAvailableRoom(Request $request){  
+                public function getNotAvailableRoom(Request $request){
                     $data = roomModel::where([['is_available', '=', 0]])->select(
                         'room_id','room_number','floor','type_of_room','price_per_hour'
                     )->get();
                     return response()->json($data);
-                } 
+                }
             // NOT AVAILABLE ROOM FOR TABLE
 
             // ADD ROOM FUNCTION
-                public function addRoom(Request $request){ 
+                public function addRoom(Request $request){
                     $filename = $request->file('roomPhoto');
                     $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
                     $path = $request->file('roomPhoto')->storeAs('roomPhotos', $imageName, 'public');
@@ -123,7 +123,7 @@ class Admin extends Controller
             // ADD ROOM FUNCTION
 
             // ALL PENDING RESERVATION
-                public function getAllPendingReservation(Request $request){ 
+                public function getAllPendingReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->where([['reservationTable.status', '=', 'Pending']])->orderBy('reservationTable.reservation_id', 'ASC')
@@ -136,7 +136,7 @@ class Admin extends Controller
             // ALL PENDING RESERVATION
 
             // ALL ACCEPT RESERVATION
-                public function getAllAcceptReservation(Request $request){ 
+                public function getAllAcceptReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->where([['reservationTable.status', '=', 'Accept']])->orderBy('reservationTable.reservation_id', 'ASC')
@@ -147,9 +147,9 @@ class Admin extends Controller
                     return response()->json($data);
                 }
             // ALL ACCEPT RESERVATION
-            
+
             // ALL DECLINE RESERVATION
-                public function getAllDeclineReservation(Request $request){ 
+                public function getAllDeclineReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->where([['reservationTable.status', '=', 'Decline']])->orderBy('reservationTable.reservation_id', 'ASC')
@@ -162,7 +162,7 @@ class Admin extends Controller
             // ALL DECLINE RESERVATION
 
             // ALL ON GOING RESERVATION
-                public function getAllOnGoingReservation(Request $request){ 
+                public function getAllOnGoingReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->where([['reservationTable.status', '=', 'OnGoing']])->orderBy('reservationTable.reservation_id', 'ASC')
@@ -171,11 +171,11 @@ class Admin extends Controller
                         'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
                     )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
                     return response()->json($data);
-                }  
+                }
             // ALL ON GOING RESERVATION
 
             // ALL COMPLETED RESERVATION
-                public function getAllCompletedReservation(Request $request){ 
+                public function getAllCompletedReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->where([['reservationTable.status', '=', 'Complete']])->orderBy('reservationTable.reservation_id', 'ASC')
@@ -188,7 +188,7 @@ class Admin extends Controller
             // ALL COMPLETED RESERVATION
 
             // ALL BACK OUT RESERVATION
-                public function getAllBackOutReservation(Request $request){ 
+                public function getAllBackOutReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                     ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
@@ -203,7 +203,7 @@ class Admin extends Controller
             // ALL BACK OUT RESERVATION
 
             // ACCEPT RESERVATION
-                public function acceptReservation(Request $request){ 
+                public function acceptReservation(Request $request){
                     $acceptReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
                     ->update(['status' => 'Accept']);
                     return response()->json(1);
@@ -211,7 +211,7 @@ class Admin extends Controller
             // ACCEPT RESERVATION
 
             // ON-GOING RESERVATION
-                public function ongoingReservation(Request $request){ 
+                public function ongoingReservation(Request $request){
                     date_default_timezone_set('Asia/Manila');
                     $currentDate = date('m-d-Y h:i A', strtotime(now()));
                     $data = reservationModel::where([['reservation_id', '=', $request->reservationId]])->first();
@@ -227,7 +227,7 @@ class Admin extends Controller
             // ON-GOING RESERVATION
 
             // DECLINE RESERVATION
-                public function declineReservation(Request $request){ 
+                public function declineReservation(Request $request){
                     $declineReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
                     ->update(['status' => 'Decline']);
                     if($declineReservation){
@@ -242,7 +242,7 @@ class Admin extends Controller
             // DECLINE RESERVATION
 
             // COMPLETE RESERVATION
-                public function completeReservation(Request $request){ 
+                public function completeReservation(Request $request){
                     date_default_timezone_set('Asia/Manila');
                     $currentDate = date('m-d-Y h:i A', strtotime("+1 hours", strtotime(now())));
                     $data = reservationModel::where([['reservation_id', '=', $request->reservationId]])->first();
@@ -257,7 +257,7 @@ class Admin extends Controller
             // COMPLETE RESERVATION
 
             // BACK OUT RESERVATION
-                public function adminBackOutReservationFunction(Request $request){ 
+                public function adminBackOutReservationFunction(Request $request){
                     $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
                     ->update(['status' => 'BackOut']);
                     if($backOutReservation){
@@ -273,7 +273,7 @@ class Admin extends Controller
             // BACK OUT RESERVATION
 
             // TOTAL PENDING RESERVATION
-                public function totalPendingReservation(Request $request){
+                public function totalPendingReservationForAdmin(Request $request){
                     $data = reservationModel::where([['status', '=' ,'Pending']])->get();
                     $countData = $data->count();
                     return response()->json($countData != '' ? $countData : '0');
@@ -281,7 +281,7 @@ class Admin extends Controller
             // TOTAL PENDING RESERVATION
 
             // TOTAL ON-GOING RESERVATION
-                public function totalOnGoingReservation(Request $request){
+                public function totalOnGoingReservationForAdmin(Request $request){
                     $data = reservationModel::where([['status', '=' ,'OnGoing']])->get();
                     $countData = $data->count();
                     return response()->json($countData != '' ? $countData : '0');
@@ -289,7 +289,7 @@ class Admin extends Controller
             // TOTAL ON-GOING RESERVATION
 
             // TOTAL COMPLETED RESERVATION
-                public function totalCompletedReservation(Request $request){
+                public function totalCompletedReservationForAdmin(Request $request){
                     $data = reservationModel::where([['status', '=' ,'Completed']])->get();
                     $countData = $data->count();
                     return response()->json($countData != '' ? $countData : '0');
@@ -297,7 +297,7 @@ class Admin extends Controller
             // TOTAL COMPLETED RESERVATION
 
             // TOTAL CUSTOMER
-                public function totalCustomer(Request $request){
+                public function totalCustomerForAdmin(Request $request){
                     $data = userModel::where([['is_active', '=' ,1], ['is_admin', '=' ,0]])->get();
                     $countData = $data->count();
                     return response()->json($countData != '' ? $countData : '0');
@@ -309,11 +309,11 @@ class Admin extends Controller
                     $data = roomModel::where([['room_id', '=' ,$request->roomId]])->first();
                     return response()->json($data);
                 }
-                
+
             // VIEW DETAILS OF ROOM
 
-            // UPDATE ROOM 
-                public function updateRoom(Request $request){  
+            // UPDATE ROOM
+                public function updateRoom(Request $request){
                     if ($request->hasFile('roomPhoto')) {
                         $filename = $request->file('roomPhoto');
                         $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
@@ -342,21 +342,21 @@ class Admin extends Controller
                         $update->save();
                         return response()->json(1);
                     }
-                }  
-            // UPDATE ROOM 
+                }
+            // UPDATE ROOM
 
             // DEACTIVATE ROOM
-                public function deactivateRoom(Request $request){ 
+                public function deactivateRoom(Request $request){
                     $deactivateRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 0]);
                     return response()->json(1);
                 }
             // DEACTIVATE ROOM
 
             // ACTIVATE ROOM
-                public function activateRoom(Request $request){ 
+                public function activateRoom(Request $request){
                     $activateRoom = roomModel::where([['room_id', '=', $request->roomId]])->update(['is_available' => 1]);
                     return response()->json(1);
-                } 
+                }
             // ACTIVATE ROOM
 
             // GET ALL BACK OUT RESERVATION
@@ -396,11 +396,11 @@ class Admin extends Controller
                         </div>
                         ";
                     }
-                } 
+                }
             // GET ALL BACK OUT RESERVATION
 
             // FETCH THE DECLINE REASON
-                public function viewReasonDecline(Request $request){ 
+                public function viewReasonDecline(Request $request){
                     $data = reasonDeclineModel::where([['reservation_id', '=', $request->reservationId]])->
                     select('reason')->first();
                     return response()->json($data);
@@ -408,7 +408,7 @@ class Admin extends Controller
             // FETCH THE DECLINE REASON
 
             // FETCH THE BACK OUT REASON
-                public function viewReasonBackOut(Request $request){ 
+                public function viewReasonBackOut(Request $request){
                     $data = reasonBackOutModel::where([['reservation_id', '=', $request->reservationId]])->
                     select('reason')->first();
                     return response()->json($data);
@@ -416,21 +416,21 @@ class Admin extends Controller
             // FETCH THE BACK OUT REASON
 
             // DEACTIVATE CUSTOMER
-                public function deactivateCustomer(Request $request){ 
+                public function deactivateCustomer(Request $request){
                     $deactivateCustomer = userModel::where([['user_id', '=', $request->customerId]])->update(['is_active' => 0]);
                     return response()->json(1);
                 }
             // DEACTIVATE CUSTOMER
 
             // ACTIVATE CUSTOMER
-                public function activateCustomer(Request $request){ 
+                public function activateCustomer(Request $request){
                     $activateCustomer = userModel::where([['user_id', '=', $request->customerId]])->update(['is_active' => 1]);
                     return response()->json(1);
                 }
             // ACTIVATE CUSTOMER
 
             // VIEW CUSTOMER
-                public function viewCustomer(Request $request){ 
+                public function viewCustomer(Request $request){
                     $viewCustomer = userModel::where([['user_id', '=', $request->customerId]])->first();
                     return response()->json($viewCustomer);
                 }

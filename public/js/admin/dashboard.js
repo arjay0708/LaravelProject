@@ -9,7 +9,7 @@ $(document).ready(function(){
 
     function totalPendingReservation(){
         $.ajax({
-            url: '/totalPendingReservation',
+            url: '/totalPendingReservationForAdmin',
             method: 'GET',
             success : function(data) {
                 $("#totalPendingReservation").html(data);
@@ -19,7 +19,7 @@ $(document).ready(function(){
 
     function totalOnGoingReservation(){
         $.ajax({
-            url: '/totalOnGoingReservation',
+            url: '/totalOnGoingReservationForAdmin',
             method: 'GET',
             success : function(data) {
                 $("#totalOnGoingReservation").html(data);
@@ -29,7 +29,7 @@ $(document).ready(function(){
 
     function totalCompletedReservation(){
         $.ajax({
-            url: '/totalCompletedReservation',
+            url: '/totalCompletedReservationForAdmin',
             method: 'GET',
             success : function(data) {
                 $("#totalCompletedReservation").html(data);
@@ -39,7 +39,7 @@ $(document).ready(function(){
 
     function totalCustomer(){
         $.ajax({
-            url: '/totalCustomer',
+            url: '/totalCustomerForAdmin',
             method: 'GET',
             success : function(data) {
                 $("#totalCustomer").html(data);
@@ -82,9 +82,9 @@ $(document).ready(function(){
             timer: 1500,
         }).then((result) => {
         if (result) {
-            getBackOutContent();        
+            getBackOutContent();
         }
         });
         }
         });
-    } 
+    }

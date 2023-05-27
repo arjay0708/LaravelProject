@@ -16,25 +16,25 @@ class Customer extends Controller
     // ROUTES
         public function customerDashboard(){
             return view('customer/dashboard');
-        }   
+        }
         public function customerRoom(){
             return view('customer/room');
-        }   
+        }
         public function customerReservation(){
             return view('customer/reservation');
-        }   
+        }
         public function customerAcceptReservation(){
             return view('customer/acceptReservation');
-        }   
+        }
         public function customerDeclinedReservation(){
             return view('customer/declinedReservation');
-        }   
+        }
         public function customerCompleted(){
             return view('customer/complete');
-        }   
+        }
         public function customerAccount(){
             return view('customer/account');
-        }   
+        }
     // ROUTES
 
     // FUNCTION
@@ -49,7 +49,7 @@ class Customer extends Controller
                                     <div class='row g-0'>
                                         <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
                                         <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>      
+                                            <ul class='list-group list-group-flush fw-bold'>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
@@ -63,7 +63,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>                                                    
+                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
@@ -73,7 +73,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>                                                    
+                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
@@ -82,8 +82,8 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                     <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>                                                    
-                                                    </div>    
+                                                        Details: <span class='fw-normal'>$item->details</span>
+                                                    </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
                                                     <button onclick='bookReservation($item->room_id)' type='button' class='btn btn-sm btn-dark px-4 py-2 rounded-0'>BOOK NOW</button>
@@ -104,52 +104,59 @@ class Customer extends Controller
                     </div>
                     ";
                 }
-            } 
+            }
         // SHOW ROOM FOR CUSTOMER
 
         // BOOK RESERVATION
             public function bookReservation(Request $request){
-                date_default_timezone_set('Asia/Manila');
-                $currentDateTime = date('m-d-Y h:i A');
-                $checkInDateTime = date('m-d-Y h:i A',strtotime($request->checkInDateTime));
-                $checkOutDateTime = date('m-d-Y h:i A',strtotime($request->checkOutDateTime));
-                $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->get();
-                foreach($data as $certainData){
-                    if($certainData->lastname == "" && $certainData->firstname == ""){
-                        echo 5; 
-                        exit();
-                    }else{
-                        if($currentDateTime > $checkInDateTime){
-                            return response()->json(4);
+                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id], ['room_id', '=', $request->roomId],
+                ['start_dataTime', '=', $request->checkInDateTime],['end_dateTime', '=', $request->checkOutDateTime]])->get();
+                if($data->isNotEmpty()){
+                    return response()->json(6);
+                    exit();
+                }else{
+                    date_default_timezone_set('Asia/Manila');
+                    $currentDateTime = date('m-d-Y h:i A');
+                    $checkInDateTime = date('m-d-Y h:i A',strtotime($request->checkInDateTime));
+                    $checkOutDateTime = date('m-d-Y h:i A',strtotime($request->checkOutDateTime));
+                    $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->get();
+                    foreach($data as $certainData){
+                        if($certainData->lastname == "" && $certainData->firstname == ""){
+                            echo 5;
                             exit();
-                        }else if($checkInDateTime == $checkOutDateTime){
-                            return response()->json(2);
-                            exit();               
-                        }else if($checkOutDateTime < $checkInDateTime ){
-                            return response()->json(3);
-                            exit();    
                         }else{
-                            $bookRoom = reservationModel::create([
-                                'user_id' =>  auth()->guard('userModel')->user()->user_id,
-                                'room_id' => $request->roomId,
-                                'start_dataTime' => $request->checkInDateTime,
-                                'end_dateTime' => $request->checkOutDateTime,
-                                'status' => 'Pending',
-                                'is_archived' => 0
-                                ]);
-                                return response()->json($bookRoom ? 1 : 0);
-                            exit();
+                            if($currentDateTime > $checkInDateTime){
+                                return response()->json(4);
+                                exit();
+                            }else if($checkInDateTime == $checkOutDateTime){
+                                return response()->json(2);
+                                exit();
+                            }else if($checkOutDateTime < $checkInDateTime ){
+                                return response()->json(3);
+                                exit();
+                            }else{
+                                $bookRoom = reservationModel::create([
+                                    'user_id' =>  auth()->guard('userModel')->user()->user_id,
+                                    'room_id' => $request->roomId,
+                                    'start_dataTime' => $request->checkInDateTime,
+                                    'end_dateTime' => $request->checkOutDateTime,
+                                    'status' => 'Pending',
+                                    'is_archived' => 0
+                                    ]);
+                                    return response()->json($bookRoom ? 1 : 0);
+                                exit();
+                            }
                         }
                     }
                 }
-            }  
+            }
         // BOOK RESERVATION
 
         // CANCEL RESERVATION
             public function cancelReservation(Request $request){
                 $cancelReservation = reservationModel::where([['reservation_id', '=', $request->reservationID]])->delete();
                 return response()->json($cancelReservation ? 1 : 0);
-            }  
+            }
         // CANCEL RESERVATION
 
         // RESERVATION RESERVATION PER USER
@@ -178,7 +185,7 @@ class Customer extends Controller
                                     <div class='row g-0'>
                                         <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
                                         <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>      
+                                            <ul class='list-group list-group-flush fw-bold'>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
@@ -192,7 +199,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>                                                    
+                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
@@ -202,7 +209,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>                                                    
+                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
@@ -211,17 +218,17 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                     <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>                                                    
-                                                    </div>    
+                                                        Details: <span class='fw-normal'>$item->details</span>
+                                                    </div>
                                                 </li>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>    
+                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
                                                             Check Out:<span class='fw-normal'> $checkOutDateTime</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>    
+                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
@@ -274,7 +281,7 @@ class Customer extends Controller
                                     <div class='row g-0'>
                                         <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
                                         <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>      
+                                            <ul class='list-group list-group-flush fw-bold'>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
@@ -288,7 +295,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>                                                    
+                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
@@ -298,7 +305,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>                                                    
+                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
@@ -307,17 +314,17 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                     <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>                                                    
-                                                    </div>    
+                                                        Details: <span class='fw-normal'>$item->details</span>
+                                                    </div>
                                                 </li>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>    
+                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
                                                             Check Out:<span class='fw-normal'> $checkOutDateTime</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>    
+                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
@@ -370,7 +377,7 @@ class Customer extends Controller
                                     <div class='row g-0'>
                                         <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
                                         <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>      
+                                            <ul class='list-group list-group-flush fw-bold'>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
@@ -384,7 +391,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>                                                    
+                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
@@ -394,7 +401,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>                                                    
+                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
@@ -403,17 +410,17 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                     <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>                                                    
-                                                    </div>    
+                                                        Details: <span class='fw-normal'>$item->details</span>
+                                                    </div>
                                                 </li>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>    
+                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
                                                             Check Out:<span class='fw-normal'> $checkOutDateTime</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>    
+                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
@@ -466,7 +473,7 @@ class Customer extends Controller
                                     <div class='row g-0'>
                                         <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
                                         <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>      
+                                            <ul class='list-group list-group-flush fw-bold'>
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
@@ -480,7 +487,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>                                                    
+                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
@@ -490,7 +497,7 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>                                                    
+                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
                                                         </div>
                                                         <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
                                                             Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
@@ -499,17 +506,17 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                     <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>                                                    
-                                                    </div>    
+                                                        Details: <span class='fw-normal'>$item->details</span>
+                                                    </div>
                                                 </li>
                                                 <li class='list-group-item'>
                                                     <div class='row py-2'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>    
+                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
                                                             Check Out:<span class='fw-normal'> $checkOutDateTime</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>    
+                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
@@ -584,7 +591,7 @@ class Customer extends Controller
                 ->where([['reservationTable.status', '=', 'BackOut'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]
                 ,['reservationTable.is_archived', '=', 0],['reasonBackOutTable.set_by_admin', '=', 1]])
                 ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime',
-                'reservationTable.end_dateTime', 
+                'reservationTable.end_dateTime',
                 'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
                 $customer = auth()->guard('userModel')->user()->firstname.' '.
                 auth()->guard('userModel')->user()->lastname.' '.auth()->guard('userModel')->user()->extention;
@@ -598,7 +605,7 @@ class Customer extends Controller
                                     <div class='card-body'>
                                         <h5 class='card-title'>Dear $customer,</h5>
                                         <p class='card-text mb-3'>Your Reservation for <span class='fw-bold'>$item->floor Room Number $item->room_number From
-                                        $newStartDate to $newEndDate </span> has been cancelled due to $item->reason. We apologize for the inconvenience i hope you understand. 
+                                        $newStartDate to $newEndDate </span> has been cancelled due to $item->reason. We apologize for the inconvenience i hope you understand.
                                         Please book another room, Thank You And God Bless.</p>
                                         <button onclick=noteBackOutContent('$item->reservation_id') class='btn btn-success btn-sm px-3 rounded-0'>Noted</button>
                                     </div>
@@ -615,7 +622,7 @@ class Customer extends Controller
                     </div>
                     ";
                 }
-            } 
+            }
         // BACK OUT CONTENT
 
         // ARCHIVED CANCELLED RESERVATION
@@ -627,7 +634,7 @@ class Customer extends Controller
         // ARCHIVED CANCELLED RESERVATION
 
         // CANCEL THE ACCEPTED RESERVATION
-            public function backOutReservation(Request $request){ 
+            public function backOutReservation(Request $request){
                 $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
                 ->update(['status' => 'BackOut']);
                 if($backOutReservation){
@@ -643,14 +650,14 @@ class Customer extends Controller
         // CANCEL THE ACCEPTED RESERVATION
 
         // FETCH ACCOUNT PER USER
-            public function getUserInfo(Request $request){  
+            public function getUserInfo(Request $request){
                 $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
                 return response()->json($data);
-            }  
+            }
         // FETCH ACCOUNT PER USER
 
         // FETCH UPDATE ACCOUNT PER USER
-            public function updateUserAccount(Request $request){  
+            public function updateUserAccount(Request $request){
                 if ($request->hasFile('userProfile')) {
                     $filename = $request->file('userProfile');
                     $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
@@ -679,7 +686,7 @@ class Customer extends Controller
                         $update->save();
                         return response()->json(1);
                     }
-            }  
+            }
         // FETCH UPDATE ACCOUNT PER USER
     // FUNCTION
 }

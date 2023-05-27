@@ -77,6 +77,12 @@ $(document).ready(function(){
                                 'The date of both CHECK IN and CHECK OUT must not be the same',
                                 'error'
                                 )
+                            }else if(response == 6){
+                                Swal.fire(
+                                'BOOK FAILED',
+                                'You are already reserved with same date and time',
+                                'error'
+                                )
                             }
                             else if(response == 5){
                                 Swal.fire({
@@ -90,7 +96,7 @@ $(document).ready(function(){
                         error:function(error){
                             console.log(error)
                         }
-                    }) 
+                    })
                 });
             }
         });
@@ -122,7 +128,7 @@ $(document).ready(function(){
                 timer: 1000,
             }).then((result) => {
             if (result) {
-                showTotalRoom();            
+                showTotalRoom();
             }
             });
             }

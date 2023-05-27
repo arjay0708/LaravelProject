@@ -10,22 +10,22 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use App\Models\userModel;
-use Auth;    
+use Auth;
 use Session;
-       
+
 class Authentication extends Controller
 {
-    // ROUTING 
+    // ROUTING
         public function login(){
             return view('login');
-        }   
+        }
 
         public function registration(){
             return view('registration');
-        }   
-    // ROUTING 
+        }
+    // ROUTING
 
-    // FUNCTION FOR REGISTRATION 
+    // FUNCTION FOR REGISTRATION
         public function registrationFunction(Request $request){
             $existingEmail = userModel::select('email')->where('email','=',$request->email)->get();
             if($existingEmail->isNotEmpty()){
@@ -34,7 +34,7 @@ class Authentication extends Controller
                 $registration = userModel::create([
                     'photos' => '/storage/userPhotos/defaultImage.png',
                     'email' => $request->email,
-                    'password' => Hash::make($request->userRegisterPassword),
+                    'password' => Hash::make($request->password),
                     'is_active' => 1,
                     'is_admin' => 0,
                 ]);
@@ -54,7 +54,7 @@ class Authentication extends Controller
 
         protected function userEmail(){
             return 'userEmail';
-        }  
+        }
 
         public function userLoginFunction(Request $request){
             if(auth()->guard('userModel')->attempt($this->userCredentials($request))){

@@ -17,7 +17,7 @@ $(document).ready(function(){
             x.type="password";
             a.type="password";
         }
-        
+
     }
 // FUNCTION FOR PASSWORD ENABLE
 
@@ -29,35 +29,35 @@ $(document).ready(function(){
         }else{
             x.type="password";
         }
-        
+
     }
 // FUNCTION FOR PASSWORD ENABLE
 
 // SIGN UP FUNCTION
     $('#registrationForm').on( 'submit' , function(e){
         e.preventDefault();
-        var email = $('#userEmail').val();
-        var password = $('#userPassword').val();
-        var confirmPassword = $('#userConPassword').val();
+        var email = $('#userRegisterEmail').val();
+        var password = $('#userRegisterPassword').val();
+        var confirmPassword = $('#userRegisterConPassword').val();
         if(password < 6 || password > 20){
             Swal.fire(
                 'PASSWORD FAILED',
                 'The password must be longer than 6 characters and less than 20 characters',
                 'error'
-            )     
+            )
         }
         else if(password != confirmPassword){
             Swal.fire(
                 'PASSWORD MISMATCH',
                 'Please, check your password',
                 'error'
-            )      
+            )
         }else if(password === 'password'){
             Swal.fire(
                 'PASSWORD FAILED',
                 'The password can not be set to password',
                 'error'
-            )   
+            )
         }else{
             $.ajax({
                 url:"/registrationFunction",
