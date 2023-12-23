@@ -102,23 +102,28 @@ class Admin extends Controller
 
             // ADD ROOM FUNCTION
                 public function addRoom(Request $request){
-                    $filename = $request->file('roomPhoto');
-                    $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
-                    $path = $request->file('roomPhoto')->storeAs('roomPhotos', $imageName, 'public');
-                    $imageData['roomPhoto'] = '/storage/'.$path;
-                    $addRoom = roomModel::create([
-                    'photos' => $imageData['roomPhoto'],
-                    'room_number' => $request->roomNumber,
-                    'floor' => $request->roomFloor,
-                    'type_of_room' => $request->roomType,
-                    'number_of_bed' => $request->bedNumber,
-                    'details' => $request->detailsOfRoom,
-                    'max_person' => $request->maxPerson,
-                    'price_per_hour' => $request->pricePerHour,
-                    'is_available' => 1
-                    ]);
-                    return response()->json($addRoom ? 1 : 0);
-                    exit();
+                    $data = roomModel::where([['room_number', '=', $request->roomNumber]])->get();
+                    if(!$data->isNotEmpty()){
+                        $filename = $request->file('roomPhoto');
+                        $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
+                        $path = $request->file('roomPhoto')->storeAs('roomPhotos', $imageName, 'public');
+                        $imageData['roomPhoto'] = '/storage/'.$path;
+                        $addRoom = roomModel::create([
+                        'photos' => $imageData['roomPhoto'],
+                        'room_number' => $request->roomNumber,
+                        'floor' => $request->roomFloor,
+                        'type_of_room' => $request->roomType,
+                        'number_of_bed' => $request->bedNumber,
+                        'details' => $request->detailsOfRoom,
+                        'max_person' => $request->maxPerson,
+                        'price_per_hour' => $request->pricePerHour,
+                        'is_available' => 1
+                        ]);
+                        return response()->json($addRoom ? 1 : 0);
+                        exit();
+                    }else{
+                        return response()->json(2);
+                    }
                 }
             // ADD ROOM FUNCTION
 

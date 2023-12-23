@@ -5,7 +5,7 @@ $(document).ready(function(){
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    }); 
+    });
 });
 
 // FETCH AVAILABLE ROOM FOR TABLE
@@ -92,7 +92,7 @@ $(document).ready(function(){
     }
 // FETCH AVAILABLE ROOM FOR TABLE
 
-// ADD ROOM 
+// ADD ROOM
     $(document).ready(function () {
         $('#addRoomDetailsForm').on( 'submit' , function(e){
             e.preventDefault();
@@ -123,12 +123,18 @@ $(document).ready(function(){
                             'Sorry room has not stored',
                             'error'
                             )
+                        }else if(response == 2){
+                            Swal.fire(
+                            'Added Failed',
+                            'Sorry, room already exists.',
+                            'error'
+                            )
                         }
                     },
                     error:function(error){
                         console.log(error)
                     }
-                }) 
+                })
         });
     });
 // ADD ROOM
@@ -143,22 +149,22 @@ $(document).ready(function(){
             data: {roomId: id},
         })
         .done(function(response) {
-            $('#room_id').val(response.room_id),           
-            $('#roomNumber').val(response.room_number),           
-            $('#roomFloor').val(response.floor)           
-            $('#roomStart').val(response.room_number)           
-            $('#roomEnd').val(response.room_number)           
-            $('#roomPricePerHour').val(response.price_per_hour)           
-            $('#roomType').val(response.type_of_room)           
-            $('#roomBedNumber').val(response.number_of_bed)           
-            $('#roomMaxPerson').val(response.max_person)           
-            $('#detailsOfRoom').val(response.details)           
+            $('#room_id').val(response.room_id),
+            $('#roomNumber').val(response.room_number),
+            $('#roomFloor').val(response.floor)
+            $('#roomStart').val(response.room_number)
+            $('#roomEnd').val(response.room_number)
+            $('#roomPricePerHour').val(response.price_per_hour)
+            $('#roomType').val(response.type_of_room)
+            $('#roomBedNumber').val(response.number_of_bed)
+            $('#roomMaxPerson').val(response.max_person)
+            $('#detailsOfRoom').val(response.details)
             $('#roomPhoto').attr("src",response.photos)
         })
     }
 // VIEW DETAILS OF ROOM
 
-// UPDATE ROOM 
+// UPDATE ROOM
     $(document).ready(function () {
         $('#updateRoomForm').on( 'submit' , function(e){
             e.preventDefault();
@@ -189,10 +195,10 @@ $(document).ready(function(){
                 error:function(error){
                     console.log(error)
                 }
-            }) 
+            })
         });
     });
-// UPDATE ROOM 
+// UPDATE ROOM
 
 // DEACTIVATE ROOM
     function deactivateRoom(id){
@@ -224,6 +230,45 @@ $(document).ready(function(){
             });
             }
         });
+
+        async function showTermsAndConditions() {
+            const { value: accept } = await Swal.fire({
+              title: 'Are you sure?',
+              text: "Do you want to DEACTIVATE this ROOM?",
+              icon: 'question',
+              input: "checkbox",
+              inputValue: 1,
+              inputPlaceholder: `
+              I read the notes and remarks before deactivating this.
+              `,
+              confirmButtonText: `
+                Continue&nbsp;
+              `,
+              inputValidator: (result) => {
+                return !result && "You need to read the notes and remarks before deactivating this";
+              }
+            });
+
+            if (accept) {
+                $.ajax({
+                    url: '/deactivateRoom',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {roomId: id},
+                });
+                Swal.fire({
+                    title: 'DEACTIVATE SUCCESSFULLY',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1000,
+                }).then((result) => {
+                if (result) {
+                    $('#availableRoom').DataTable().ajax.reload();
+                }
+                });
+            }
+          }
+          showTermsAndConditions();
     }
 // DEACTIVATE ROOM
 

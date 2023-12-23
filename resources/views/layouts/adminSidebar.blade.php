@@ -1,7 +1,7 @@
 <div class="border-end bg-white" id="sidebar-wrapper">
     <div class="sidebar-heading border-bottom pt-5 text-center">
         <img class="scpiLogo" src="/img/whitelogo.png">
-        <p class="portal pt-4">ADMINISTRATOR PORTAL</p>
+        <p class="portal pt-4">HOTEL OPERATION SOLLUTION SYSTEM</p>
     </div>
     <div class="list-group list-group-flush recruiterLink">
         <a class="list-group-item list-group-item-action list-group-item-light" href="/adminDashboard"><i class="bi bi-bar-chart-line-fill pe-3"></i> Dashboard</a>

@@ -102,6 +102,10 @@
                                     </div>
                                     <div class="row gap-0">
                                         <div class="col-3">
+                                            <label class="form-label">Email Address: </label>
+                                            <input required type="text" class="form-control shadow-sm bg-body rounded-0" id="userEmail" Name="userEmail">
+                                        </div>
+                                        <div class="col-3">
                                             <label class="form-label">Phone Number: </label>
                                             <input required type="text" class="form-control shadow-sm bg-body rounded-0" id="userPhoneNumber" Name="userPhoneNumber">
                                         </div>
@@ -111,7 +115,7 @@
                                         </div>
                                         <div class="col-2">
                                             <label class="form-label">Age:</label>
-                                            <input type="number" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge">
+                                            <input type="number" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge" readonly>
                                         </div>
                                     </div>
                                     <div class="row mt-4">

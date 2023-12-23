@@ -97,7 +97,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:15rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO ROOM AVAILABLE
                         </div>
@@ -245,7 +245,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:15rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -341,7 +341,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:15rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -437,7 +437,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:15rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -530,7 +530,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:15rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:21rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -615,7 +615,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSched' style='margin-top:1.5rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:1.5rem; color: #303030;'>
                         <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
                             NO CANCELLED RESERVATION
                         </div>
@@ -657,36 +657,28 @@ class Customer extends Controller
         // FETCH ACCOUNT PER USER
 
         // FETCH UPDATE ACCOUNT PER USER
-            public function updateUserAccount(Request $request){
-                if ($request->hasFile('userProfile')) {
-                    $filename = $request->file('userProfile');
-                    $imageName =   time().rand() . '.' .  $filename->getClientOriginalExtension();
-                    $path = $request->file('userProfile')->storeAs('userPhotos', $imageName, 'public');
-                    $imageData['userProfile'] = '/storage/'.$path;
-                        $update = userModel::find($request->userUniqueId);
-                        $update->photos=$imageData['userProfile'];
-                        $update->lastname=$request->input('userLastName');
-                        $update->firstname=$request->input('userFirstName');
-                        $update->middlename=$request->input('userMiddleName');
-                        $update->extention=$request->input('userExtention');
-                        $update->phoneNumber=$request->input('userPhoneNumber');
-                        $update->birthday=$request->input('userBirthday');
-                        $update->age=$request->input('userAge');
-                        $update->save();
-                        return response()->json(1);
-                }else{
-                        $update = userModel::find($request->userUniqueId);
-                        $update->lastname=$request->input('userLastName');
-                        $update->firstname=$request->input('userFirstName');
-                        $update->middlename=$request->input('userMiddleName');
-                        $update->extention=$request->input('userExtention');
-                        $update->phoneNumber=$request->input('userPhoneNumber');
-                        $update->birthday=$request->input('userBirthday');
-                        $update->age=$request->input('userAge');
-                        $update->save();
-                        return response()->json(1);
-                    }
+        public function updateUserAccount(Request $request){
+            $update = userModel::find($request->userUniqueId);
+            if ($request->hasFile('userProfile')) {
+                $filename = $request->file('userProfile');
+                $imageName = time() . rand() . '.' . $filename->getClientOriginalExtension();
+                $path = $request->file('userProfile')->storeAs('userPhotos', $imageName, 'public');
+                $update->photos = '/storage/' . $path;
             }
+
+            $update->lastname = $request->input('userLastName');
+            $update->firstname = $request->input('userFirstName');
+            $update->middlename = $request->input('userMiddleName');
+            $update->extention = $request->input('userExtention');
+            $update->email = $request->input('userEmail');
+            $update->phoneNumber = $request->input('userPhoneNumber');
+            $update->birthday = $request->input('userBirthday');
+            $update->age = $request->input('userAge');
+            $update->save();
+
+            return response()->json(1);
+        }
+
         // FETCH UPDATE ACCOUNT PER USER
     // FUNCTION
 }

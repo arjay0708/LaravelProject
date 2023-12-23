@@ -4,7 +4,7 @@
     border: 0;
     box-sizing: border-box;
     padding: 0;
-    font-family: "Roboto", sans-serif !important; 
+    font-family: "Roboto", sans-serif !important;
 }
 
 body{
@@ -14,7 +14,7 @@ body{
 .navbar {
     padding: 1rem 0 10px 0  !important;
     background-color: #fff !important;
-    position: fixed !important; 
+    position: fixed !important;
     z-index: 1;
     width: 100%;
 }
@@ -42,15 +42,15 @@ table tbody td{
 }
 
 #sidebar-wrapper{
-    height: 100%; 
+    height: 100%;
     background-color: #ffff !important;
-    width: 210px; 
-    position: fixed; 
+    width: 210px;
+    position: fixed;
     z-index: 1;
-    top: 0; 
+    top: 0;
     left: 0;
     padding-top: 5px;
-    border-right: 1px solid #DDE6ED !important;   
+    border-right: 1px solid #DDE6ED !important;
 }
 
 #page-content-wrapper{
@@ -90,7 +90,7 @@ table tbody td{
     width: 10px !important;
     background-color: none !important;
     width: 100px !important;
-    filter: brightness(70%);
+    filter: brightness(90%);
 }
 .portal {
     background: transparent;
@@ -99,15 +99,16 @@ table tbody td{
     letter-spacing: 1px;
     color: #000 !important;
     font-weight: bolder;
+    padding: 0 10px;
 }
 
 .recruiterLink .list-group-item {
     text-align: start !important;
-    width: 209  px; 
+    width: 209  px;
     letter-spacing: 1px;
     font-size: 12px;
     display: block !important;
-    padding: 20px 16px !important;
+    padding: 30px 16px !important;
     color: #000 !important;
     font-weight: 400;
     text-decoration: none;
@@ -132,8 +133,8 @@ table tbody td{
 }
 
 .mainBar .perIcons{
-    font-size:2rem; 
-    color:#000; 
+    font-size:2rem;
+    color:#000;
 }
 
 .mainBar, .form-control, .form-select, .form-label{
@@ -141,10 +142,10 @@ table tbody td{
 }
 
 .mainBar .card i{
-    font-size:1rem; 
-    background-color:#000; 
-    padding:10px; 
-    border:1px solid #000; 
+    font-size:1rem;
+    background-color:#000;
+    padding:10px;
+    border:1px solid #000;
     border-radius:50%;
     color: #F1F6F9 !important;
 }
@@ -162,13 +163,13 @@ table tbody td{
     background: #F1F6F9;
     transition: opacity 0.1s, visibility 1.5s;
     }
-    
+
     .loader--hidden {
     z-index: 10000000000000000000000000;
     opacity: 1  ;
     visibility: hidden;
     }
-    
+
     .loader::after {
     margin: -5rem 0 0 -12rem;
     content: "";
@@ -179,7 +180,7 @@ table tbody td{
     border-radius: 50%;
     animation: loading 1s ease infinite;
     }
-    
+
     @keyframes loading {
       from {
         transform: rotate(0turn);
@@ -188,28 +189,28 @@ table tbody td{
         transform: rotate(1turn);
       }
     }
-    
+
 
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
   }
-  
+
   /* Track */
   ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
+    box-shadow: inset 0 0 5px grey;
     border-radius: 5px;
   }
-   
+
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #000; 
+    background: #000;
     border-radius: 5px;
   }
-  
+
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #000; 
+    background: #000;
   }
 
 @media (max-width: 900px) {
