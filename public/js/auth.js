@@ -7,7 +7,7 @@ $(document).ready(function(){
 });
 
 // FUNCTION FOR PASSWORD ENABLE
-    function seePassword() {
+    function seePasswordUserRegistration() {
         var x = document.getElementById("userRegisterPassword");
         var a = document.getElementById("userRegisterConPassword");
         if (x.type === 'password' && a.type === 'password'){
@@ -22,7 +22,7 @@ $(document).ready(function(){
 // FUNCTION FOR PASSWORD ENABLE
 
 // FUNCTION FOR PASSWORD ENABLE
-    function seePassword2() {
+    function seePasswordUserLogin() {
         var x = document.getElementById("userLoginPassword");
         if (x.type === 'password'){
             x.type ="text";
@@ -32,6 +32,17 @@ $(document).ready(function(){
 
     }
 // FUNCTION FOR PASSWORD ENABLE
+
+// FUNCTION FOR PASSWORD ENABLE IN ADMIN LOGIN
+    function seePasswordAdminLogin() {
+        var x = document.getElementById("adminPassword");
+        if (x.type === 'password'){
+            x.type ="text";
+        }else{
+            x.type="password";
+        }
+    }
+// FUNCTION FOR PASSWORD ENABLE IN ADMIN LOGIN
 
 // SIGN UP FUNCTION
     $('#registrationForm').on( 'submit' , function(e){
@@ -101,7 +112,7 @@ $(document).ready(function(){
     });
 // SIGN UP FUNCTION
 
-// LOGIN FUNCTION
+// USER LOGIN FUNCTION
     $('#userLoginForm').on( 'submit' , function(e){
         e.preventDefault();
         var data = $('#userLoginForm').serialize();
@@ -112,31 +123,7 @@ $(document).ready(function(){
         data:data
         })
         .done(function(response) {
-            var parsed = JSON.parse(response);
             if(response == 1){
-                    $('#loginForm').trigger("reset");
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                          toast.addEventListener('mouseenter', Swal.stopTimer)
-                          toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        },
-                        didClose: () =>{
-                            window.location = "/adminDashboard";
-                        }
-                      })
-                      Toast.fire({
-                        icon: 'success',
-                        title: 'Signed in successfully',
-                        text: 'Welcome Admin',
-                      })
-            }
-            if(response == 2){
-                $('#loginForm').trigger("reset");
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
@@ -144,22 +131,22 @@ $(document).ready(function(){
                     timer: 2000,
                     timerProgressBar: true,
                     didOpen: (toast) => {
-                      toast.addEventListener('mouseenter', Swal.stopTimer)
-                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
                     },
                     didClose: () =>{
                         window.location = "/customerDashboard";
                     }
-                  })
-                  Toast.fire({
+                    })
+                    Toast.fire({
                     icon: 'success',
                     title: 'Signed in successfully',
                     text: 'Welcome Customer',
-                  })
+                    })
             }else if(response == 0){
                 Swal.fire(
                 'Sorry Login Failed',
-                'Wrong Username/Password',
+                'Wrong Email or Password',
                 'error'
                 )
             }else if(response == 3){
@@ -168,11 +155,64 @@ $(document).ready(function(){
                 'Your account is disable to access the A&S Application',
                 'error'
                 )
+            }else if(response == 2){
+                Swal.fire(
+                'Sorry Login Failed',
+                'Email verification required. Please check your inbox to verify it.',
+                'error'
+                )
             }
-            });
+            $('#userLoginForm')[0].reset()
+        });
     });
-// LOGIN FUNCTION
 
+    setTimeout(function() {
+        $('.alert.alert-success').hide();
+    }, 5000);
+// USER LOGIN FUNCTION
+
+// ADMIN LOGIN FUNCTION
+    $('#adminLoginForm').on( 'submit' , function(e){
+    e.preventDefault();
+    var data = $('#adminLoginForm').serialize();
+    $.ajax({
+        url:"/adminLoginFunction",
+        method:"POST",
+        dataType:"text",
+        data:data
+    })
+    .done(function(response) {
+        if(response == 1){
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                },
+                didClose: () =>{
+                    window.location = "/adminDashboard";
+                }
+                })
+                Toast.fire({
+                icon: 'success',
+                title: 'Signed in successfully',
+                text: 'Welcome Admin',
+                })
+        }else if(response == 0){
+            Swal.fire(
+            'Sorry Login Failed',
+            'Wrong Email or Password',
+            'error'
+            )
+        }
+        $('#adminLoginForm')[0].reset()
+    });
+    });
+// ADMIN LOGIN FUNCTION
 
 // LISTENER
     var sideButtons = document.querySelectorAll('.bottomLink');

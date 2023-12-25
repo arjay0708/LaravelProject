@@ -14,11 +14,14 @@ use App\Http\Controllers\Customer;
 // AUTHENTICATION
     Route::get('/login', [Authentication::class,'login'])->name('login');
     Route::get('/registration', [Authentication::class,'registration'])->name('registration');
+    Route::get('/adminLogin', [Authentication::class,'adminLogin'])->name('adminLogin');
 
 
-    Route::post('registrationFunction', [Authentication::class,'registrationFunction'])->name('registrationFunction');
-    Route::post('userLoginFunction', [Authentication::class,'userLoginFunction'])->name('userLoginFunction');
+    Route::post('/registrationFunction', [Authentication::class,'registrationFunction'])->name('registrationFunction');
+    Route::post('/userLoginFunction', [Authentication::class,'userLoginFunction'])->name('userLoginFunction');
+    Route::post('/adminLoginFunction', [Authentication::class,'adminLoginFunction'])->name('adminLoginFunction');
     Route::get('/logoutFunction', [Authentication::class,'logoutFunction'])->name('logoutFunction');
+    Route::get('/userVerify/{token}', [Authentication::class, 'userVerify'])->name('userVerify'); 
 // AUTHENTICATION
 
 // ADMIN DASHBOARD

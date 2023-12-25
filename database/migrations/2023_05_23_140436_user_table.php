@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('is_active');
             $table->integer('is_admin');
+            $table->tinyInteger('email_verified')->default(0);
             $table->timestamps();
         });
     }

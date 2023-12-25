@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use App\Models\userModel;
+use App\Models\userVerify;
+use App\Mail\userVerifyMail;
+use Illuminate\Support\Str;
 use Auth;
 use Session;
+
 
 class Authentication extends Controller
 {
@@ -23,13 +28,17 @@ class Authentication extends Controller
         public function registration(){
             return view('registration');
         }
+
+        public function adminLogin(){
+            return view('adminLogin');
+        }
     // ROUTING
 
     // FUNCTION FOR REGISTRATION
         public function registrationFunction(Request $request){
             $existingEmail = userModel::select('email')->where('email','=',$request->email)->get();
             if($existingEmail->isNotEmpty()){
-                return response()->json(2); // CHOOSE ANOTHER EMAIL
+                return response()->json(2); 
             }else{
                 $registration = userModel::create([
                     'photos' => '/storage/userPhotos/defaultImage.png',
@@ -37,45 +46,94 @@ class Authentication extends Controller
                     'password' => Hash::make($request->password),
                     'is_active' => 1,
                     'is_admin' => 0,
+                    'email_verified' => 0,
                 ]);
-                return response()->json($registration ? 1 : 0);
+
+                $token = Str::random(64);
+
+                userVerify::create([
+                    'user_id' => $registration->user_id, 
+                    'token' => $token
+                ]);
+
+                $email = $request->email;
+                Mail::send('layouts.emailVerificationEmail', ['token' => $token], function($message) use ($email) {
+                    $message->to($email);
+                    $message->subject('Verify your Email');
+                });
+
+                return response()->json(1);
             }
         }
 
     // FUNCTION FOR REGISTRATION
 
-    // FUNCTION FOR LOGIN
+    // EMAIL VERIFICATION
+        public function userVerify($token)
+        {
+            $verifyUser = userVerify::where('token', $token)->first();
+    
+            if(!is_null($verifyUser) ){
+                $user = $verifyUser->user_id;
+                userModel::where([['user_id', '=', $user]])
+                ->update(['email_verified' => 1]);
+                return redirect()->to('login')->with('message', 'Email verified successfully!');
+            }
+    
+        }
+    // EMAIL VERIFICATION
+
+    // FUNCTION FOR USER LOGIN
         protected function userCredentials(Request $request){
             return [
-                'email' => request()->{$this->userEmail()},
+                'email' => request()->userEmail,
                 'password' => request()->userLoginPassword,
             ];
-        }
-
-        protected function userEmail(){
-            return 'userEmail';
         }
 
         public function userLoginFunction(Request $request){
             if(auth()->guard('userModel')->attempt($this->userCredentials($request))){
                 if(auth()->guard('userModel')->user()->is_active != 0 ){
-                    if(auth()->guard('userModel')->user()->is_admin == 1){
-                        $request->session()->regenerate();
-                        return response()->json(1);
+                    if(auth()->guard('userModel')->user()->is_admin !== 1){
+                        if(auth()->guard('userModel')->user()->email_verified == 1){
+                            $request->session()->regenerate();
+                            return response()->json(1);
+                        }else{
+                            return response()->json(2); // NOT VERIFIED EMAIL
+                        }   
                     }else{
-                        $request->session()->regenerate();
-                        return response()->json(2);
+                        return response()->json(0);  // IS ADMIN
                     }
                 }else{
-                    // INACTIVE ACCOUNT
-                    return response()->json(3);
+                    return response()->json(3);  // INACTIVE ACCOUNT
                 }
             }else{
-                // WRONG CREDENTIALS
-                return response()->json(0);
+                return response()->json(0); // WRONG CREDENTIALS
             }
         }
-    // FUNCTION FOR LOGIN
+    // FUNCTION FOR USER LOGIN
+
+    // FUNCTION FOR ADMIN LOGIN
+        protected function adminCredentials(Request $request){
+            return [
+                'email' => request()->adminEmail,
+                'password' => request()->adminPassword,
+            ];
+        }
+
+        public function adminLoginFunction(Request $request){
+            if(auth()->guard('userModel')->attempt($this->adminCredentials($request))){
+                if(auth()->guard('userModel')->user()->is_admin === 1){
+                    $request->session()->regenerate();
+                    return response()->json(1);
+                }else{
+                    return response()->json(0);  // NOT ADMIN
+                }
+            }else{
+                return response()->json(0); // WRONG CREDENTIALS
+            }
+        }
+    // FUNCTION FOR ADMIN LOGIN
 
     // LOGOUT FUNCTION
         public function logoutFunction(){
@@ -88,4 +146,5 @@ class Authentication extends Controller
             }
         }
     // LOGOUT FUNCTION
+
 }

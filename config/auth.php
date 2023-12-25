@@ -18,6 +18,11 @@ return [
             'provider' => 'userModel',
         ],
 
+        'userVerify' => [
+            'driver' => 'session',
+            'provider' => 'userVerify',
+        ],
+
         'roomModel' => [
             'driver' => 'session',
             'provider' => 'roomModel',
@@ -49,6 +54,11 @@ return [
         'userModel' => [
             'driver' => 'eloquent',
             'model' => App\Models\userModel::class,
+        ],
+
+        'userVerify' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\userVerify::class,
         ],
 
         'roomModel' => [

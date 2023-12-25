@@ -434,6 +434,7 @@
 											<li><a href="#">Hotels</a></li>
 											<li><a href="#">Customer Care</a></li>
 											<li><a href="#">Contact Us</a></li>
+											<li><a href="/adminLogin">Administrator</a></li>
 										</ul>
 									</div>
 									<div class="col-md-3">

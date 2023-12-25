@@ -8,7 +8,7 @@
     <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
     @include('cdn')
-    <title>Harbor View</title>
+    <title>HOSS</title>
 </head>
 <body>
         {{-- CONTENT --}}
@@ -26,19 +26,19 @@
                         <form name="registrationForm" id="registrationForm">
                             @csrf
                             <div class="mb-3">
-                                <input type="email" class="form-control rounded-pill" required id="userRegisterEmail" name="userRegisterEmail" placeholder="Email">
+                                <input type="email" class="form-control rounded" required id="userRegisterEmail" name="userRegisterEmail" placeholder="Email">
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control rounded-pill" required id="userRegisterPassword" name="userRegisterPassword" placeholder="Password">
+                                <input type="password" class="form-control rounded" required id="userRegisterPassword" name="userRegisterPassword" placeholder="Password">
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control rounded-pill" required id="userRegisterConPassword" name="userRegisterConPassword" placeholder="Confirm Password">
+                                <input type="password" class="form-control rounded" required id="userRegisterConPassword" name="userRegisterConPassword" placeholder="Confirm Password">
                             </div>
                             <div class="mb-3 checkBox ms-1">
-                                <input type="checkbox" class="form-check-input ms-1" onclick="seePassword()">
+                                <input type="checkbox" class="form-check-input ms-1" onclick="seePasswordUserRegistration()">
                                 <label class="form-check-label ms-4">Show Password</label>
                             </div>
-                                <button type="submit" class="btn rounded-pill">SUBMIT</button>
+                                <button type="submit" class="btn rounded">SUBMIT</button>
                             <ul class="navbar-nav text-center">
                                 <li class="nav-item"><a href="#" class="nav-link bottomLink">Already Have an Account?</a></li>
                             </ul>
@@ -54,8 +54,13 @@
                     <div class="container mt-5 pt-5">
                         <a class='homeButton' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
                         <img class="border-0 logo" src="{{ URL('/img/whitelogo.png')}}">
-                        <p class="title mt-lg-3">HARBOR VIEW RESORT</p>
+                        <p class="title mt-lg-3">HOTEL OPERATION SOLUTION SYSTEM</p>
                         <form name="userLoginForm" id="userLoginForm">
+                            @if(session('message'))
+                                <div class="alert alert-success">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Email" required>
                                 <label for="floatingInput" class="text-muted">Email</label>
@@ -65,13 +70,13 @@
                                 <label for="floatingInput" class="text-muted">Password</label>
                             </div>
                             <div class="mb-3 checkBox ms-4">
-                                <input type="checkbox" class="form-check-input" onclick="seePassword2()">
+                                <input type="checkbox" class="form-check-input" onclick="seePasswordUserLogin()">
                                 <label class="form-check-label">Show Password</label>
                             </div>
                             <ul class="navbar-nav text-center">
                                 <li class="nav-item"><a href="/forgotPasswordRoutes" class="nav-link">Forgot Password?</a></li>
                             </ul>
-                                <button type="submit" id="appLoginBtn" name="appLoginBtn" class="btn rounded-pill">LOGIN</button>
+                                <button type="submit" id="appLoginBtn" name="appLoginBtn" class="btn rounded">LOGIN</button>
                             <ul class="navbar-nav text-center">
                                 <li class="nav-item"><a href="#" class="nav-link bottomLink">Create Your Account</a></li>
                             </ul>

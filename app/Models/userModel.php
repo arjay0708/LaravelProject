@@ -30,7 +30,8 @@ class userModel extends Authenticatable
         'age',
         'password',
         'is_active',
-        'is_admin'
+        'is_admin',        
+        'email_verified'
     ];
     protected $hidden = [
         'token',
