@@ -36,14 +36,21 @@ class Authentication extends Controller
 
     // FUNCTION FOR REGISTRATION
         public function registrationFunction(Request $request){
-            $existingEmail = userModel::select('email')->where('email','=',$request->email)->get();
+            $existingEmail = userModel::select('email')->where('email','=',$request->userEmailAddress)->get();
             if($existingEmail->isNotEmpty()){
                 return response()->json(2); 
             }else{
                 $registration = userModel::create([
-                    'photos' => '/storage/userPhotos/defaultImage.png',
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
+                    'photos' => '/storage/userPhotos/defaultImage.jpg',
+                    'lastname' => $request->userLastName,
+                    'firstname' => $request->userFirstName,
+                    'middlename' => $request->userMiddleName,
+                    'extention' => $request->userExtension,
+                    'email' => $request->userEmailAddress,
+                    'phoneNumber' => $request->userPhone,
+                    'birthday' => $request->userBirthdate,
+                    'age' => $request->userAge,
+                    'password' => Hash::make($request->userPassword),
                     'is_active' => 1,
                     'is_admin' => 0,
                     'email_verified' => 0,
@@ -56,7 +63,7 @@ class Authentication extends Controller
                     'token' => $token
                 ]);
 
-                $email = $request->email;
+                $email = $request->userEmailAddress;
                 Mail::send('layouts.emailVerificationEmail', ['token' => $token], function($message) use ($email) {
                     $message->to($email);
                     $message->subject('Verify your Email');

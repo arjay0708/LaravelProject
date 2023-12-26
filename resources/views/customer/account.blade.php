@@ -92,10 +92,13 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Extention: </label>
-                                                <select class="form-select shadow-sm rounded-0" aria-label="Default select example" id="userExtention" name="userExtention">
-                                                    <option value="" selected>None</option>
-                                                    <option value="Jr.">Jr.</option>
-                                                    <option value="Sr.">Sr.</option>
+                                                <select class="form-select shadow-sm rounded-0" id="userExtension" name="userExtension" required>
+                                                    <option value="None">None</option>
+                                                    <option value="Jr.">Junior.</option>
+                                                    <option value="Sr.">Senior.</option>
+                                                    <option value="II">The Second.</option>
+                                                    <option value="III">The Third.</option>
+                                                    <option value="IV">The Fourth.</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -103,7 +106,7 @@
                                     <div class="row gap-0">
                                         <div class="col-3">
                                             <label class="form-label">Email Address: </label>
-                                            <input required type="text" class="form-control shadow-sm bg-body rounded-0" id="userEmail" Name="userEmail">
+                                            <input required type="text" class="form-control shadow-sm bg-body rounded-0" id="userEmail" Name="userEmail" readonly>
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label">Phone Number: </label>
@@ -115,7 +118,7 @@
                                         </div>
                                         <div class="col-2">
                                             <label class="form-label">Age:</label>
-                                            <input type="number" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge" readonly>
+                                            <input type="text" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge" readonly>
                                         </div>
                                     </div>
                                     <div class="row mt-4">

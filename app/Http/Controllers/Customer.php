@@ -669,7 +669,7 @@ class Customer extends Controller
             $update->lastname = $request->input('userLastName');
             $update->firstname = $request->input('userFirstName');
             $update->middlename = $request->input('userMiddleName');
-            $update->extention = $request->input('userExtention');
+            $update->extention = $request->input('userExtension');
             $update->email = $request->input('userEmail');
             $update->phoneNumber = $request->input('userPhoneNumber');
             $update->birthday = $request->input('userBirthday');

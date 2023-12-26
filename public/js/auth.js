@@ -8,8 +8,8 @@ $(document).ready(function(){
 
 // FUNCTION FOR PASSWORD ENABLE
     function seePasswordUserRegistration() {
-        var x = document.getElementById("userRegisterPassword");
-        var a = document.getElementById("userRegisterConPassword");
+        var x = document.getElementById("userPassword");
+        var a = document.getElementById("userConfirmPassword");
         if (x.type === 'password' && a.type === 'password'){
             x.type ="text";
             a.type ="text";
@@ -47,68 +47,110 @@ $(document).ready(function(){
 // SIGN UP FUNCTION
     $('#registrationForm').on( 'submit' , function(e){
         e.preventDefault();
-        var email = $('#userRegisterEmail').val();
-        var password = $('#userRegisterPassword').val();
-        var confirmPassword = $('#userRegisterConPassword').val();
-        if(password < 6 || password > 20){
-            Swal.fire(
-                'PASSWORD FAILED',
-                'The password must be longer than 6 characters and less than 20 characters',
-                'error'
-            )
-        }
-        else if(password != confirmPassword){
-            Swal.fire(
-                'PASSWORD MISMATCH',
-                'Please, check your password',
-                'error'
-            )
-        }else if(password === 'password'){
-            Swal.fire(
-                'PASSWORD FAILED',
-                'The password can not be set to password',
-                'error'
-            )
-        }else{
-            $.ajax({
-                url:"/registrationFunction",
-                method:"POST",
-                dataType:"text",
-                data:{email:email,password:password},
-                success: function(response) {
-                if(response == 1){
-                Swal.fire({
-                icon: 'success',
-                title: 'REGISTER SUCCESSFULLY',
-                showConfirmButton: false,
-                timer: 1500
-                }).then((result) => {
-                if (result) {
-                    $("#registrationForm").trigger("reset");
-                    window.location.href = "/login";
-                }
-                })
-                }
-                else if(response == 0){
-                    Swal.fire(
-                    'SORRY REGISTRATION FAILED',
-                    'Sorry, please re-enter your credentials',
-                    'error'
-                    )
-                }
-                else if(response == 2){
-                    Swal.fire(
-                    'EMAIL ADDRESS NOT AVAILABLE',
-                    'Sorry, please choose another valid email',
-                    'error'
-                    )
-                }
-                },
-                error:function(er){
-                console.log(er)
-                }
+        async function showTermsAndConditions() {
+            const { value: accept } = await Swal.fire({
+              title: 'Are you sure?',
+              text: "Do you want to continue to register your account?",
+              icon: 'question',
+              input: "checkbox",
+              inputValue: 1,
+              inputPlaceholder: `
+              I read the terms and condition before register my account.
+              `,
+              confirmButtonText: `
+                Continue;
+              `,
+              inputValidator: (result) => {
+                return !result && "You need to read the terms and condition before register your account";
+              }
             });
+            if (accept) {
+                const firstName = $('#userFirstName').val();
+                const middleName = $('#userMiddleName').val();
+                const lastName = $('#userLastName').val();
+                const age = $('#userAge').val();
+                const password = $('#userRegisterPassword').val();
+                const confirmPassword = $('#userRegisterConPassword').val();
+                const data = $('#registrationForm').serialize();
+                var regex = /[0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+                if(regex.test(firstName) || regex.test(middleName) || regex.test(lastName)) {
+                    Swal.fire(
+                        'Register Failed',
+                        'First name, middle name, and last name must not contain digits or special characters.',
+                        'error'
+                    );
+                }else if (firstName.length < 3 || middleName.length < 3 || lastName.length < 3) {
+                    Swal.fire(
+                        'Register Failed',
+                        'The first name, middle name, and last name must be at least 3 characters long.',
+                        'error'
+                    );
+                }else if (age < 18) {
+                    Swal.fire(
+                        'Register Failed',
+                        'Age restriction: No minors allowed at the hotel.',
+                        'error'
+                    );
+                }else if(password < 6 || password > 20){
+                    Swal.fire(
+                        'PASSWORD FAILED',
+                        'The password must be longer than 6 characters and less than 20 characters',
+                        'error'
+                    )
+                }else if(password != confirmPassword){
+                    Swal.fire(
+                        'PASSWORD MISMATCH',
+                        'Please, check your password',
+                        'error'
+                    )
+                }else if(password === 'password'){
+                    Swal.fire(
+                        'PASSWORD FAILED',
+                        'The password can not be set to password',
+                        'error'
+                    )
+                }else{
+                    $.ajax({
+                        url:"/registrationFunction",
+                        method:"POST",
+                        dataType:"text",
+                        data:data,
+                        success: function(response) {
+                        if(response == 1){
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'REGISTER SUCCESSFULLY',
+                        showConfirmButton: false,
+                        timer: 1500
+                        }).then((result) => {
+                        if (result) {
+                            $("#registrationForm").trigger("reset");
+                        }
+                        })
+                        }
+                        else if(response == 0){
+                            Swal.fire(
+                            'SORRY REGISTRATION FAILED',
+                            'Sorry, please re-enter your credentials',
+                            'error'
+                            )
+                        }
+                        else if(response == 2){
+                            Swal.fire(
+                            'EMAIL ADDRESS NOT AVAILABLE',
+                            'Sorry, please choose another valid email',
+                            'error'
+                            )
+                        }
+                        },
+                        error:function(er){
+                        console.log(er)
+                        }
+                    });
+                }
+            }
         }
+        showTermsAndConditions();
     });
 // SIGN UP FUNCTION
 
@@ -214,9 +256,35 @@ $(document).ready(function(){
     });
 // ADMIN LOGIN FUNCTION
 
-// LISTENER
-    var sideButtons = document.querySelectorAll('.bottomLink');
-        sideButtons.forEach(btn => btn.addEventListener('click', () => {
-        document.body.classList.toggle('signup');
-    }))
-// LISTENER
+// GENERATE AGE
+function calculateAge() {
+    var birthDate = new Date($('#userBirthdate').val());
+    var birthDateDay = birthDate.getDate();
+    var birthDateMonth = birthDate.getMonth();
+    var birthDateYear = birthDate.getFullYear();
+
+    var todayDate = new Date();
+    var todayDay = todayDate.getDate();
+    var todayMonth = todayDate.getMonth();
+    var todayYear = todayDate.getFullYear();
+
+    var calculateAge = 0;
+
+    if (todayMonth > birthDateMonth || (todayMonth === birthDateMonth && todayDay >= birthDateDay)) {
+        calculateAge = todayYear - birthDateYear;
+    } else {
+        calculateAge = todayYear - birthDateYear - 1;
+    }
+
+    var outputValue = calculateAge;
+    document.getElementById("userAge").value = calculateAge;
+}
+
+// GENERATE AGE
+
+// TRANSITION FOR SWITCHING PAGE
+    // var sideButtons = document.querySelectorAll('.bottomLink');
+    //     sideButtons.forEach(btn => btn.addEventListener('click', () => {
+    //     document.body.classList.toggle('signup');
+    // }))
+// TRANSITION FOR SWITCHING PAGE

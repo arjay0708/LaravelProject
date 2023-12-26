@@ -49,7 +49,7 @@ $(document).ready(function(){
     function cancelReservation(id){
         Swal.fire({
             title: 'Are you sure?',
-            text: "Do you want to CANCEL this RESERVATION?",
+            text: "Do you want to CANCELs this RESERVATION?",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -57,23 +57,44 @@ $(document).ready(function(){
             confirmButtonText: 'Yes, Cancel it'
             }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                url: '/cancelReservation',
-                type: 'GET',
-                dataType: 'json',
-                data: {reservationID: id},
-            });
-            Swal.fire({
-                title: 'CANCEL SUCCESSFULLY',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000,
-            }).then((result) => {
-            if (result) {
+                async function cancelReservation() {
+                    const { value: accept } = await Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Do you want to continue to cancel this reservation?",
+                        icon: 'question',
+                        input: "checkbox",
+                        inputValue: 1,
+                        inputPlaceholder: `
+                        I read the <a href="#">notes and remarks</a> before cancelling my booking.
+                        `,
+                        confirmButtonText: `
+                        Continue;
+                        `,
+                        inputValidator: (result) => {
+                            return !result && "You need to read the notes and remarks before cancelling your reservation";
+                        }
+                    });
+                    if (accept) {
+                        $.ajax({
+                            url: '/cancelReservation',
+                            type: 'GET',
+                            dataType: 'json',
+                            data: {reservationID: id},
+                        });
+                        Swal.fire({
+                            title: 'CANCEL SUCCESSFULLY',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        }).then((result) => {
+                        if (result) {
+                            showTotalRoom();
+                        }
+                    });
+                    }
+                }
                 showBookingPerUser();
                 showDeclineBookingPerUser();
-            }
-            });
             }
         });
     }

@@ -11,80 +11,44 @@
     <title>HOSS</title>
 </head>
 <body>
-        {{-- CONTENT --}}
-            <div class="back-image">
-                <img src="./img/img1.png" alt="background image">
-            </div>
-
-        {{-- FOR REGISTRATION --}}
-            <section class="left">
-                <section class="main register">
-                    <div class="container mt-5 pt-5">
-                        <a class='homeButton2' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
-                        <img class="border-0 logo" src="{{ URL('/img/whitelogo.png')}}">
-                        <p class="title mt-lg-3">CREATE ACCOUNT</p>
-                        <form name="registrationForm" id="registrationForm">
-                            @csrf
-                            <div class="mb-3">
-                                <input type="email" class="form-control rounded" required id="userRegisterEmail" name="userRegisterEmail" placeholder="Email">
+    {{-- CONTENT --}}
+        <div class="back-image"><img src="./img/hotel.jpg" alt="background image"></div>
+        <section class="left"></section>
+        <section class="rightLogin">
+            <section class="main login">
+                <div class="container mt-5 pt-5">
+                    <a class='homeButton' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
+                    <img class="border-0 logo" src="{{ URL('/img/whitelogo.png')}}">
+                    <p class="title mt-lg-3">HOTEL OPERATION SOLUTION SYSTEM</p>
+                    <form name="userLoginForm" id="userLoginForm">
+                        @if(session('message'))
+                            <div class="alert alert-success">
+                                {{ session('message') }}
                             </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control rounded" required id="userRegisterPassword" name="userRegisterPassword" placeholder="Password">
-                            </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control rounded" required id="userRegisterConPassword" name="userRegisterConPassword" placeholder="Confirm Password">
-                            </div>
-                            <div class="mb-3 checkBox ms-1">
-                                <input type="checkbox" class="form-check-input ms-1" onclick="seePasswordUserRegistration()">
-                                <label class="form-check-label ms-4">Show Password</label>
-                            </div>
-                                <button type="submit" class="btn rounded">SUBMIT</button>
-                            <ul class="navbar-nav text-center">
-                                <li class="nav-item"><a href="#" class="nav-link bottomLink">Already Have an Account?</a></li>
-                            </ul>
-                        </form>
-                    </div>
-                </section>
+                        @endif
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Email" required>
+                            <label for="floatingInput" class="text-muted">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" name="userLoginPassword" id="userLoginPassword" placeholder="Password" required>
+                            <label for="floatingInput" class="text-muted">Password</label>
+                        </div>
+                        <div class="mb-3 checkBox ms-4">
+                            <input type="checkbox" class="form-check-input" onclick="seePasswordUserLogin()">
+                            <label class="form-check-label">Show Password</label>
+                        </div>
+                        <ul class="navbar-nav text-center">
+                            <li class="nav-item"><a href="/forgotPasswordRoutes" class="nav-link">Forgot Password?</a></li>
+                        </ul>
+                            <button type="submit" id="appLoginBtn" name="appLoginBtn" class="btn rounded">LOGIN</button>
+                        <ul class="navbar-nav text-center">
+                            <li class="nav-item"><a href="/registration" class="nav-link bottomLink">Create Your Account</a></li>
+                        </ul>
+                    </form>
+                </div>
             </section>
-        {{-- FOR REGISTRATION --}}
-
-        {{-- FOR LOGIN --}}
-            <section class="right">
-                <section class="main login">
-                    <div class="container mt-5 pt-5">
-                        <a class='homeButton' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
-                        <img class="border-0 logo" src="{{ URL('/img/whitelogo.png')}}">
-                        <p class="title mt-lg-3">HOTEL OPERATION SOLUTION SYSTEM</p>
-                        <form name="userLoginForm" id="userLoginForm">
-                            @if(session('message'))
-                                <div class="alert alert-success">
-                                    {{ session('message') }}
-                                </div>
-                            @endif
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" name="userEmail" id="userEmail" placeholder="Email" required>
-                                <label for="floatingInput" class="text-muted">Email</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="password" class="form-control" name="userLoginPassword" id="userLoginPassword" placeholder="Password" required>
-                                <label for="floatingInput" class="text-muted">Password</label>
-                            </div>
-                            <div class="mb-3 checkBox ms-4">
-                                <input type="checkbox" class="form-check-input" onclick="seePasswordUserLogin()">
-                                <label class="form-check-label">Show Password</label>
-                            </div>
-                            <ul class="navbar-nav text-center">
-                                <li class="nav-item"><a href="/forgotPasswordRoutes" class="nav-link">Forgot Password?</a></li>
-                            </ul>
-                                <button type="submit" id="appLoginBtn" name="appLoginBtn" class="btn rounded">LOGIN</button>
-                            <ul class="navbar-nav text-center">
-                                <li class="nav-item"><a href="#" class="nav-link bottomLink">Create Your Account</a></li>
-                            </ul>
-                        </form>
-                    </div>
-                </section>
-            </section>
-        {{-- FOR LOGIN --}}
+        </section>
     {{-- END OF CONTENT --}}
 
     {{-- JS --}}

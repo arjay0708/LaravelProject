@@ -89,17 +89,12 @@ $(document).ready(function(){
             $('#userLastName').val(response.lastname)
             $('#userFirstName').val(response.firstname)
             $('#userMiddleName').val(response.middlename)
-            $('#userExtention').val(response.extention)
+            $('#userExtension').val(response.extention)
             $('#userBirthday').val(response.birthday)
             $('#userEmail').val(response.email)
             $('#userPhoneNumber').val(response.phoneNumber)
-            $('#userAge').val(response.age)
+            $('#userAge').val(response.age);
             $('#updateEmployeeEmail').val(response.email)
-            if(response.extention != ''){
-                $('#userExtention').val(response.extention)
-            }else{
-                $('#userExtention').val
-            }
             if(response.photos != ''){
                 $('#userProfile').attr("src",response.photos)
             }else{
