@@ -96,8 +96,18 @@ $(document).ready(function(){
     $(document).ready(function () {
         $('#addRoomDetailsForm').on( 'submit' , function(e){
             e.preventDefault();
-            var currentForm = $('#addRoomDetailsForm')[0];
-            var data = new FormData(currentForm);
+            const currentForm = $('#addRoomDetailsForm')[0];
+            const data = new FormData(currentForm);
+            const extension = /(\.jpg|\.jpeg|\.png)$/i;
+            const fileInput = $('#roomPhoto');
+            var fileName = fileInput.val();
+            if (!extension.test(fileName)) {
+                Swal.fire(
+                    'Added Failed',
+                    'Sorry, the file is not supported',
+                    'error'
+                );
+            }else{
                 $.ajax({
                     url: "/addRoom",
                     type:"POST",
@@ -135,6 +145,7 @@ $(document).ready(function(){
                         console.log(error)
                     }
                 })
+            }
         });
     });
 // ADD ROOM

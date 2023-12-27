@@ -108,48 +108,49 @@ class Customer extends Controller
         // SHOW ROOM FOR CUSTOMER
 
         // BOOK RESERVATION
-            public function bookReservation(Request $request){
-                $data = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id], ['room_id', '=', $request->roomId],
-                ['start_dataTime', '=', $request->checkInDateTime],['end_dateTime', '=', $request->checkOutDateTime]])->get();
-                if($data->isNotEmpty()){
-                    return response()->json(6);
-                    exit();
-                }else{
-                    date_default_timezone_set('Asia/Manila');
-                    $currentDateTime = date('m-d-Y h:i A');
-                    $checkInDateTime = date('m-d-Y h:i A',strtotime($request->checkInDateTime));
-                    $checkOutDateTime = date('m-d-Y h:i A',strtotime($request->checkOutDateTime));
-                    $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->get();
-                    foreach($data as $certainData){
-                        if($certainData->lastname == "" && $certainData->firstname == ""){
-                            echo 5;
-                            exit();
-                        }else{
-                            if($currentDateTime > $checkInDateTime){
-                                return response()->json(4);
-                                exit();
-                            }else if($checkInDateTime == $checkOutDateTime){
-                                return response()->json(2);
-                                exit();
-                            }else if($checkOutDateTime < $checkInDateTime ){
-                                return response()->json(3);
-                                exit();
-                            }else{
-                                $bookRoom = reservationModel::create([
-                                    'user_id' =>  auth()->guard('userModel')->user()->user_id,
-                                    'room_id' => $request->roomId,
-                                    'start_dataTime' => $request->checkInDateTime,
-                                    'end_dateTime' => $request->checkOutDateTime,
-                                    'status' => 'Pending',
-                                    'is_archived' => 0
-                                    ]);
-                                    return response()->json($bookRoom ? 1 : 0);
-                                exit();
-                            }
-                        }
-                    }
-                }
+        public function bookReservation(Request $request) {
+            $user = auth()->guard('userModel')->user();
+            
+            if (empty($user->lastname) && empty($user->firstname)) {
+                return response()->json(5);
             }
+        
+            $existingReservation = reservationModel::where([
+                ['user_id', '=', $user->user_id],
+                ['room_id', '=', $request->roomId],
+                ['start_dataTime', '=', $request->checkInDateTime],
+                ['end_dateTime', '=', $request->checkOutDateTime]
+            ])->exists();
+        
+            if ($existingReservation) {
+                return response()->json(6);
+            }
+        
+            date_default_timezone_set('Asia/Manila');
+            $currentDateTime = date('m-d-Y h:i A');
+            $checkInDateTime = date('m-d-Y h:i A', strtotime($request->checkInDateTime));
+            $checkOutDateTime = date('m-d-Y h:i A', strtotime($request->checkOutDateTime));
+        
+            if ($currentDateTime > $checkInDateTime) {
+                return response()->json(4);
+            } elseif ($checkInDateTime == $checkOutDateTime) {
+                return response()->json(2);
+            } elseif ($checkOutDateTime < $checkInDateTime) {
+                return response()->json(3);
+            }
+        
+            $bookRoom = reservationModel::create([
+                'user_id' => $user->user_id,
+                'room_id' => $request->roomId,
+                'start_dataTime' => $request->checkInDateTime,
+                'end_dateTime' => $request->checkOutDateTime,
+                'status' => 'Pending',
+                'is_archived' => 0
+            ]);
+        
+            return response()->json($bookRoom ? 1 : 0);
+        }
+        
         // BOOK RESERVATION
 
         // CANCEL RESERVATION

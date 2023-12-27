@@ -17,7 +17,7 @@ $(document).ready(function(){
                     url: "/logoutFunction",
                     success: function(response){
                         if(response == 1){
-                            window.location = "/login";
+                            window.location = "/";
                         }
                         else{
                             Swal.fire({

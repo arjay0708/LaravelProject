@@ -56,7 +56,7 @@
                                         <div class="col-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Image of Room</label>
-                                                <input required class="form-control shadow-sm bg-body rounded-0" type="file" name="roomPhoto" accept="image/png, image/jpg, image/jpeg, image/gif, image/svg">
+                                                <input required class="form-control shadow-sm bg-body rounded-0" type="file" id="roomPhoto" name="roomPhoto" accept="image/png, image/jpg, image/jpeg, image/gif, image/svg">
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Room Number:</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="roomNumber" name="roomNumber">
+                                                <input required class="form-control shadow-sm rounded-0" type="number"  id="roomNumber" name="roomNumber" placeholder="00#">
                                             </div>
                                         </div>
                                         <div class="col-2">
@@ -106,7 +106,7 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Price Per Hour</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="pricePerHour" name="pricePerHour">
+                                                <input required class="form-control shadow-sm rounded-0" type="number"  id="pricePerHour" name="pricePerHour">
                                             </div>
                                         </div>
                                     </div>

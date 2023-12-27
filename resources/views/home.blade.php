@@ -491,7 +491,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="copyright">
-                                <p><small>&copy; 2023 Harbor View Beach Resort <br> All Rights Reserved. <br>
+                                <p><small>&copy; 2023 Hoss <br> All Rights Reserved. <br>
                                         Designed by <a href="#" target="_blank">Vince & Reginald</a> <br> Block:
                                         <a href="http://unsplash.com/" target="_blank">BSIT 3</a></small></p>
                             </div>
@@ -503,10 +503,10 @@
                                     <ul class="link">
                                         <li><a href="#">About Us</a></li>
                                         <li><a href="#">Hotels</a></li>
-                                        <li><a href="/dataPrivacy">Data Privacy</li>
                                         <li><a href="#">Contact Us</a></li>
+                                        <li><a href="/dataPrivacy">Data Privacy</li>
+                                        <li><a href="/privacyPolicy">Terms / Policy</a></li>
                                         <li><a href="/adminLogin">Administrator</a></li>
-                                        <li><a href="/privacyPolicy">Terms & Policy</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-3">

@@ -41,58 +41,40 @@ $(document).ready(function(){
                         method:"POST",
                         dataType: "text",
                         data: {roomId: id, checkInDateTime:checkInDateTime, checkOutDateTime:checkOutDateTime},
-                        success:function(response){
-                            if(response == 1){
+                        success: function(response) {
+                            if (response == 1) {
                                 showTotalRoom();
                                 $("#bookReservationForm").trigger("reset");
-                                $('#reservationModal').modal('hide')
+                                $('#reservationModal').modal('hide');
                                 Swal.fire({
                                     position: 'center',
                                     icon: 'success',
-                                    title: 'RESERVATION HAS BEEN SUBMIT',
+                                    title: 'RESERVATION HAS BEEN SUBMITTED',
                                     showConfirmButton: false,
                                     timer: 1500
-                                })
-                            }else if(response == 0){
-                                Swal.fire(
-                                'Added Failed',
-                                'Sorry operation has not stored',
-                                'error'
-                                )
-                            }else if(response == 4){
-                                Swal.fire(
-                                'Invalid Check In',
-                                'Please check the date and time of the CHECK IN',
-                                'error'
-                                )
-                            }else if(response == 3){
-                                Swal.fire(
-                                'Invalid Check Out',
-                                'Please check the date and time of the CHECK OUT',
-                                'error'
-                                )
-                            }else if(response == 2){
-                                Swal.fire(
-                                'Invalid Date and Time',
-                                'The date of both CHECK IN and CHECK OUT must not be the same',
-                                'error'
-                                )
-                            }else if(response == 6){
-                                Swal.fire(
-                                'BOOK FAILED',
-                                'You are already reserved with same date and time',
-                                'error'
-                                )
-                            }
-                            else if(response == 5){
+                                });
+                            } else if (response == 0) {
+                                Swal.fire('Addition Failed', 'Sorry, the operation has not been stored', 'error');
+                            } else if (response == 4) {
+                                Swal.fire('Invalid Check In', 'Please check the date and time of the CHECK IN', 'error');
+                            } else if (response == 3) {
+                                Swal.fire('Invalid Check Out', 'Please check the date and time of the CHECK OUT', 'error');
+                            } else if (response == 2) {
+                                Swal.fire('Invalid Date and Time', 'The date of both CHECK IN and CHECK OUT must not be the same', 'error');
+                            } else if (response == 6) {
+                                Swal.fire('BOOK FAILED', 'You are already reserved with the same date and time', 'error');
+                            } else if (response == 5) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'BOOK FAILED',
                                     text: 'Please complete all of your information.',
                                     footer: '<a href="/customerAccount">DIRECT ME TO MANAGE ACCOUNT</a>'
-                                })
+                                });
+                            } else {
+                                Swal.fire('Unknown Response', 'An unexpected response was received', 'error');
                             }
                         },
+                        
                         error:function(error){
                             console.log(error)
                         }

@@ -55,13 +55,13 @@ $(document).ready(function(){
               input: "checkbox",
               inputValue: 1,
               inputPlaceholder: `
-              I read the terms and condition before register my account.
+              I read the <a href="privacyPolicy">terms and condition</a> before register my account.
               `,
               confirmButtonText: `
                 Continue;
               `,
               inputValidator: (result) => {
-                return !result && "You need to read the terms and condition before register your account";
+                return !result && "You need to read the <a href='privacyPolicy'>terms and condition</a> before register your account";
               }
             });
             if (accept) {

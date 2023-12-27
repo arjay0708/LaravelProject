@@ -57,7 +57,7 @@ $(document).ready(function(){
             confirmButtonText: 'Yes, Cancel it'
             }).then((result) => {
             if (result.isConfirmed) {
-                async function cancelReservation() {
+                async function readNotesAndRemarks() {
                     const { value: accept } = await Swal.fire({
                         title: 'Are you sure?',
                         text: "Do you want to continue to cancel this reservation?",
@@ -88,11 +88,12 @@ $(document).ready(function(){
                             timer: 1000,
                         }).then((result) => {
                         if (result) {
-                            showTotalRoom();
+                            showBookingPerUser();
                         }
                     });
                     }
                 }
+                readNotesAndRemarks();
                 showBookingPerUser();
                 showDeclineBookingPerUser();
             }

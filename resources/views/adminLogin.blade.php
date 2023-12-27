@@ -12,14 +12,10 @@
 </head>
 <body>
         {{-- CONTENT --}}
-            <div class="back-image">
-                <img src="./img/img1.png" alt="background image">
-            </div>
-
+            <div class="back-image"><img src="./img/hotel.jpg" alt="background image"></div>
             <section class="left"></section>
 
-        {{-- FOR LOGIN --}}
-            <section class="right">
+            <section class="rightLogin">
                 <section class="main login">
                     <div class="container mt-5 pt-5">
                         <a class='homeButton' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
@@ -51,8 +47,7 @@
                     </div>
                 </section>
             </section>
-        {{-- FOR LOGIN --}}
-    {{-- END OF CONTENT --}}
+        {{-- END OF CONTENT --}}
 
     {{-- JS --}}
         <script src="{{ asset('/js/auth.js') }}"></script>
