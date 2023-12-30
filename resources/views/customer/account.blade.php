@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="row mt-4">
                                         <div class="col-3 d-flex ms-auto">
-                                            <button type="submit" readonly class="btn btn-primary px-3 py-2 rounded-0">Save Changes</button>
+                                            <button type="submit" readonly class="btn btn-dark px-3 py-2 rounded-0">Save Changes</button>
                                         </div>
                                     </div>
                                 </form>

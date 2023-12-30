@@ -32,12 +32,12 @@
                                 <div class="col-4 px-2">
                                     <input type="text" class="form-control rounded" required id="userLastName" name="userLastName" placeholder="Last Name">
                                 </div>
- 
+
                             </div>
                             <div class="row mb-4 mx-3">
                                 <div class="col-4 px-2">
-                                <select class="form-select" id="userExtension" name="userExtension" required>
-                                    <option value="None" selected>Suffix</option>
+                                <select class="form-select" id="userExtension" name="userExtension">
+                                    <option value="" selected>Suffix</option>
                                     <option value="Jr.">Junior.</option>
                                     <option value="Sr.">Senior.</option>
                                     <option value="II">The Second.</option>

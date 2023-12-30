@@ -29,6 +29,9 @@ class Customer extends Controller
         public function customerDeclinedReservation(){
             return view('customer/declinedReservation');
         }
+        public function customerUnpaidReservation(){
+            return view('customer/unpaidReservation');
+        }
         public function customerCompleted(){
             return view('customer/complete');
         }
@@ -97,7 +100,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO ROOM AVAILABLE
                         </div>
@@ -108,49 +111,73 @@ class Customer extends Controller
         // SHOW ROOM FOR CUSTOMER
 
         // BOOK RESERVATION
-        public function bookReservation(Request $request) {
-            $user = auth()->guard('userModel')->user();
-            
-            if (empty($user->lastname) && empty($user->firstname)) {
-                return response()->json(5);
+            public function bookReservation(Request $request) {
+                $checkInDateTime = Carbon::parse($request->checkInDate . '14:00:00');
+                $formattedCheckIn = $checkInDateTime->format('Y-m-d H:i:s');
+                $checkOutDateTime = Carbon::parse($request->checkOutDate . '12:00:00');
+                $formattedCheckOut = $checkOutDateTime->format('Y-m-d H:i:s');
+
+                $currentDateTime = now();
+                $random = Carbon::now()->format('YmdHis').rand(001, 999);
+
+                $user = auth()->guard('userModel')->user();
+
+                if (empty($user->lastname) || empty($user->firstname)) {
+                    return response()->json(5);
+                }
+
+                $existingReservation = ReservationModel::where('room_id', $request->roomId)
+                ->where(function ($query) use ($user, $formattedCheckIn, $formattedCheckOut) {
+                    $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                            $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                                $query->where('start_dataTime', '<', $formattedCheckOut)
+                                    ->where('end_dateTime', '>', $formattedCheckIn);
+                            })
+                            ->orWhere(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                                $query->where('start_dataTime', $formattedCheckIn)
+                                    ->where('end_dateTime', $formattedCheckOut);
+                            });
+                        });
+                })
+                ->exists();
+
+                if ($existingReservation) {
+                    return response()->json(6);
+                }
+
+                if ($currentDateTime > $formattedCheckIn) {
+                    return response()->json(4);
+                } elseif ($formattedCheckIn == $formattedCheckOut) {
+                    return response()->json(2);
+                } elseif ($formattedCheckOut < $formattedCheckIn) {
+                    return response()->json(3);
+                }
+
+                $bookRoom = ReservationModel::create([
+                    'book_code' => $random,
+                    'user_id' => $user->user_id,
+                    'room_id' => $request->roomId,
+                    'start_dataTime' => $formattedCheckIn,
+                    'end_dateTime' => $formattedCheckOut,
+                    'status' => 'Unpaid',
+                    'is_archived' => 0
+                ]);
+
+                if ($bookRoom) {
+                    return response()->json(['status' => 1, 'book_code' => $bookRoom->book_code]);
+                } else {
+                    return response()->json(['status' => 0]);
+                }
             }
-        
-            $existingReservation = reservationModel::where([
-                ['user_id', '=', $user->user_id],
-                ['room_id', '=', $request->roomId],
-                ['start_dataTime', '=', $request->checkInDateTime],
-                ['end_dateTime', '=', $request->checkOutDateTime]
-            ])->exists();
-        
-            if ($existingReservation) {
-                return response()->json(6);
+
+            public function payment($book_code){
+                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                ->where([['book_code', '=', $book_code]])->select('roomTable.room_id','roomTable.photos','roomTable.room_number',
+                'roomTable.floor','roomTable.type_of_room','roomTable.number_of_bed', 'roomTable.details',
+                'roomTable.price_per_hour', 'reservationTable.book_code' , 'reservationTable.start_dataTime',
+                'reservationTable.end_dateTime')->get();
+                return view('customer/payment', compact('data'));
             }
-        
-            date_default_timezone_set('Asia/Manila');
-            $currentDateTime = date('m-d-Y h:i A');
-            $checkInDateTime = date('m-d-Y h:i A', strtotime($request->checkInDateTime));
-            $checkOutDateTime = date('m-d-Y h:i A', strtotime($request->checkOutDateTime));
-        
-            if ($currentDateTime > $checkInDateTime) {
-                return response()->json(4);
-            } elseif ($checkInDateTime == $checkOutDateTime) {
-                return response()->json(2);
-            } elseif ($checkOutDateTime < $checkInDateTime) {
-                return response()->json(3);
-            }
-        
-            $bookRoom = reservationModel::create([
-                'user_id' => $user->user_id,
-                'room_id' => $request->roomId,
-                'start_dataTime' => $request->checkInDateTime,
-                'end_dateTime' => $request->checkOutDateTime,
-                'status' => 'Pending',
-                'is_archived' => 0
-            ]);
-        
-            return response()->json($bookRoom ? 1 : 0);
-        }
-        
         // BOOK RESERVATION
 
         // CANCEL RESERVATION
@@ -174,12 +201,9 @@ class Customer extends Controller
                             $carbonStart = Carbon::parse($checkInDateTime);
                             $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                            $totalHours = $carbonStart->diffInHours($carbonEnd);
-                        // CALCULATE OF TOTAL HOURS
+                            $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                        // CALCULATE OF TOTAL PAYMENT
-                            $totalPayment = $totalHours * $item->price_per_hour;
-                        // CALCULATE OF TOTAL PAYMENT
+                            $totalPayment = $totalNights * $item->price_per_hour;
                         echo"
                             <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                 <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
@@ -225,11 +249,11 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
-                                                            Check Out:<span class='fw-normal'> $checkOutDateTime</span>
+                                                            Check In: <span class='fw-normal'> $checkInDateTime - 02:00 PM</span><br>
+                                                            Check Out:<span class='fw-normal'> $checkOutDateTime - 12:00 PM</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
+                                                            Total Night(s): <span class='fw-normal'> $totalNights</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
@@ -246,7 +270,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -257,121 +281,119 @@ class Customer extends Controller
         // RESERVATION RESERVATION PER USER
 
         // ACCEPT RESERVATION PER USER
-            public function getAcceptBookPerUser(Request $request){
-                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where([['reservationTable.status', '=', 'Accept'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
-                )->orderBy('reservationTable.reservation_id', 'ASC')->get();
-                if($data->isNotEmpty()){
-                    foreach($data as $item){
-                        // CALCULATE OF TOTAL HOURS
-                            $checkInDateTime = date('F d, Y g:i A',strtotime($item->start_dataTime));
-                            $checkOutDateTime = date('F d, Y g:i A',strtotime($item->end_dateTime));
+            // public function getAcceptBookPerUser(Request $request){
+            //     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            //     ->where([['reservationTable.status', '=', 'Accept'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
+            //     )->orderBy('reservationTable.reservation_id', 'ASC')->get();
+            //     if($data->isNotEmpty()){
+            //         foreach($data as $item){
+            //             // CALCULATE OF TOTAL HOURS
+            //                 $checkInDateTime = date('F d, Y g:i A',strtotime($item->start_dataTime));
+            //                 $checkOutDateTime = date('F d, Y g:i A',strtotime($item->end_dateTime));
 
-                            $carbonStart = Carbon::parse($checkInDateTime);
-                            $carbonEnd = Carbon::parse($checkOutDateTime);
+            //                 $carbonStart = Carbon::parse($checkInDateTime);
+            //                 $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                            $totalHours = $carbonStart->diffInHours($carbonEnd);
-                        // CALCULATE OF TOTAL HOURS
+            //                 $totalHours = $carbonStart->diffInHours($carbonEnd);
+            //             // CALCULATE OF TOTAL HOURS
 
-                        // CALCULATE OF TOTAL PAYMENT
-                            $totalPayment = $totalHours * $item->price_per_hour;
-                        // CALCULATE OF TOTAL PAYMENT
-                        echo"
-                            <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
-                                <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
-                                    <div class='row g-0'>
-                                        <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
-                                        <div class='col-md-12'>
-                                            <ul class='list-group list-group-flush fw-bold'>
-                                                <li class='list-group-item'>
-                                                    <div class='row'>
-                                                        <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Room Number: <span class='fw-normal'> $item->room_number</span>
-                                                        </div>
-                                                        <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Room Floor:<span class='fw-normal'> $item->floor</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class='list-group-item'>
-                                                    <div class='row'>
-                                                        <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Type of Room: <span class='fw-normal'>$item->type_of_room</span>
-                                                        </div>
-                                                        <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class='list-group-item'>
-                                                    <div class='row'>
-                                                        <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                            Max Person: <span class='fw-normal'>$item->max_person People Only</span>
-                                                        </div>
-                                                        <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class='list-group-item fw-bold' style='color:#'>
-                                                    <div class='col-12'>
-                                                        Details: <span class='fw-normal'>$item->details</span>
-                                                    </div>
-                                                </li>
-                                                <li class='list-group-item'>
-                                                    <div class='row'>
-                                                        <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
-                                                            Check Out:<span class='fw-normal'> $checkOutDateTime</span>
-                                                        </div>
-                                                        <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
-                                                            Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class='list-group-item text-center text-lg-end py-2'>
-                                                    <button onclick='backOutReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ";
-                    }
-                }else{
-                    echo "
-                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
-                        <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
-                            NO RESERVATION FOUND
-                        </div>
-                    </div>
-                    ";
-                }
-            }
+            //             // CALCULATE OF TOTAL PAYMENT
+            //                 $totalPayment = $totalHours * $item->price_per_hour;
+            //             // CALCULATE OF TOTAL PAYMENT
+            //             echo"
+            //                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
+            //                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
+            //                         <div class='row g-0'>
+            //                             <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
+            //                             <div class='col-md-12'>
+            //                                 <ul class='list-group list-group-flush fw-bold'>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Room Number: <span class='fw-normal'> $item->room_number</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Room Floor:<span class='fw-normal'> $item->floor</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Type of Room: <span class='fw-normal'>$item->type_of_room</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Max Person: <span class='fw-normal'>$item->max_person People Only</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item fw-bold' style='color:#'>
+            //                                         <div class='col-12'>
+            //                                             Details: <span class='fw-normal'>$item->details</span>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
+            //                                                 Check In: <span class='fw-normal'> $checkInDateTime</span><br>
+            //                                                 Check Out:<span class='fw-normal'> $checkOutDateTime</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
+            //                                                 Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item text-center text-lg-end py-2'>
+            //                                         <button onclick='backOutReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
+            //                                     </li>
+            //                                 </ul>
+            //                             </div>
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //             ";
+            //         }
+            //     }else{
+            //         echo "
+            //         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
+            //             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+            //                 NO RESERVATION FOUND
+            //             </div>
+            //         </div>
+            //         ";
+            //     }
+            // }
         // ACCEPT RESERVATION PER USER
 
-        // DECLINE RESERVATION PER USER
-            public function getDeclineBookPerUser(Request $request){
+        // UNPAID RESERVATION PER USER
+            public function getUnpaidBooking(Request $request){
                 $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where([['reservationTable.status', '=', 'Decline'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
+                ->where([['reservationTable.status', '=', 'Unpaid'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
                 )->orderBy('reservationTable.reservation_id', 'ASC')->get();
                 if($data->isNotEmpty()){
                     foreach($data as $item){
-                        // CALCULATE OF TOTAL HOURS
-                            $checkInDateTime = date('F d, Y g:i A',strtotime($item->start_dataTime));
-                            $checkOutDateTime = date('F d, Y g:i A',strtotime($item->end_dateTime));
+                            $currentDateTime = Carbon::now()->format('F d, Y g:i A');
+
+                            $checkInDateTime = date('F d, Y',strtotime($item->start_dataTime));
+                            $checkOutDateTime = date('F d, Y',strtotime($item->end_dateTime));
 
                             $carbonStart = Carbon::parse($checkInDateTime);
                             $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                            $totalHours = $carbonStart->diffInHours($carbonEnd);
-                        // CALCULATE OF TOTAL HOURS
+                            $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                        // CALCULATE OF TOTAL PAYMENT
-                            $totalPayment = $totalHours * $item->price_per_hour;
-                        // CALCULATE OF TOTAL PAYMENT
+                            $totalPayment = $totalNights * $item->price_per_hour;
                         echo"
                             <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                 <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
@@ -417,17 +439,37 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
-                                                            Check Out:<span class='fw-normal'> $checkOutDateTime</span>
+                                                            Check In: <span class='fw-normal'> $checkInDateTime - 02:00 PM</span><br>
+                                                            Check Out:<span class='fw-normal'> $checkOutDateTime - 12:00 PM</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
+                                                            Total Night(s): <span class='fw-normal'> $totalNights</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
-                                                    <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
+                                                ";
+                                                if($currentDateTime > $checkInDateTime){
+                                                    echo"
+                                                        <div class='row mt-3'>
+                                                            <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
+                                                                <span class='fw-normal text-danger'> Notes: This reservation is expired because the book date has already passed.</span><br>
+                                                            </div>
+                                                        </div>
+                                                        <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 mt-2 rounded-0'>DELETE RESERVATION</button>
+                                                    ";
+                                                }else{
+                                                    echo"
+                                                        <div class='row mt-3'>
+                                                            <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
+                                                                <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
+                                                            </div>
+                                                        </div>
+                                                        <button type='button' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
+                                                    ";
+                                                }
+                                                echo"
                                                 </li>
                                             </ul>
                                         </div>
@@ -438,7 +480,7 @@ class Customer extends Controller
                     }
                 }else{
                     echo "
-                    <div class='row applicantNoSchedule' style='margin-top:18rem; color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
@@ -446,7 +488,103 @@ class Customer extends Controller
                     ";
                 }
             }
+        // UNPAID RESERVATION PER USER
+
         // DECLINE RESERVATION PER USER
+            // public function getDeclineBookPerUser(Request $request){
+            //     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            //     ->where([['reservationTable.status', '=', 'Decline'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
+            //     )->orderBy('reservationTable.reservation_id', 'ASC')->get();
+            //     if($data->isNotEmpty()){
+            //         foreach($data as $item){
+            //             // CALCULATE OF TOTAL HOURS
+            //                 $checkInDateTime = date('F d, Y g:i A',strtotime($item->start_dataTime));
+            //                 $checkOutDateTime = date('F d, Y g:i A',strtotime($item->end_dateTime));
+
+            //                 $carbonStart = Carbon::parse($checkInDateTime);
+            //                 $carbonEnd = Carbon::parse($checkOutDateTime);
+
+            //                 $totalHours = $carbonStart->diffInHours($carbonEnd);
+            //             // CALCULATE OF TOTAL HOURS
+
+            //             // CALCULATE OF TOTAL PAYMENT
+            //                 $totalPayment = $totalHours * $item->price_per_hour;
+            //             // CALCULATE OF TOTAL PAYMENT
+            //             echo"
+            //                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
+            //                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
+            //                         <div class='row g-0'>
+            //                             <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
+            //                             <div class='col-md-12'>
+            //                                 <ul class='list-group list-group-flush fw-bold'>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Room Number: <span class='fw-normal'> $item->room_number</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Room Floor:<span class='fw-normal'> $item->floor</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Type of Room: <span class='fw-normal'>$item->type_of_room</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+            //                                                 Max Person: <span class='fw-normal'>$item->max_person People Only</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Price Per Hour:<span class='fw-normal'> ₱$item->price_per_hour.00</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item fw-bold' style='color:#'>
+            //                                         <div class='col-12'>
+            //                                             Details: <span class='fw-normal'>$item->details</span>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item'>
+            //                                         <div class='row'>
+            //                                             <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
+            //                                                 Check In: <span class='fw-normal'> $checkInDateTime</span><br>
+            //                                                 Check Out:<span class='fw-normal'> $checkOutDateTime</span>
+            //                                             </div>
+            //                                             <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+            //                                                 Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
+            //                                                 Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
+            //                                             </div>
+            //                                         </div>
+            //                                     </li>
+            //                                     <li class='list-group-item text-center text-lg-end py-2'>
+            //                                         <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 rounded-0'>CANCEL BOOK</button>
+            //                                     </li>
+            //                                 </ul>
+            //                             </div>
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //             ";
+            //         }
+            //     }else{
+            //         echo "
+            //         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
+            //             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+            //                 NO RESERVATION FOUND
+            //             </div>
+            //         </div>
+            //         ";
+            //     }
+            // }
+         // DECLINE RESERVATION PER USER
 
         // COMPLETE RESERVATION PER USER
             public function getCompleteBookPerUser(Request $request){
@@ -456,18 +594,15 @@ class Customer extends Controller
                 if($data->isNotEmpty()){
                     foreach($data as $item){
                         // CALCULATE OF TOTAL HOURS
-                            $checkInDateTime = date('F d, Y g:i A',strtotime($item->start_dataTime));
-                            $checkOutDateTime = date('F d, Y g:i A',strtotime($item->end_dateTime));
+                            $checkInDateTime = date('F d, Y',strtotime($item->start_dataTime));
+                            $checkOutDateTime = date('F d, Y',strtotime($item->end_dateTime));
 
                             $carbonStart = Carbon::parse($checkInDateTime);
                             $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                            $totalHours = $carbonStart->diffInHours($carbonEnd);
-                        // CALCULATE OF TOTAL HOURS
+                            $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                        // CALCULATE OF TOTAL PAYMENT
-                            $totalPayment = $totalHours * $item->price_per_hour;
-                        // CALCULATE OF TOTAL PAYMENT
+                            $totalPayment = $totalNights * $item->price_per_hour;
                         echo"
                             <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                 <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
@@ -513,11 +648,11 @@ class Customer extends Controller
                                                 <li class='list-group-item'>
                                                     <div class='row py-2'>
                                                         <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                            Check In: <span class='fw-normal'> $checkInDateTime</span><br>
-                                                            Check Out:<span class='fw-normal'> $checkOutDateTime</span>
+                                                            Check In: <span class='fw-normal'> $checkInDateTime - 02:00 PM</span><br>
+                                                            Check Out:<span class='fw-normal'> $checkOutDateTime - 12:00 PM</span>
                                                         </div>
                                                         <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                            Total Hours: <span class='fw-normal'> $totalHours Hours</span><br>
+                                                            Total Hours: <span class='fw-normal'> $totalNights</span><br>
                                                             Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
                                                         </div>
                                                     </div>

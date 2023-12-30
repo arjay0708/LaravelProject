@@ -40,8 +40,16 @@ body {
     overflow: hidden;
 }
 
+.rightLogin img{
+    margin-top: 4rem;
+}
+
 .rightRegister {
     position: relative;
+}
+
+.rightRegister img{
+    margin-top: 2rem;
 }
 
 .side,.main {
@@ -161,7 +169,7 @@ input ~i {
 
 input:focus ~i {
     color: #134e5e;
-} 
+}
 
 
 .btn {
@@ -220,7 +228,7 @@ body.signup .left .register {
 }
 
 .homeButton i, .homeButton2 i{
-    font-size: 18px;
+    font-size: 20px;
     color: #17171E;
     border: 1px solid #17171E;
     padding: 10px 14px;
@@ -320,7 +328,7 @@ body.signup .back-image {
     }
     form {
         padding: 0 !important;
-    } 
+    }
     .btn{
         margin-bottom: 0rem !important;
     }

@@ -68,19 +68,19 @@
                     <form id="bookReservationForm" name="bookReservationForm">
                     @csrf
                         <div class="row gap-0">
-                            <div class="col-lg-6 col-12 my-lg-0 my-2">
+                            <div class="col-6 my-2">
                                 <label class="form-label">CHECK IN: </label>
-                                <input required type="datetime-local" class="form-control shadow-sm bg-body rounded-0" id="checkInDateTime" Name="checkInDateTime">
+                                <input required type="date" class="form-control shadow-sm bg-body rounded-0" id="checkInDate" Name="checkInDate">
                             </div>
-                            <div class="col-lg-6 col-12 my-lg-0 my-2">
+                            <div class="col-6 my-2">
                                 <label class="form-label">CHECK OUT:</label>
-                                <input required type="datetime-local" class="form-control shadow-sm rounded-0" id="checkOutDateTime" name="checkOutDateTime">
+                                <input required type="date" class="form-control shadow-sm rounded-0" id="checkOutDate" name="checkOutDate">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Close</button>
-                        <button type="button" id="submitDateBooking" class="btn btn-dark rounded-0 px-4">Submit</button>
+                        <button type="button" id="submitDateBooking" class="btn btn-primary rounded-0 px-4">Submit</button>
                     </div>
                     </form>
                 </div>

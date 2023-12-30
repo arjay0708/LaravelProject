@@ -58,7 +58,7 @@ $(document).ready(function(){
               I read the <a href="privacyPolicy">terms and condition</a> before register my account.
               `,
               confirmButtonText: `
-                Continue;
+              Continue&nbsp;<i class="fa fa-arrow-right"></i>
               `,
               inputValidator: (result) => {
                 return !result && "You need to read the <a href='privacyPolicy'>terms and condition</a> before register your account";
@@ -115,6 +115,24 @@ $(document).ready(function(){
                         method:"POST",
                         dataType:"text",
                         data:data,
+                        beforeSend: function () {
+                            let timerInterval;
+                            Swal.fire({
+                                title: "PROCESSING...",
+                                html: "Please Wait, The System will send you an email to verify your account",
+                                timer: 8000,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                    const timer = Swal.getPopup().querySelector("b");
+                                    timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                },
+                            })
+                        },
                         success: function(response) {
                         if(response == 1){
                         Swal.fire({
@@ -125,6 +143,7 @@ $(document).ready(function(){
                         }).then((result) => {
                         if (result) {
                             $("#registrationForm").trigger("reset");
+                            window.location = "/";
                         }
                         })
                         }

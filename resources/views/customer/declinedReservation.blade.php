@@ -53,6 +53,9 @@
                             <li class="nav-item">
                                 <a class="nav-link active" href="#">Declined Reservation</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/customerUnpaidReservation">Unpaid Reservation</a>
+                            </li>
                         </ul>
                         <div class="row g-2" id="showDeclineReservation"></div>
                     </div>
@@ -63,6 +66,25 @@
 
     {{-- JS --}}
         <script src="{{ asset('/js/customer/reservation.js') }}"></script>
+        <script>
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                showDeclineBookingPerUser();
+                function showDeclineBookingPerUser(){
+                    $.ajax({
+                        url: "/getDeclineBookPerUser",
+                        method: 'GET',
+                        success : function(data) {
+                            $("#showDeclineReservation").html(data);
+                        }
+                    })
+                }
+            });
+        </script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>
     {{-- END JS --}}

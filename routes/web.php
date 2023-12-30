@@ -90,8 +90,10 @@ Route::get('/customerRoom', [Customer::class, 'customerRoom'])->name('customerRo
 Route::get('/customerReservation', [Customer::class, 'customerReservation'])->name('customerReservation');
 Route::get('/customerAcceptReservation', [Customer::class, 'customerAcceptReservation'])->name('customerAcceptReservation');
 Route::get('/customerDeclinedReservation', [Customer::class, 'customerDeclinedReservation'])->name('customerDeclinedReservation');
+Route::get('/customerUnpaidReservation', [Customer::class, 'customerUnpaidReservation'])->name('customerUnpaidReservation');
 Route::get('/customerCompleted', [Customer::class, 'customerCompleted'])->name('customerReservation');
 Route::get('/customerAccount', [Customer::class, 'customerAccount'])->name('customerReservation');
+Route::get('/payment/{book_code}', [Customer::class, 'payment'])->name('payment');
 // ROUTES
 
 // FUNCTION
@@ -101,6 +103,7 @@ Route::get('/cancelReservation', [Customer::class, 'cancelReservation'])->name('
 Route::get('/getBookPerUser', [Customer::class, 'getBookPerUser'])->name('getBookPerUser');
 Route::get('/getAcceptBookPerUser', [Customer::class, 'getAcceptBookPerUser'])->name('getAcceptBookPerUser');
 Route::get('/getDeclineBookPerUser', [Customer::class, 'getDeclineBookPerUser'])->name('getDeclineBookPerUser');
+Route::get('/getUnpaidBooking', [Customer::class, 'getUnpaidBooking'])->name('getUnpaidBooking');
 Route::get('/getCompleteBookPerUser', [Customer::class, 'getCompleteBookPerUser'])->name('getCompleteBookPerUser');
 Route::get('/totalPendingReservation', [Customer::class, 'totalPendingReservation'])->name('totalPendingReservation');
 Route::get('/totalAcceptReservation', [Customer::class, 'totalAcceptReservation'])->name('totalAcceptReservation');

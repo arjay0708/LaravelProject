@@ -4,48 +4,9 @@ $(document).ready(function(){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    showBookingPerUser();
-    showAcceptBookingPerUser();
-    showDeclineBookingPerUser();
 });
 
-// SHOW PENDING RESERVATION PER USER
-    function showBookingPerUser(){
-        $.ajax({
-            url: "/getBookPerUser",
-            method: 'GET',
-            success : function(data) {
-                $("#showPendingReservation").html(data);
-            }
-        })
-    }
-// SHOW PENDING RESERVATION PER USER
-
-// SHOW ACCEPT RESERVATION PER USER 
-    function showAcceptBookingPerUser(){
-        $.ajax({
-            url: "/getAcceptBookPerUser",
-            method: 'GET',
-            success : function(data) {
-                $("#showAcceptReservation").html(data);
-            }
-        })
-    }
-// SHOW ACCEPT RESERVATION PER USER 
-
-// SHOW DECLINED RESERVATION PER USER
-    function showDeclineBookingPerUser(){
-        $.ajax({
-            url: "/getDeclineBookPerUser",
-            method: 'GET',
-            success : function(data) {
-                $("#showDeclineReservation").html(data);
-            }
-        })
-    }
-// SHOW DECLINED RESERVATION PER USER
-
-// FUNCTION FOR BOOKING
+// FUNCTION FOR CANCEL BOOKING
     function cancelReservation(id){
         Swal.fire({
             title: 'Are you sure?',
@@ -68,7 +29,7 @@ $(document).ready(function(){
                         I read the <a href="#">notes and remarks</a> before cancelling my booking.
                         `,
                         confirmButtonText: `
-                        Continue;
+                        Continue&nbsp;<i class="fa fa-arrow-right"></i>
                         `,
                         inputValidator: (result) => {
                             return !result && "You need to read the notes and remarks before cancelling your reservation";
@@ -99,9 +60,9 @@ $(document).ready(function(){
             }
         });
     }
-// FUNCTION FOR BOOKING
+// FUNCTION FOR CANCEL BOOKING
 
-// BACK OUT RESERVATION
+// FUNCTION FOR BACK OUT RESERVATION
     function backOutReservation(id){
         Swal.fire({
             title: 'Are you sure?',
@@ -154,5 +115,5 @@ $(document).ready(function(){
             })()
             }
         });
-    } 
-// BACK OUT RESERVATION
+    }
+// FUNCTION FOR BACK OUT RESERVATION
