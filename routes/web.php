@@ -5,6 +5,8 @@ use App\Http\Controllers\Home;
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Customer;
+use App\Http\Controllers\Stripe;
+
 
 // LANDING PAGE
 Route::get('/', [Home::class, 'harborView'])->name('harborView');
@@ -94,6 +96,16 @@ Route::get('/customerUnpaidReservation', [Customer::class, 'customerUnpaidReserv
 Route::get('/customerCompleted', [Customer::class, 'customerCompleted'])->name('customerReservation');
 Route::get('/customerAccount', [Customer::class, 'customerAccount'])->name('customerReservation');
 Route::get('/payment/{book_code}', [Customer::class, 'payment'])->name('payment');
+
+
+//Stripe
+Route::post('/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
+Route::get('/success', [Stripe::class, 'success'])->name('success');
+Route::get('/success', [Stripe::class, 'success'])->name('success');
+
+
+
+
 // ROUTES
 
 // FUNCTION
