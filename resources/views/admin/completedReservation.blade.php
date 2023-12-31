@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Harbor View</title>
+    <title>HOSS</title>
         <!-- CSS -->
-            <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+            <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
         <!-- CSS -->
     @include('cdn')
@@ -36,13 +36,30 @@
                                 </ul>
                             </div>
                         </div>
-                    </nav>              
-                <!-- NAV BAR -->            
+                    </nav>
+                <!-- NAV BAR -->
 
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
                         <div class="container-fluid">
                             <div class="container-fluid px-5 py-4 bg-body rounded shadow-lg">
+                            <ul class="nav nav-tabs mb-4">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminReservation">Pending Reservation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">On-Going Reservation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminDeclineReservation">Cancelled Reservation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminBackOutReservation">Unpaid Reservation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Completed Reservation</a>
+                                </li>
+                            </ul>
                             <table id="completedReservationTable" class="table table-sm table-bordered text-center align-middle">
                                 <thead>
                                     <tr>

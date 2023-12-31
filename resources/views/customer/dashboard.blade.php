@@ -9,9 +9,9 @@
     {{-- CSS --}}
         <link href="{{ asset('/css/customerDashboard.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/sideBar.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     {{-- CSS --}}
-    <title>Harbor View</title>
+    <title>HOSS</title>
 </head>
 <body>
 
@@ -67,8 +67,8 @@
                                                 <i class="fa-solid fa-inbox icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalDeclineReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">DECLINE RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCancelReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">CANCELLED RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -82,8 +82,8 @@
                                                 <i class="fa-solid fa-calendar-days icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalAcceptReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">ACCEPT RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalUnpaidReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">UNPAID RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
                                                 <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCompleteReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">COMPLETE RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">COMPLETED RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         <div class="mb-3 mt-2 border-2 shadow">
-                            <div class="card p-lg-4 p-0 rounded-0" id="fetchAllBackOut"></div>
+                            <div class="card p-lg-4 p-0 rounded-0"></canvas></div>
                         </div>
                     </div>
                 {{-- MAIN CONTENT --}}
@@ -115,9 +115,58 @@
     </div>
 
     {{-- JS --}}
-        <script src="{{ asset('/js/customer/dashboard.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>
+        <script>
+            $(document).ready(function(){
+                totalPendingReservation();
+                totalUnpaidReservation();
+                totalCompleteReservation();
+                totalCancelReservation();
+                graph();
+            });
+
+            function totalPendingReservation(){
+                $.ajax({
+                    url: '/totalPendingReservation',
+                    method: 'GET',
+                    success : function(data) {
+                        $("#totalPendingReservation").html(data);
+                    }
+                })
+            }
+
+            function totalUnpaidReservation(){
+                $.ajax({
+                    url: '/totalUnpaidReservation',
+                    method: 'GET',
+                    success : function(data) {
+                        $("#totalUnpaidReservation").html(data);
+                    }
+                })
+            }
+
+            function totalCancelReservation(){
+                $.ajax({
+                    url: '/totalCancelReservation',
+                    method: 'GET',
+                    success : function(data) {
+                        $("#totalCancelReservation").html(data);
+                    }
+                })
+            }
+
+            function totalCompleteReservation(){
+                $.ajax({
+                    url: '/totalCompleteReservation',
+                    method: 'GET',
+                    success : function(data) {
+                        $("#totalCompleteReservation").html(data);
+                    }
+                })
+            }
+        </script>
     {{-- END JS --}}
 </body>
 </html>

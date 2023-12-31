@@ -39,11 +39,11 @@ Route::get('/adminRoom', [Admin::class, 'adminRoom'])->name('adminRoom');
 Route::get('/adminNotAvailableRoom', [Admin::class, 'adminNotAvailableRoom'])->name('adminNotAvailableRoom');
 Route::get('/addNewRoom', [Admin::class, 'addNewRoom'])->name('addNewRoom');
 Route::get('/adminReservation', [Admin::class, 'adminReservation'])->name('adminReservation');
-Route::get('/adminAcceptReservation', [Admin::class, 'adminAcceptReservation'])->name('adminAcceptReservation');
+Route::get('/adminCancelledReservation', [Admin::class, 'adminCancelledReservation'])->name('adminCancelledReservation');
 Route::get('/adminOnGoingReservation', [Admin::class, 'adminOnGoingReservation'])->name('adminOnGoingReservation');
-Route::get('/adminDeclineReservation', [Admin::class, 'adminDeclineReservation'])->name('adminDeclineReservation');
-Route::get('/adminBackOutReservation', [Admin::class, 'adminBackOutReservation'])->name('adminBackOutReservation');
-Route::get('/adminCompleted', [Admin::class, 'adminCompleted'])->name('adminCompleted');
+Route::get('/adminUnpaidReservation', [Admin::class, 'adminUnpaidReservation'])->name('adminUnpaidReservation');
+Route::get('/getAllUnpaidReservation', [Admin::class, 'getAllUnpaidReservation'])->name('getAllUnpaidReservation');
+Route::get('/adminCompletedReservation', [Admin::class, 'adminCompletedReservation'])->name('adminCompletedReservation');
 Route::get('/adminCustomer', [Admin::class, 'adminCustomer'])->name('adminCustomer');
 Route::get('/adminInActiveCustomer', [Admin::class, 'adminInActiveCustomer'])->name('adminInActiveCustomer');
 Route::get('/adminAccount', [Admin::class, 'adminAccount'])->name('adminAccount');
@@ -57,10 +57,10 @@ Route::get('/getAvailableRoom', [Admin::class, 'getAvailableRoom'])->name('getAv
 Route::get('/getNotAvailableRoom', [Admin::class, 'getNotAvailableRoom'])->name('getNotAvailableRoom');
 Route::post('/addRoom', [Admin::class, 'addRoom'])->name('addRoom');
 Route::get('/getAllPendingReservation', [Admin::class, 'getAllPendingReservation'])->name('getAllPendingReservation');
-Route::get('/getAllAcceptReservation', [Admin::class, 'getAllAcceptReservation'])->name('getAllAcceptReservation');
+Route::get('/getAllOnGoingReservation', [Admin::class, 'getAllOnGoingReservation'])->name('getAllOnGoingReservation');
+Route::get('/getAllCancelledReservation', [Admin::class, 'getAllCancelledReservation'])->name('getAllCancelledReservation');
 Route::get('/getAllDeclineReservation', [Admin::class, 'getAllDeclineReservation'])->name('getAllDeclineReservation');
 Route::get('/getAllBackOutReservation', [Admin::class, 'getAllBackOutReservation'])->name('getAllBackOutReservation');
-Route::get('/getAllOnGoingReservation', [Admin::class, 'getAllOnGoingReservation'])->name('getAllOnGoingReservation');
 Route::get('/getAllCompletedReservation', [Admin::class, 'getAllCompletedReservation'])->name('getAllCompletedReservation');
 Route::get('/acceptReservation', [Admin::class, 'acceptReservation'])->name('acceptReservation');
 Route::get('/declineReservation', [Admin::class, 'declineReservation'])->name('declineReservation');
@@ -93,15 +93,16 @@ Route::get('/customerReservation', [Customer::class, 'customerReservation'])->na
 Route::get('/customerAcceptReservation', [Customer::class, 'customerAcceptReservation'])->name('customerAcceptReservation');
 Route::get('/customerDeclinedReservation', [Customer::class, 'customerDeclinedReservation'])->name('customerDeclinedReservation');
 Route::get('/customerUnpaidReservation', [Customer::class, 'customerUnpaidReservation'])->name('customerUnpaidReservation');
+Route::get('/customerCancelReservation', [Customer::class, 'customerCancelReservation'])->name('customerCancelReservation');
 Route::get('/customerCompleted', [Customer::class, 'customerCompleted'])->name('customerReservation');
 Route::get('/customerAccount', [Customer::class, 'customerAccount'])->name('customerReservation');
 Route::get('/payment/{book_code}', [Customer::class, 'payment'])->name('payment');
 
 
 //Stripe
-Route::post('/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
-Route::get('/success', [Stripe::class, 'success'])->name('success');
-Route::get('/success', [Stripe::class, 'success'])->name('success');
+// Route::post('/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
+// Route::get('/success', [Stripe::class, 'success'])->name('success');
+// Route::get('/success', [Stripe::class, 'success'])->name('success');
 
 
 
@@ -114,17 +115,18 @@ Route::post('/bookReservation', [Customer::class, 'bookReservation'])->name('boo
 Route::get('/cancelReservation', [Customer::class, 'cancelReservation'])->name('cancelReservation');
 Route::get('/getBookPerUser', [Customer::class, 'getBookPerUser'])->name('getBookPerUser');
 Route::get('/getAcceptBookPerUser', [Customer::class, 'getAcceptBookPerUser'])->name('getAcceptBookPerUser');
+Route::get('/getCancelBookPerUser', [Customer::class, 'getCancelBookPerUser'])->name('getCancelBookPerUser');
 Route::get('/getDeclineBookPerUser', [Customer::class, 'getDeclineBookPerUser'])->name('getDeclineBookPerUser');
 Route::get('/getUnpaidBooking', [Customer::class, 'getUnpaidBooking'])->name('getUnpaidBooking');
 Route::get('/getCompleteBookPerUser', [Customer::class, 'getCompleteBookPerUser'])->name('getCompleteBookPerUser');
 Route::get('/totalPendingReservation', [Customer::class, 'totalPendingReservation'])->name('totalPendingReservation');
-Route::get('/totalAcceptReservation', [Customer::class, 'totalAcceptReservation'])->name('totalAcceptReservation');
-Route::get('/totalDeclineReservation', [Customer::class, 'totalDeclineReservation'])->name('totalDeclineReservation');
+Route::get('/totalUnpaidReservation', [Customer::class, 'totalUnpaidReservation'])->name('totalUnpaidReservation');
+Route::get('/totalCancelReservation', [Customer::class, 'totalCancelReservation'])->name('totalCancelReservation');
 Route::get('/totalCompleteReservation', [Customer::class, 'totalCompleteReservation'])->name('totalCompleteReservation');
 Route::get('/getBackOutContent', [Customer::class, 'getBackOutContent'])->name('getBackOutContent');
 Route::get('/archivedCancelledReservation', [Customer::class, 'archivedCancelledReservation'])->name('archivedCancelledReservation');
-Route::get('/backOutReservation', [Customer::class, 'backOutReservation'])->name('backOutReservation');
+Route::get('/cancelReservation', [Customer::class, 'cancelReservation'])->name('cancelReservation');
 Route::get('/getUserInfo', [Customer::class, 'getUserInfo'])->name('getUserInfo');
 Route::post('/updateUserAccount', [Customer::class, 'updateUserAccount'])->name('updateUserAccount');
-    // FUNCTION
+// FUNCTION
 // CUSTOMER DASHBOARD

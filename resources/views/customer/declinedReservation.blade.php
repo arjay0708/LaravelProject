@@ -9,9 +9,9 @@
     {{-- CSS --}}
         <link href="{{ asset('/css/customerDashboard.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/sideBar.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     {{-- CSS --}}
-    <title>Harbor View</title>
+    <title>HOSS</title>
 </head>
 <body>
 
@@ -65,7 +65,6 @@
     </div>
 
     {{-- JS --}}
-        <script src="{{ asset('/js/customer/reservation.js') }}"></script>
         <script>
             $(document).ready(function(){
                 $.ajaxSetup({

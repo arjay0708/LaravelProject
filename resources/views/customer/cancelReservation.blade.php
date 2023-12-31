@@ -26,7 +26,7 @@
                     <nav class="navbar navbar-expand-lg text-white border-bottom">
                         <div class="container-fluid">
                             <button class="btn btn-lg" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
-                            <h4 class="ms-2 pt-2">MY RESERVATION</h4>
+                            <h4 class="ms-2 pt-2">CANCEL RESERVATION</h4>
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                                     <li>
@@ -43,21 +43,7 @@
 
                 {{-- MAIN CONTENT --}}
                     <div class="container-fluid mainBar">
-                        <ul class="nav nav-tabs mb-4 mx-4">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/customerReservation">Pending Reservation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">Accept Reservation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/customerDeclinedReservation">Declined Reservation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/customerUnpaidReservation">Unpaid Reservation</a>
-                            </li>
-                        </ul>
-                        <div class="row g-2" id="showAcceptReservation"></div>
+                        <div class="row g-2" id="showCancelReservation"></div>
                     </div>
                 {{-- MAIN CONTENT --}}
             </div>
@@ -65,6 +51,7 @@
     </div>
 
     {{-- JS --}}
+        <script src="{{ asset('/js/customer/reservation.js') }}"></script>
         <script>
             $(document).ready(function(){
                 $.ajaxSetup({
@@ -72,13 +59,13 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                showAcceptBookingPerUser();
-                function showAcceptBookingPerUser(){
+                showCancelBookingPerUser();
+                function showCancelBookingPerUser(){
                     $.ajax({
-                        url: "/getAcceptBookPerUser",
+                        url: "/getCancelBookPerUser",
                         method: 'GET',
                         success : function(data) {
-                            $("#showAcceptReservation").html(data);
+                            $("#showCancelReservation").html(data);
                         }
                     })
                 }

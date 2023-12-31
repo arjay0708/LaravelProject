@@ -37,7 +37,7 @@ $(document).ready(function(){
                 error:function(error){
                     console.log(error)
                 }
-            }) 
+            })
     });
 // MANAGE EMPLOYEES
 
@@ -49,32 +49,32 @@ $(document).ready(function(){
             dataType: 'json',
         })
         .done(function(response) {
-            $('#userUniqueId').val(response.user_id )           
-            $('#userLastName').val(response.lastname)           
-            $('#userFirstName').val(response.firstname)           
-            $('#userMiddleName').val(response.middlename)           
-            $('#userExtention').val(response.extention)           
-            $('#userBirthday').val(response.birthday)           
-            $('#userPhoneNumber').val(response.phoneNumber)           
-            $('#userAge').val(response.age)           
-            $('#updateEmployeeEmail').val(response.email)        
+            $('#userUniqueId').val(response.user_id )
+            $('#userLastName').val(response.lastname)
+            $('#userFirstName').val(response.firstname)
+            $('#userMiddleName').val(response.middlename)
+            $('#userExtention').val(response.extention)
+            $('#userBirthday').val(response.birthday)
+            $('#userPhoneNumber').val(response.phoneNumber)
+            $('#userAge').val(response.age)
+            $('#updateEmployeeEmail').val(response.email)
             if(response.extention != ''){
-                $('#userExtention').val(response.extention)           
+                $('#userExtention').val(response.extention)
             }else{
-                $('#userExtention').val      
-            }    
+                $('#userExtention').val('None')
+            }
             if(response.photos != ''){
                 $('#userProfile').attr("src",response.photos)
             }else{
                 $('#userProfile').attr("src","/storage/employees/defaultImage.png")
-            }      
+            }
         })
     }
 // FETCH INFO MANAGE ACCOUNT
 
-// GENERATE AGE 
+// GENERATE AGE
     function calculateAge() {
-        var birthDate = new Date(document.getElementById("updateEmployeeBirthday").value); 
+        var birthDate = new Date(document.getElementById("updateEmployeeBirthday").value);
         var birthDateDay = birthDate.getDate();
         var birthDateMonth = birthDate.getMonth();
         var birthDateYear = birthDate.getFullYear();
@@ -87,12 +87,12 @@ $(document).ready(function(){
         var calculateAge = 0;
 
         if(todayMonth > birthDateMonth) calculateAge  = todayYear - birthDateYear;
-        else calculateAge = todayYear - birthDateYear - 1; 
+        else calculateAge = todayYear - birthDateYear - 1;
 
         var outputValue = calculateAge;
         document.getElementById("updateEmployeeAge").value = calculateAge;
     }
-// GENERATE AGE 
+// GENERATE AGE
 
 // FUNCTION FOR PASSWORD ENABLE
     function seePassword() {
@@ -108,7 +108,7 @@ $(document).ready(function(){
             a.type="password";
             b.type="password";
         }
-        
+
     }
 // FUNCTION FOR PASSWORD ENABLE
 $('#usersPasswordForm').on( 'submit' , function(e){
@@ -146,13 +146,13 @@ $('#usersPasswordForm').on( 'submit' , function(e){
                         'UPDATE FAILED',
                         'Sorry current password was not correct',
                         'error'
-                    )   
+                    )
                 }
             },
             error:function(error){
                 console.log(error)
             }
-        }) 
+        })
     }
 
 });

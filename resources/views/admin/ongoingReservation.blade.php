@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Harbor View</title>
+    <title>HOSS</title>
         <!-- CSS -->
-            <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+            <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
         <!-- CSS -->
     @include('cdn')
@@ -36,8 +36,8 @@
                                 </ul>
                             </div>
                         </div>
-                    </nav>              
-                <!-- NAV BAR -->            
+                    </nav>
+                <!-- NAV BAR -->
 
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
@@ -48,16 +48,16 @@
                                     <a class="nav-link" href="/adminReservation">Pending Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminAcceptReservation">Accept Reservation</a>
+                                    <a class="nav-link active" href="/adminOnGoingReservation">On-Going Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#">On-Going Reservation</a>
+                                    <a class="nav-link" href="/adminCancelledReservation">Cancelled Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminDeclineReservation">Declined Reservation</a>
+                                    <a class="nav-link" href="/adminUnpaidReservation">Unpaid Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminBackOutReservation">Back-Out Reservation</a>
+                                    <a class="nav-link" href="/adminCompletedReservation">Completed Reservation</a>
                                 </li>
                             </ul>
                             <table id="ongoingReservationTable" class="table table-sm table-bordered text-center align-middle">
@@ -68,6 +68,8 @@
                                         <th class="text-center">Room</th>
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
+                                        <th class="text-center">Total Payments</th>
+                                        <th class="text-center">Balance</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>

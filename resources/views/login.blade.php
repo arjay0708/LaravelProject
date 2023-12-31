@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     @include('cdn')
     <title>HOSS</title>
 </head>
@@ -18,7 +18,7 @@
             <section class="main login">
                 <div class="container mt-5 pt-5">
                     <a class='homeButton' href="/" data-title='Back to Home?'><i class="bi bi-house"></i></a>
-                    <img class="border-0 logo" src="{{ URL('/img/whitelogo.png')}}">
+                    <img class="border-0 logo" src="{{ URL('/img/icon.png')}}">
                     <p class="title mt-lg-3">HOTEL OPERATION SOLUTION SYSTEM</p>
                     <form name="userLoginForm" id="userLoginForm">
                         @if(session('message'))

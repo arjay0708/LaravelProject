@@ -9,7 +9,7 @@
     {{-- CSS --}}
         <link href="{{ asset('/css/customerDashboard.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/sideBar.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     {{-- CSS --}}
     <title>H0SS</title>
 </head>

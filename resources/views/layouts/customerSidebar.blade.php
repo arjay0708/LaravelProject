@@ -9,6 +9,7 @@
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerUnpaidReservation"><i class="fa-solid fa-file-invoice-dollar pe-3"></i> Unpaid Reservation</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerReservation"><i class="fa-solid fa-hourglass-half pe-3"></i> Pending Reservation</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerCompleted"><i class="fa-solid fa-clipboard-list pe-3"></i> Complete Reservation</a>
+        <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerCancelReservation"><i class="fa-solid fa-ban pe-3"></i> Cancelled Reservation</a>
         <a class="list-group-item recruiterA list-group-item-action list-group-item-light p-3" href="/customerAccount"><i class="bi bi-pencil-square pe-3"></i> Manage Account</a>
     </div>
     <div class="sidebar-footing border-top pt-3 text-center">

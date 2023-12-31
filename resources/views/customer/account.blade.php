@@ -9,9 +9,9 @@
     {{-- CSS --}}
         <link href="{{ asset('/css/customerDashboard.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/sideBar.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     {{-- CSS --}}
-    <title>Harbor View</title>
+    <title>HOSS</title>
 </head>
 <body>
 
@@ -92,8 +92,8 @@
                                         <div class="col-2">
                                             <div class="mb-3">
                                                 <label class="form-label">Extention: </label>
-                                                <select class="form-select shadow-sm rounded-0" id="userExtension" name="userExtension" required>
-                                                    <option value="None">None</option>
+                                                <select class="form-select shadow-sm rounded-0" id="userExtension" name="userExtension">
+                                                    <option value="" selected>None</option>
                                                     <option value="Jr.">Junior.</option>
                                                     <option value="Sr.">Senior.</option>
                                                     <option value="II">The Second.</option>
@@ -106,7 +106,7 @@
                                     <div class="row gap-0">
                                         <div class="col-3">
                                             <label class="form-label">Email Address: </label>
-                                            <input required type="text" class="form-control shadow-sm bg-body rounded-0" id="userEmail" Name="userEmail" readonly>
+                                            <input type="text" class="form-control shadow-sm rounded-0" id="userEmail" Name="userEmail" readonly>
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label">Phone Number: </label>
@@ -118,12 +118,12 @@
                                         </div>
                                         <div class="col-2">
                                             <label class="form-label">Age:</label>
-                                            <input type="text" class="form-control shadow-sm bg-body rounded-0" id="userAge" Name="userAge" readonly>
+                                            <input type="text" class="form-control shadow-sm  rounded-0" id="userAge" Name="userAge" readonly>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
                                         <div class="col-3 d-flex ms-auto">
-                                            <button type="submit" readonly class="btn btn-dark px-3 py-2 rounded-0">Save Changes</button>
+                                            <button type="submit" readonly class="btn btn-primary px-4 py-2 rounded-0">Save Changes</button>
                                         </div>
                                     </div>
                                 </form>

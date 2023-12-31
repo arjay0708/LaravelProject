@@ -1,15 +1,14 @@
 $(document).ready(function(){
     pendingReservationTable();
-    acceptReservationTable();
-    declineReservationTable();
     ongoingReservationTable();
+    cancelledReservationTable();
+    unpaidReservationTable();
     completedReservationTable();
-    backOutReservationTable();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    }); 
+    });
 });
 
 // FETCH ALL PENDING RESERVATION FOR TABLES
@@ -19,7 +18,6 @@ $(document).ready(function(){
             "emptyTable": "No Reservation Found"
         },
         "lengthChange": true,
-        "scrollCollapse": true,
         "paging": true,
         "info": true,
         "responsive": true,
@@ -55,7 +53,14 @@ $(document).ready(function(){
             "targets": 1
             },
             { "mData": function (data, type, row) {
-                return '<button type="button" data-title="Accept Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=acceptReservation('+data.reservation_id+') class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="declineReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Decline Reservation?"><i class="bi bi-x-square"></i></button>'
+                return "₱"+data.totalPayment+ ".00" ;
+            }},
+            { "mData": function (data, type, row) {
+                return "₱"+data.balance+ ".00" ;
+            }},
+            { "mData": function (data, type, row) {
+                return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="backOutReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Back Out Reservation?"><i class="bi bi-x-square"></i></button>'
+                // return '<button type="button" data-title="Accept Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=acceptReservation('+data.reservation_id+') class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="declineReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Decline Reservation?"><i class="bi bi-x-square"></i></button>'
             }},
         ],
         order: [[1, 'asc']],
@@ -68,63 +73,6 @@ $(document).ready(function(){
     }).draw();
     }
 // FETCH ALL PENDING RESERVATION FOR TABLES
-
-// FETCH ALL ACCEPT RESERVATION FOR TABLE
-    function acceptReservationTable(){
-        var table = $('#acceptReservationTable').DataTable({
-            "language": {
-                "emptyTable": "No Reservation Found"
-            },
-            "lengthChange": true,
-            "scrollCollapse": true,
-            "paging": true,
-            "info": true,
-            "responsive": true,
-            "ordering": false,
-            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
-            "iDisplayLength": 25,
-            "ajax":{
-                "url":"/getAllAcceptReservation",
-                "dataSrc": "",
-            },
-            "columns":[
-                {"data":"reservation_id"},
-                { "mData": function (data, type, row) {
-                    if(data.extention != null){
-                        return data.firstname+ " " +data.lastname+ " " +data.extention;
-                    }else{
-                        return data.firstname+ " " +data.lastname;
-                    }
-                }},
-                { "mData": function (data, type, row) {
-                        return data.floor+ " - Room " +data.room_number;
-                }},
-                {"data": "start_dataTime",
-                    "render": function(data) {
-                    return moment(data).format('MMM DD, YYYY | hh:mm A');
-                },
-                "targets": 1
-                },
-                {"data": "end_dateTime",
-                    "render": function(data) {
-                    return moment(data).format('MMM DD, YYYY | hh:mm A');
-                },
-                "targets": 1
-                },
-                { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="backOutReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Back Out Reservation?"><i class="bi bi-x-square"></i></button>'
-                }},
-            ],
-            order: [[1, 'asc']],
-        });
-        table.on('order.dt search.dt', function () {
-            let i = 1;
-            table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
-                this.data(i++);
-            });
-        }).draw();
-    }
-// FETCH ALL ACCEPT RESERVATION FOR TABLE
 
 // FETCH ALL ACCEPT RESERVATION FOR TABLE
     function ongoingReservationTable(){
@@ -169,6 +117,12 @@ $(document).ready(function(){
                 "targets": 1
                 },
                 { "mData": function (data, type, row) {
+                    return "₱"+data.totalPayment+ ".00" ;
+                }},
+                { "mData": function (data, type, row) {
+                    return "₱"+data.balance+ ".00" ;
+                }},
+                { "mData": function (data, type, row) {
                     return '<button type="button" data-title="Complete Transaction?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="completeTransaction('+data.reservation_id+' , '+data.roomId+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
                 }},
             ],
@@ -183,9 +137,9 @@ $(document).ready(function(){
     }
 // FETCH ALL ACCEPT RESERVATION FOR TABLE
 
-// FETCH ALL DECLINE RESERVATION FOR TABLE
-    function declineReservationTable(){
-        var table = $('#declineReservationTable').DataTable({
+// FETCH ALL CANCELLED RESERVATION FOR TABLE
+    function cancelledReservationTable(){
+        var table = $('#cancelledReservationTable').DataTable({
             "language": {
                 "emptyTable": "No Reservation Found"
             },
@@ -198,7 +152,7 @@ $(document).ready(function(){
             "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
             "iDisplayLength": 25,
             "ajax":{
-                "url":"/getAllDeclineReservation",
+                "url":"/getAllCancelledReservation",
                 "dataSrc": "",
             },
             "columns":[
@@ -225,6 +179,75 @@ $(document).ready(function(){
                 },
                 "targets": 1
                 },
+                { "mData": function (data, type, row) {
+                    return "₱"+data.totalPayment+ ".00" ;
+                }},
+                { "mData": function (data, type, row) {
+                    return "₱"+data.balance+ ".00" ;
+                }},
+                { "mData": function (data, type, row) {
+                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
+                }},
+            ],
+            order: [[1, 'asc']],
+        });
+        table.on('order.dt search.dt', function () {
+            let i = 1;
+            table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                this.data(i++);
+            });
+        }).draw();
+    }
+// FETCH ALL CANCELLED RESERVATION FOR TABLE
+
+// FETCH ALL DECLINE RESERVATION FOR TABLE
+    function unpaidReservationTable(){
+        var table = $('#unpaidReservationTable').DataTable({
+            "language": {
+                "emptyTable": "No Reservation Found"
+            },
+            "lengthChange": true,
+            "scrollCollapse": true,
+            "paging": true,
+            "info": true,
+            "responsive": true,
+            "ordering": false,
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+            "iDisplayLength": 25,
+            "ajax":{
+                "url":"/getAllUnpaidReservation",
+                "dataSrc": "",
+            },
+            "columns":[
+                {"data":"reservation_id"},
+                { "mData": function (data, type, row) {
+                    if(data.extention != null){
+                        return data.firstname+ " " +data.lastname+ " " +data.extention;
+                    }else{
+                        return data.firstname+ " " +data.lastname;
+                    }
+                }},
+                { "mData": function (data, type, row) {
+                        return data.floor+ " - Room " +data.room_number;
+                }},
+                {"data": "start_dataTime",
+                    "render": function(data) {
+                    return moment(data).format('MMM DD, YYYY | hh:mm A');
+                },
+                "targets": 1
+                },
+                {"data": "end_dateTime",
+                    "render": function(data) {
+                    return moment(data).format('MMM DD, YYYY | hh:mm A');
+                },
+                "targets": 1
+                },
+                { "mData": function (data, type, row) {
+                    return "₱"+data.totalPayment+ ".00" ;
+                }},
+                { "mData": function (data, type, row) {
+                    return "₱"+data.balance+ ".00" ;
+                }},
                 {"data": "reservation_id",
                     mRender: function (data, type, row) {
                     return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewReasonOfDecline('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
@@ -407,7 +430,7 @@ $(document).ready(function(){
             })()
             }
         });
-    } 
+    }
 // DECLINE RESERVATION
 
 // ACCEPT RESERVATION
@@ -441,7 +464,7 @@ $(document).ready(function(){
         });
         }
         });
-    } 
+    }
 // ACCEPT RESERVATION
 
 // SET RESERVATION
@@ -482,10 +505,10 @@ $(document).ready(function(){
                     })
                 }
             }
-        });       
+        });
         }
         });
-    } 
+    }
 // SET RESERVATION
 
 // COMPLETE TRANSACTION
@@ -529,7 +552,7 @@ $(document).ready(function(){
         });
         }
         });
-    } 
+    }
 // COMPLETE TRANSACTION
 
 // BACK OUT RESERVATION
@@ -586,7 +609,7 @@ $(document).ready(function(){
             })()
             }
         });
-    } 
+    }
 // BACK OUT RESERVATION
 
 // VIEW DECLINE REASON
@@ -599,9 +622,9 @@ $(document).ready(function(){
             data: {reservationId: id},
         })
         .done(function(response) {
-            $('#declinedReason').text(response.reason); 
+            $('#declinedReason').text(response.reason);
         })
-    } 
+    }
 // VIEW DECLINE REASON
 
 // VIEW BACK OUT REASON
@@ -614,9 +637,9 @@ $(document).ready(function(){
             data: {reservationId: id},
         })
         .done(function(response) {
-            $('#backOutReason').text(response.reason); 
+            $('#backOutReason').text(response.reason);
         })
-    } 
+    }
 // VIEW BACK OUT REASON
 
 

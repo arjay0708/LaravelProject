@@ -30,20 +30,17 @@ class Admin extends Controller
         public function adminReservation(){
             return view('admin/reservation');
         }
-        public function adminAcceptReservation(){
-            return view('admin/acceptReservation');
-        }
         public function adminOnGoingReservation(){
             return view('admin/ongoingReservation');
         }
-        public function adminDeclineReservation(){
-            return view('admin/declineReservation');
+        public function adminCancelledReservation(){
+            return view('admin/cancelledReservation');
         }
-        public function adminBackOutReservation(){
-            return view('admin/backOutReservation');
+        public function adminUnpaidReservation(){
+            return view('admin/unpaidReservation');
         }
-        public function adminCompleted(){
-            return view('admin/completed');
+        public function adminCompletedReservation(){
+            return view('admin/completedReservation');
         }
         public function adminCustomer(){
             return view('admin/customer');
@@ -128,56 +125,117 @@ class Admin extends Controller
             // ADD ROOM FUNCTION
 
             // ALL PENDING RESERVATION
-                public function getAllPendingReservation(Request $request){
-                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            public function getAllPendingReservation(Request $request) {
+                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
-                    ->where([['reservationTable.status', '=', 'Pending']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->where([['reservationTable.status', '=', 'Pending']])
+                    ->orderBy('reservationTable.reservation_id', 'ASC')
                     ->select(
-                        'reservationTable.reservation_id', 'userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename',
-                        'userTable.extention','roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
-                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
-                    return response()->json($data);
+                        'reservationTable.reservation_id', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
+                        'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+
+                foreach ($data as $reservation) {
+                    $startDateTime = Carbon::parse($reservation->start_dataTime);
+                    $endDateTime = Carbon::parse($reservation->end_dateTime);
+
+                    $totalNights = ceil($startDateTime->diffInHours($endDateTime) / 24);
+                    $totalPayment = $totalNights * $reservation->price_per_hour;
+                    $halfTotalPayment = $totalPayment / 2;
+
+                    $reservation->totalNights = $totalNights;
+                    $reservation->totalPayment = $totalPayment;
+                    $reservation->balance = $halfTotalPayment;
                 }
+
+                return response()->json($data);
+            }
+
             // ALL PENDING RESERVATION
-
-            // ALL ACCEPT RESERVATION
-                public function getAllAcceptReservation(Request $request){
-                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
-                    ->where([['reservationTable.status', '=', 'Accept']])->orderBy('reservationTable.reservation_id', 'ASC')
-                    ->select(
-                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
-                        'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
-                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
-                    return response()->json($data);
-                }
-            // ALL ACCEPT RESERVATION
-
-            // ALL DECLINE RESERVATION
-                public function getAllDeclineReservation(Request $request){
-                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
-                    ->where([['reservationTable.status', '=', 'Decline']])->orderBy('reservationTable.reservation_id', 'ASC')
-                    ->select(
-                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
-                        'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime'
-                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
-                    return response()->json($data);
-                }
-            // ALL DECLINE RESERVATION
 
             // ALL ON GOING RESERVATION
                 public function getAllOnGoingReservation(Request $request){
                     $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                     ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
-                    ->where([['reservationTable.status', '=', 'OnGoing']])->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->where([['reservationTable.status', '=', 'OnGoing']])
+                    ->orderBy('reservationTable.reservation_id', 'ASC')
                     ->select(
-                        'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
-                        'roomTable.room_id', 'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime',
-                    )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
+                        'reservationTable.reservation_id', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
+                        'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+
+                    foreach ($data as $reservation) {
+                        $startDateTime = Carbon::parse($reservation->start_dataTime);
+                        $endDateTime = Carbon::parse($reservation->end_dateTime);
+
+                        $totalNights = ceil($startDateTime->diffInHours($endDateTime) / 24);
+                        $totalPayment = $totalNights * $reservation->price_per_hour;
+                        $halfTotalPayment = $totalPayment / 2;
+
+                        $reservation->totalNights = $totalNights;
+                        $reservation->totalPayment = $totalPayment;
+                        $reservation->balance = $halfTotalPayment;
+                    }
+
                     return response()->json($data);
                 }
             // ALL ON GOING RESERVATION
+
+            // ALL CANCELLED RESERVATION
+                public function getAllCancelledReservation(Request $request){
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Cancel']])
+                    ->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
+                        'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+
+                    foreach ($data as $reservation) {
+                        $startDateTime = Carbon::parse($reservation->start_dataTime);
+                        $endDateTime = Carbon::parse($reservation->end_dateTime);
+
+                        $totalNights = ceil($startDateTime->diffInHours($endDateTime) / 24);
+                        $totalPayment = $totalNights * $reservation->price_per_hour;
+                        $halfTotalPayment = $totalPayment / 2;
+
+                        $reservation->totalNights = $totalNights;
+                        $reservation->totalPayment = $totalPayment;
+                        $reservation->balance = $halfTotalPayment;
+                    }
+
+                    return response()->json($data);
+                }
+            // ALL CANCELLED RESERVATION
+
+            // ALL UNPAID RESERVATION
+                public function getAllUnpaidReservation(Request $request){
+                    $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                    ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                    ->where([['reservationTable.status', '=', 'Unpaid']])
+                    ->orderBy('reservationTable.reservation_id', 'ASC')
+                    ->select(
+                        'reservationTable.reservation_id', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
+                        'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
+                    )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+
+                    foreach ($data as $reservation) {
+                        $startDateTime = Carbon::parse($reservation->start_dataTime);
+                        $endDateTime = Carbon::parse($reservation->end_dateTime);
+
+                        $totalNights = ceil($startDateTime->diffInHours($endDateTime) / 24);
+                        $totalPayment = $totalNights * $reservation->price_per_hour;
+                        $halfTotalPayment = $totalPayment / 2;
+
+                        $reservation->totalNights = $totalNights;
+                        $reservation->totalPayment = $totalPayment;
+                        $reservation->balance = $halfTotalPayment;
+                    }
+
+                    return response()->json($data);
+                }
+            // ALL UNPAID RESERVATION
 
             // ALL COMPLETED RESERVATION
                 public function getAllCompletedReservation(Request $request){

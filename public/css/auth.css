@@ -127,7 +127,7 @@ section.left, section.right {
 
 .logo{
     filter: brightness(90%);
-    width: 15%;
+    width: 20%;
 }
 
 .form-control, .form-select{
@@ -230,15 +230,15 @@ body.signup .left .register {
 .homeButton i, .homeButton2 i{
     font-size: 20px;
     color: #17171E;
-    border: 1px solid #17171E;
+    border-bottom: 1px solid #17171E;
     padding: 10px 14px;
-    border-radius: 50%;
-    transition: 0.4s;
+    transition: 0.2s;
 }
 
 .homeButton i:hover , .homeButton2 i:hover{
     background-color: #17171E;
     color: #fff;
+    border-radius: 50%;
 }
 
 [data-title]:hover:after {

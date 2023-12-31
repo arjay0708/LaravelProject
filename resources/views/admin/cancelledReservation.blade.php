@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Harbor View</title>
+    <title>HOSS</title>
         <!-- CSS -->
-            <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+            <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
         <!-- CSS -->
     @include('cdn')
@@ -36,8 +36,8 @@
                                 </ul>
                             </div>
                         </div>
-                    </nav>              
-                <!-- NAV BAR -->            
+                    </nav>
+                <!-- NAV BAR -->
 
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
@@ -48,19 +48,19 @@
                                     <a class="nav-link" href="/adminReservation">Pending Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminAcceptReservation">Accept Reservation</a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link" href="/adminOnGoingReservation">On-Going Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminDeclineReservation">Declined Reservation</a>
+                                    <a class="nav-link active" href="#">Cancelled Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#">Back-Out Reservation</a>
+                                    <a class="nav-link" href="/adminUnpaidReservation">Unpaid Reservation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminCompletedReservation">Completed Reservation</a>
                                 </li>
                             </ul>
-                            <table id="backOutReservationTable" class="table table-sm table-bordered text-center align-middle">
+                            <table id="cancelledReservationTable" class="table table-sm table-bordered text-center align-middle">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -68,7 +68,9 @@
                                         <th class="text-center">Room</th>
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
-                                        <th class="text-center">Reason</th>
+                                        <th class="text-center">Total Payments</th>
+                                        <th class="text-center">Balance</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -85,17 +87,5 @@
             <script src="{{ asset('/js/dateTime.js') }}"></script>
             <script src="{{ asset('/js/logout.js') }}"></script>
         <!-- JS -->
-
-        {{-- MODAL --}}
-            <div class="modal fade" id="backOutReasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body text-center mt-3">
-                        <p id="backOutReason"></p>                   
-                    </div>
-                </div>
-                </div>
-            </div>
-        {{-- MODAL --}}
 </body>
 </html>

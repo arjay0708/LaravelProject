@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ URL('/img/icon.png') }}" type="image/x-icon">
     <title>Harbor View</title>
     @include('cdn')
     {{-- CSS --}}

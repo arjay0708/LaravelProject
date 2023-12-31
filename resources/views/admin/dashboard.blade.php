@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Harbor View</title>
+    <title>HOSS</title>
         <!-- CSS -->
-            <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+            <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
         <!-- CSS -->
     @include('cdn')
@@ -35,7 +35,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </nav>            
+                    </nav>
                 <!-- NAV BAR -->
 
                 <!-- MAIN CONTENT -->
@@ -91,7 +91,7 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-3 text-start">
-                                                <i class="bi bi-people-fill"></i> 
+                                                <i class="bi bi-people-fill"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
                                                 <p class="card-text fw-bold pe-2" style="font-size: 2rem; color:#303030;" id="totalCustomer"></p>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="mb-3 mt-2 border-2 shadow">
                             <div class="card p-lg-4 p-0 rounded-0" id="fetchAllBackOut"></div>
-                        </div>  
+                        </div>
                     </div>
                 <!-- MAIN CONTENT -->
             </div>

@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png') }}" type="image/x-icon">
-    <title>Harbor View</title>
+    <link rel="shortcut icon" href="{{ URL('/img/icon.png') }}" type="image/x-icon">
+    <title>HOSS</title>
     @include('cdn')
     {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('css/home/superfish.css') }}">
@@ -29,7 +29,7 @@
                     <div class="container">
                         <div class="nav-header">
                             <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
-                            <h1 id="fh5co-logo"><a href="#">Harbor View</a></h1>
+                            <h1 id="fh5co-logo"><a href="#">HOSS Application</a></h1>
                             <nav id="fh5co-menu-wrap" role="navigation">
                                 <ul class="sf-menu" id="fh5co-primary-menu">
                                     <li><a class="active" href="#">Home</a></li>
@@ -469,7 +469,7 @@
                                 </div>
                             </div>
                             <div class="desc">
-                                <h3><a href="#">1st Anniversary of Harbor View</a></h3>
+                                <h3><a href="#">1st Anniversary of HOSS Application</a></h3>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -492,7 +492,7 @@
                         <div class="col-md-3">
                             <div class="copyright">
                                 <p><small>&copy; 2023 Hoss <br> All Rights Reserved. <br>
-                                        Designed by <a href="#" target="_blank">Vince & Reginald</a> <br> Block:
+                                        Designed by <a href="#" target="_blank">GC CCS DEVS</a> <br> Block:
                                         <a href="http://unsplash.com/" target="_blank">BSIT 3</a></small></p>
                             </div>
                         </div>

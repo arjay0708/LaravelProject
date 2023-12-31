@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Harbor View</title>
+    <title>HOSS</title>
         <!-- CSS -->
-            <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+            <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
             <link href="{{ asset('/css/adminDashboard.css') }}" rel="stylesheet">
         <!-- CSS -->
     @include('cdn')
@@ -36,8 +36,8 @@
                                 </ul>
                             </div>
                         </div>
-                    </nav>              
-                <!-- NAV BAR -->            
+                    </nav>
+                <!-- NAV BAR -->
 
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
@@ -91,7 +91,7 @@
                 <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body text-center mt-3">
-                        <p id="declinedReason"></p>                   
+                        <p id="declinedReason"></p>
                     </div>
                 </div>
                 </div>
