@@ -365,7 +365,7 @@ class Admin extends Controller
                 $update->price_per_hour = $request->input('roomPricePerHour');
                 $update->save();
 
-                return response()->json(['success' => true]);
+                return response()->json(1);
             }
 
             // DEACTIVATE ROOM
@@ -451,7 +451,5 @@ class Admin extends Controller
                 ReservationModel::where([['status', '=', 'Unpaid'],['end_dateTime', '<', $currentDateTime],])->delete();
                 return response()->json(1);
             }
-
-
     // FUNCTION
 }

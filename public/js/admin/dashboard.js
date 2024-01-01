@@ -140,3 +140,15 @@ $(document).ready(function(){
             }
         });
     }
+
+    // AUTOMATIC DELETE THE UNPAID RESERVATION
+    if(window.location.href === 'http://127.0.0.1:8000/adminDashboard'){
+        $.ajax({
+            url: '/deleteUnpaidReservation',
+            type: 'GET',
+            dataType: 'json',
+        })
+        .done(function(response) {
+            $('#ongoingReservationTable').DataTable().ajax.reload();
+        })
+    }

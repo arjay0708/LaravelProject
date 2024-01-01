@@ -105,7 +105,7 @@
                                 <div class="row g-1 mt-3">
                                     <div class="col-4">
                                         <label class="form-label">Room Number:</label>
-                                        <input type="text" class="form-control shadow-sm bg-body rounded" required id="roomNumber" name="roomNumber">
+                                        <input type="text" class="form-control shadow-sm rounded" required id="roomNumber" name="roomNumber" readonly>
                                         <input type="hidden" class="form-control shadow-sm bg-body rounded" required id="room_id" name="room_id">
                                     </div>
                                     <div class="col-4">

@@ -52,8 +52,8 @@
                                                 <i class="fa-solid fa-ship icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.5rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalPendingReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">PENDING RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#8d8a85;" id="totalPendingReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#8d8a85;">PENDING RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -67,8 +67,8 @@
                                                 <i class="fa-solid fa-inbox icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCancelReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">CANCELLED RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#8d8a85;" id="totalCancelReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#8d8a85;">CANCELLED RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -82,8 +82,8 @@
                                                 <i class="fa-solid fa-calendar-days icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalUnpaidReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">UNPAID RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#8d8a85;" id="totalUnpaidReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#8d8a85;">UNPAID RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -97,8 +97,8 @@
                                                 <i class="fa-regular fa-square-check icons"></i>
                                             </div>
                                             <div class="col-9 text-center" style="line-height:19px; padding-top:1.4rem">
-                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#303030;" id="totalCompleteReservation"></p>
-                                                <p class="card-text fw-bold" style="font-size: 13px; color:#303030;">COMPLETED RESERVATION</p>
+                                                <p class="card-text fw-bold" style="font-size: 2rem; color:#8d8a85;" id="totalCompleteReservation"></p>
+                                                <p class="card-text fw-bold" style="font-size: 13px; color:#8d8a85;">COMPLETED RESERVATION</p>
                                             </div>
                                         </div>
                                     </div>
@@ -164,6 +164,18 @@
                     success : function(data) {
                         $("#totalCompleteReservation").html(data);
                     }
+                })
+            }
+
+            // AUTOMATIC DELETE THE UNPAID RESERVATION
+            if(window.location.href === 'http://127.0.0.1:8000/customerDashboard'){
+                $.ajax({
+                    url: '/deleteUnpaidReservation',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(response) {
+                    $('#ongoingReservationTable').DataTable().ajax.reload();
                 })
             }
         </script>

@@ -41,7 +41,7 @@
                 <!-- MAIN CONTENT -->
                     <div class="container-fluid mainBar">
                         <div class="card p-5 bg-body rounded-0 shadow-lg">
-                            <h5 class="mb-4 text-lg-start text-center">NEW DETAILS OF ROOM</h5>
+                            <h5 class="mb-4 text-lg-start text-center">ADD NEW ROOM</h5>
                             <ul class="nav nav-tabs mb-4">
                                 <li class="nav-item">
                                     <a class="nav-link active" href="/adminRoom">Available Room</a>

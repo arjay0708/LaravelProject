@@ -16,14 +16,14 @@
 }
 
 .navbar h4{
-    color:  #17171E !important;
+    color:  #8d8a85 !important;
     font-weight: bold;
     letter-spacing: 1px !important;
     font-size: 22px !important;
 }
 
 .navbar a{
-    color:  #17171E !important;
+    color:  #8d8a85 !important;
     font-weight: 500 !important;
     letter-spacing: 1px !important;
     font-size: 12px !important;
@@ -45,7 +45,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #17171E;
+    background-color: #403f3a;
     padding-top: 20px;
 }
 
@@ -70,7 +70,7 @@
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 1px;
-    color: #17171ec5 !important;
+    color: #8d8a85 !important;
     font-weight: 500;
 }
 
@@ -86,22 +86,26 @@
     font-size: 12px;
     display: block !important;
     padding: 22px 16px !important;
-    color: #17171E !important;
+    color: #403f3a !important;
     font-weight: 400;
     text-decoration: none;
     transition: 0.2s linear;
 }
 
+.list-group-item i{
+    color: #8d8a85 !important;
+}
+
 #dateDisplay,
 #clockDisplay {
     font-size: 12px;
-    color: #17171E;
+    color: #403f3a;
     letter-spacing: 1px;
 }
 
 #logout , #applicantslogout{
     font-size: 12px !important;
-    color: #17171E !important;
+    color: #8d8a85 !important;
     border: none !important;
 }
 
@@ -109,8 +113,9 @@
     margin-top: 14rem;
 }
 
-.mainBar , .mainBar .form-control , .mainBar .form-select{
+.mainBar, .form-control, .form-select, .form-label, th , td{
     font-size: 14px !important;
+    color: #403f3a !important;
 }
 
 
@@ -127,20 +132,20 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #17171E;
+    background: #403f3a;
     border-radius: 5px;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #17171E;
+    background: #403f3a;
   }
 
     .mainBar .icons{
         font-size:1rem;
-        background-color:#17171E;
+        background-color:#8d8a85;
         padding:10px;
-        border:1px solid #17171E;
+        border:1px solid #8d8a85;
         border-radius:50%;
         color: #ffffff !important;
     }
@@ -148,46 +153,6 @@
     table tbody td{
         vertical-align: baseline !important;
     }
-
-    .loader {
-        position: fixed;
-        top: 9.2%;
-        left: 15%;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff;
-        transition: opacity 0.1s, visibility 1.5s;
-        }
-
-        .loader--hidden {
-        z-index: 117171E17171E17171E17171E17171E17171E17171E17171E0;
-        opacity: 1  ;
-        visibility: hidden;
-        }
-
-        .loader::after {
-        margin: -5rem 0 0 -12rem;
-        content: "";
-        width: 40px;
-        height: 40px;
-        border: 3px solid #dddddd;
-        border-top-color: #17171E;
-        border-radius: 50%;
-        animation: loading 1s ease infinite;
-        }
-
-        @keyframes loading {
-          from {
-            transform: rotate(0turn);
-          }
-          to {
-            transform: rotate(1turn);
-          }
-        }
-
 
 @media (max-width: 900px) {
     .navbar {
@@ -216,14 +181,14 @@
     }
 
     .navbar h4{
-        color:  #17171E !important;
+        color:  #403f3a !important;
         font-weight: bold;
         letter-spacing: 1px !important;
         font-size: 20px !important;
     }
 
     .navbar button{
-        color:  #17171E;
+        color:  #403f3a;
         display: block;
     }
 
@@ -238,7 +203,7 @@
 
     .noSchedule{
         margin: 15rem 0 0 1.6rem !important;
-        color: #17171E !important;
+        color: #403f3a !important;
     }
 
     /* width */
@@ -249,7 +214,7 @@
     .mainBar .icons{
         font-size:4rem !important;
         padding-top:0.8rem !important;
-        color:#17171E !important;
+        color:#403f3a !important;
         border:0 !important;
         border-radius:0 !important;
         background-color: #ffffff;

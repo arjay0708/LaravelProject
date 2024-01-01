@@ -131,7 +131,7 @@ class Customer extends Controller
         $checkOutDateTime = Carbon::parse($request->checkOutDate . '12:00:00');
         $formattedCheckOut = $checkOutDateTime->format('Y-m-d H:i:s');
 
-        $currentDateTime = now();
+        $currentDateTime = now()->format('Y-m-d H:i:s');
         $random = Carbon::now()->format('YmdHis') . rand(001, 999);
 
         $user = auth()->guard('userModel')->user();
@@ -438,116 +438,93 @@ class Customer extends Controller
                 $carbonEnd = Carbon::parse($checkOutDateTime);
 
                 $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
-
                 $totalPayment = $totalNights * $item->price_per_hour;
-                echo "
-                                <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
-                                    <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
-                                        <div class='row g-0'>
-                                            <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
-                                            <div class='col-md-12'>
-                                                <ul class='list-group list-group-flush fw-bold'>
-                                                    <li class='list-group-item'>
-                                                        <div class='row'>
-                                                            <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                                Room Number: <span class='fw-normal'> $item->room_number</span>
-                                                            </div>
-                                                            <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                                Room Floor:<span class='fw-normal'> $item->floor</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class='list-group-item'>
-                                                        <div class='row'>
-                                                            <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                                Type of Room: <span class='fw-normal'>$item->type_of_room</span>
-                                                            </div>
-                                                            <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                                Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class='list-group-item'>
-                                                        <div class='row'>
-                                                            <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
-                                                                Max Person: <span class='fw-normal'>$item->max_person People Only</span>
-                                                            </div>
-                                                            <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                                Price Per Night(s): <span class='fw-normal'> ₱$item->price_per_hour.00</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class='list-group-item fw-bold' style='color:#'>
-                                                        <div class='col-12'>
-                                                            Details: <span class='fw-normal'>$item->details</span>
-                                                        </div>
-                                                    </li>
-                                                    <li class='list-group-item'>
-                                                        <div class='row'>
-                                                            <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
-                                                                Check In: <span class='fw-normal'> $checkInDateTime - 02:00 PM</span><br>
-                                                                Check Out:<span class='fw-normal'> $checkOutDateTime - 12:00 PM</span>
-                                                            </div>
-                                                            <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
-                                                                Total Night(s): <span class='fw-normal'> $totalNights</span><br>
-                                                                Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class='list-group-item text-center text-lg-end py-2'>
-                                                    ";
-                if ($currentDateTime > $checkInDateTime) {
-                    echo "
-                                                            <div class='row mt-3'>
-                                                                <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
-                                                                    <span class='fw-normal text-danger'> Notes: This reservation is expired because the book date has already passed.</span><br>
-                                                                </div>
-                                                            </div>
-                                                            <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 mt-2 rounded-0'>DELETE RESERVATION</button>
-                                                        ";
-                } else {
-                    echo "
-                                                            <div class='row mt-3'>
-                                                                <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
-                                                                    <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
-                                                                </div>
-                                                            </div>
-                                                            <button type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
-                                                        ";
-                }
-                echo "
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ";
-
-
-                // Calculate total payment
                 $typeOfRoom = $item->type_of_room;
-                echo "
-                <script>
-                    document.getElementById('continueToPayBtn').addEventListener('click', function() {
 
+                echo "
+                    <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
+                        <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
+                            <div class='row g-0'>
+                                <img loading='lazy' src=$item->photos class='card-img-top img-thumdnail' style='height:230px; width:100%;' alt='ship'>
+                                <div class='col-md-12'>
+                                    <ul class='list-group list-group-flush fw-bold'>
+                                        <li class='list-group-item'>
+                                            <div class='row'>
+                                                <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+                                                    Room Number: <span class='fw-normal'> $item->room_number</span>
+                                                </div>
+                                                <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+                                                    Room Floor:<span class='fw-normal'> $item->floor</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class='list-group-item'>
+                                            <div class='row'>
+                                                <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+                                                    Type of Room: <span class='fw-normal'>$item->type_of_room</span>
+                                                </div>
+                                                <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+                                                    Number of Bed:<span class='fw-normal'> $item->number_of_bed Only</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class='list-group-item'>
+                                            <div class='row'>
+                                                <div class='col-12 col-lg-6 ps-0 ps-lg-4'>
+                                                    Max Person: <span class='fw-normal'>$item->max_person People Only</span>
+                                                </div>
+                                                <div class='col-12 col-lg-6 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+                                                    Price Per Night(s): <span class='fw-normal'> ₱$item->price_per_hour.00</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class='list-group-item fw-bold' style='color:#'>
+                                            <div class='col-12'>
+                                                Details: <span class='fw-normal'>$item->details</span>
+                                            </div>
+                                        </li>
+                                        <li class='list-group-item'>
+                                            <div class='row'>
+                                                <div class='col-12 col-lg-7 ps-0 ps-lg-4'>
+                                                    Check In: <span class='fw-normal'> $checkInDateTime - 02:00 PM</span><br>
+                                                    Check Out:<span class='fw-normal'> $checkOutDateTime - 12:00 PM</span>
+                                                </div>
+                                                <div class='col-12 col-lg-5 pt-2 pt-lg-0 ps-0 ps-lg-4'>
+                                                    Total Night(s): <span class='fw-normal'> $totalNights</span><br>
+                                                    Total Payment:<span class='fw-normal'> ₱$totalPayment.00</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class='list-group-item text-center text-lg-end py-2'>
+                                            <div class='row mt-3'>
+                                                <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
+                                                    <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
+                                                </div>
+                                            </div>
+                                            <button type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                    document.getElementById('continueToPayBtn').addEventListener('click', function() {
                         var roomId = " . $item->reservation_id . ";
                         window.location.href = '" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => '']) . "' + roomId;
-
-
                     });
-                </script>
-            ";
+                    </script>
+                ";
             }
             // return redirect()->route('stripePayment', ['total_payment' => $totalPayment]);
         } else {
             echo "
-                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
-                                NO RESERVATION FOUND
-                            </div>
-                        </div>
-                        ";
+                <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
+                    <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                        NO RESERVATION FOUND
+                    </div>
+                </div>
+                ";
         }
     }
     // UNPAID RESERVATION PER USER

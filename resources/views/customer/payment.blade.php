@@ -83,7 +83,6 @@
     </div>
 
     {{-- JS --}}
-        <script src="{{ asset('/js/customer/reservation.js') }}"></script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>
     {{-- END JS --}}
