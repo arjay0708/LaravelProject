@@ -68,8 +68,8 @@
                                         <th class="text-center">Room</th>
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
-                                        <th class="text-center">Total Payments</th>
-                                        <th class="text-center">Balance</th>
+                                        <th class="text-center">Total Payment</th>
+                                        <th class="text-center">Advance Payment</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>

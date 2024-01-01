@@ -59,7 +59,7 @@ $(document).ready(function(){
                 return "₱"+data.balance+ ".00" ;
             }},
             { "mData": function (data, type, row) {
-                return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="backOutReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Back Out Reservation?"><i class="bi bi-x-square"></i></button>'
+                return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button></button>'
                 // return '<button type="button" data-title="Accept Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=acceptReservation('+data.reservation_id+') class="btn rounded-0 btn-outline-success btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button> <button type="button" onclick="declineReservation('+data.reservation_id+', '+data.user_id+')" class="btn rounded-0 ROUNDED-0 btn-outline-danger btn-sm py-2 px-3" data-title="Decline Reservation?"><i class="bi bi-x-square"></i></button>'
             }},
         ],
@@ -186,7 +186,7 @@ $(document).ready(function(){
                     return "₱"+data.balance+ ".00" ;
                 }},
                 { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
+                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button>'
                 }},
             ],
             order: [[1, 'asc']],
@@ -248,11 +248,6 @@ $(document).ready(function(){
                 { "mData": function (data, type, row) {
                     return "₱"+data.balance+ ".00" ;
                 }},
-                {"data": "reservation_id",
-                    mRender: function (data, type, row) {
-                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewReasonOfDecline('+data+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
-                }
-                }
             ],
             order: [[1, 'asc']],
         });
@@ -307,6 +302,9 @@ $(document).ready(function(){
             },
             "targets": 1
             },
+            { "mData": function (data, type, row) {
+                return "₱"+data.totalPayment+ ".00" ;
+            }},
         ],
         order: [[1, 'asc']],
     });
@@ -318,154 +316,6 @@ $(document).ready(function(){
     }).draw();
     }
 // FETCH ALL COMPLETED TRANSACTION
-
-// FETCH ALL COMPLETED TRANSACTION
-    function backOutReservationTable(){
-        var table = $('#backOutReservationTable').DataTable({
-            "language": {
-                "emptyTable": "No Reservation Found"
-            },
-            "lengthChange": true,
-            "scrollCollapse": true,
-            "paging": true,
-            "info": true,
-            "responsive": true,
-            "ordering": false,
-            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
-            "iDisplayLength": 25,
-            "ajax":{
-                "url":"/getAllBackOutReservation",
-                "dataSrc": "",
-            },
-            "columns":[
-                {"data":"reservation_id"},
-                { "mData": function (data, type, row) {
-                    if(data.extention != null){
-                        return data.firstname+ " " +data.lastname+ " " +data.extention;
-                    }else{
-                        return data.firstname+ " " +data.lastname;
-                    }
-                }},
-                { "mData": function (data, type, row) {
-                        return data.floor+ " - Room " +data.room_number;
-                }},
-                {"data": "start_dataTime",
-                    "render": function(data) {
-                    return moment(data).format('MMM DD, YYYY | hh:mm A');
-                },
-                "targets": 1
-                },
-                {"data": "end_dateTime",
-                    "render": function(data) {
-                    return moment(data).format('MMM DD, YYYY | hh:mm A');
-                },
-                "targets": 1
-                },
-                { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick=viewReasonOfBackOut('+data.reservation_id+') class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button>'
-                }},
-            ],
-            order: [[1, 'asc']],
-        });
-        table.on('order.dt search.dt', function () {
-            let i = 1;
-            table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
-                this.data(i++);
-            });
-        }).draw();
-    }
-// FETCH ALL COMPLETED TRANSACTION
-
-// DECLINE RESERVATION
-    function declineReservation(reservationId, userId){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to DECLINE this BOOKING?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d72323',
-            confirmButtonText: 'Yes, Continue'
-            }).then((result) => {
-            if (result.isConfirmed) {
-            (async () => {
-                const { value: reason } = await Swal.fire({
-                    input: 'textarea',
-                    title: 'Reason of Decline?',
-                    text: "once you submit, You won't be able to revert this",
-                    inputPlaceholder: 'Type your reason here...',
-                    inputAttributes: {
-                    'aria-label': 'Type your message here'
-                    },
-                    showCancelButton: true
-                })
-                if(reason){
-                    $.ajax({
-                        url: '/declineReservation',
-                        type: 'GET',
-                        dataType: 'text',
-                        data: {reason: reason, reservationId: reservationId,  userId: userId},
-                        success: function(response) {
-                            if(response == 1){
-                                Swal.fire({
-                                    title: 'DECLINE SUCCESSFULLY',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1000,
-                                }).then((result) => {
-                                if (result) {
-                                    $('#pendingReservationTable').DataTable().ajax.reload();
-                                }
-                                });
-                            }else if(response == 0){
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Decline Failed',
-                                    text: 'Something wrong at the backend',
-                                })
-                            }
-                        }
-                    });
-                }
-            })()
-            }
-        });
-    }
-// DECLINE RESERVATION
-
-// ACCEPT RESERVATION
-    function acceptReservation(id){
-        Swal.fire({
-        title: 'Are you sure?',
-        text: "Do you want to ACCEPT this BOOKING?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Accept it'
-        }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-            url: '/acceptReservation',
-            type: 'GET',
-            dataType: 'json',
-            data: {reservationId: id},
-        });
-        Swal.fire({
-            title: 'ACCEPT BOOKING',
-            text: "Reservation was accept successfully",
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-        }).then((result) => {
-        if (result) {
-            $('#pendingReservationTable').DataTable().ajax.reload();
-        }
-        });
-        }
-        });
-    }
-// ACCEPT RESERVATION
 
 // SET RESERVATION
     function ongoingReservation(reservationId , roomId){
@@ -494,7 +344,7 @@ $(document).ready(function(){
                         timer: 1500,
                     }).then((result) => {
                     if (result) {
-                        $('#acceptReservationTable').DataTable().ajax.reload();
+                        $('#ongoingReservationTable').DataTable().ajax.reload();
                     }
                     });
                 }else if(response == 2){
@@ -555,92 +405,31 @@ $(document).ready(function(){
     }
 // COMPLETE TRANSACTION
 
-// BACK OUT RESERVATION
-    function backOutReservation(reservationId, userId){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to BACK OUT this BOOKING?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d72323',
-            confirmButtonText: 'Yes, Continue'
-            }).then((result) => {
-            if (result.isConfirmed) {
-            (async () => {
-                const { value: reason } = await Swal.fire({
-                    input: 'textarea',
-                    title: 'Reason of Back Out?',
-                    text: "once you submit, You won't be able to revert this",
-                    inputPlaceholder: 'Type your reason here...',
-                    inputAttributes: {
-                    'aria-label': 'Type your message here'
-                    },
-                    showCancelButton: true
-                })
-                if(reason){
-                    $.ajax({
-                        url: '/adminBackOutReservationFunction',
-                        type: 'GET',
-                        dataType: 'text',
-                        data: {reason: reason, reservationId: reservationId,  userId: userId},
-                        success: function(response) {
-                            if(response == 1){
-                                Swal.fire({
-                                    title: 'BACK OUT SUCCESSFULLY',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1000,
-                                }).then((result) => {
-                                if (result) {
-                                    $('#acceptReservationTable').DataTable().ajax.reload();
-                                }
-                                });
-                            }else if(response == 0){
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Back Out Failed',
-                                    text: 'Something wrong at the backend',
-                                })
-                            }
-                        }
-                    });
-                }
-            })()
-            }
-        });
-    }
-// BACK OUT RESERVATION
-
-// VIEW DECLINE REASON
-    function viewReasonOfDecline(id){
-        $('#declineReasonModal').modal('show')
+// VIEW CANCELLED REASON
+    function viewReason(id){
+        $('#cancelledReasonModal').modal('show')
         $.ajax({
-            url: '/viewReasonDecline',
+            url: '/viewReasonCancelled',
             type: 'GET',
             dataType: 'json',
             data: {reservationId: id},
         })
         .done(function(response) {
-            $('#declinedReason').text(response.reason);
+            $('#cancelledReason').text(response.reason);
+            $('#cancelledLast').text(moment(response.created_at).format('MMM DD, YYYY | hh:mm A'));
         })
     }
-// VIEW DECLINE REASON
+// VIEW CANCELLED REASON
 
-// VIEW BACK OUT REASON
-    function viewReasonOfBackOut(id){
-        $('#backOutReasonModal').modal('show')
+// AUTOMATIC DELETE THE UNPAID RESERVATION
+    if(window.location.href === 'http://127.0.0.1:8000/adminUnpaidReservation'){
         $.ajax({
-            url: '/viewReasonBackOut',
+            url: '/deleteUnpaidReservation',
             type: 'GET',
             dataType: 'json',
-            data: {reservationId: id},
         })
         .done(function(response) {
-            $('#backOutReason').text(response.reason);
+            $('#ongoingReservationTable').DataTable().ajax.reload();
         })
     }
-// VIEW BACK OUT REASON
-
-
-
+// AUTOMATIC DELETE THE UNPAID RESERVATION

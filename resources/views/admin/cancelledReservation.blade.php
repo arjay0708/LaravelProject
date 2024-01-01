@@ -82,10 +82,29 @@
         <!-- MAIN CONTENT -->
     </div>
 
-        <!-- JS -->
-            <script src="{{ asset('/js/admin/reservation.js') }}"></script>
-            <script src="{{ asset('/js/dateTime.js') }}"></script>
-            <script src="{{ asset('/js/logout.js') }}"></script>
-        <!-- JS -->
+    <!-- JS -->
+        <script src="{{ asset('/js/admin/reservation.js') }}"></script>
+        <script src="{{ asset('/js/dateTime.js') }}"></script>
+        <script src="{{ asset('/js/logout.js') }}"></script>
+    <!-- JS -->
+
+    {{-- MODAL --}}
+    <div class="modal fade" id="cancelledReasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5">REASON</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center mt-3">
+                <p id="cancelledReason"></p>
+            </div>
+            <div class="modal-footer">
+                <p class="card-text"><small class="text-body-secondary">Cancelled Last: <span id="cancelledLast"></span></small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {{-- MODAL --}}
 </body>
 </html>

@@ -24,7 +24,7 @@
                 <!-- NAV BAR -->
                     <nav class="navbar navbar-expand-lg border-bottom">
                         <div class="container-fluid">
-                            <h4 class="ms-2"> COMPLETED TRANSACTION</h4>
+                            <h4 class="ms-2"> MANAGE RESERVATION</h4>
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                                     <li>
@@ -51,10 +51,10 @@
                                     <a class="nav-link" href="#">On-Going Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminDeclineReservation">Cancelled Reservation</a>
+                                    <a class="nav-link" href="/adminCancelledReservation">Cancelled Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminBackOutReservation">Unpaid Reservation</a>
+                                    <a class="nav-link" href="/adminUnpaidReservation">Unpaid Reservation</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link active" href="#">Completed Reservation</a>
@@ -68,6 +68,7 @@
                                         <th class="text-center">Room</th>
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
+                                        <th class="text-center">Total Payment</th>
                                     </tr>
                                 </thead>
                             </table>

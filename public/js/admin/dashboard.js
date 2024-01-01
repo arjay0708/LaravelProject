@@ -4,6 +4,7 @@ $(document).ready(function(){
     totalCompletedReservation();
     totalCustomer();
     getBackOutContent();
+    chart();
 });
 
 
@@ -86,5 +87,56 @@ $(document).ready(function(){
         }
         });
         }
+        });
+    }
+
+    function chart(){
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+              label: 'Reservation Per Month',
+              data: [12, 19, 3, 5, 2, 3],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+    }
+
+    function chart(){
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+              label: 'Sales Per Month',
+              data: [12000, 19000, 3000, 5000, 2000, 3000, 15000, 22000, 13000, 7000, 9000, 13000],
+              borderWidth: 1,
+              backgroundColor: [
+                '#f8d38d',
+              ],
+                borderColor: [
+                    '#f8d38d',
+                ],
+            }]
+          },
+          options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max:30000
+                },
+            }
+            }
         });
     }

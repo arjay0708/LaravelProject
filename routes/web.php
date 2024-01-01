@@ -76,11 +76,12 @@ Route::post('/updateRoom', [Admin::class, 'updateRoom'])->name('updateRoom');
 Route::get('/deactivateRoom', [Admin::class, 'deactivateRoom'])->name('deactivateRoom');
 Route::get('/activateRoom', [Admin::class, 'activateRoom'])->name('activateRoom');
 Route::get('/getBackOutContentForAdmin', [Admin::class, 'getBackOutContentForAdmin'])->name('getBackOutContentForAdmin');
-Route::get('/viewReasonDecline', [Admin::class, 'viewReasonDecline'])->name('viewReasonDecline');
+Route::get('/viewReasonCancelled', [Admin::class, 'viewReasonCancelled'])->name('viewReasonCancelled');
 Route::get('/viewReasonBackOut', [Admin::class, 'viewReasonBackOut'])->name('viewReasonBackOut');
 Route::get('/deactivateCustomer', [Admin::class, 'deactivateCustomer'])->name('deactivateCustomer');
 Route::get('/activateCustomer', [Admin::class, 'activateCustomer'])->name('activateCustomer');
 Route::get('/viewCustomer', [Admin::class, 'viewCustomer'])->name('viewCustomer');
+Route::get('/deleteUnpaidReservation', [Admin::class, 'deleteUnpaidReservation'])->name('deleteUnpaidReservation');
 
 // FUNCTION
 // ADMIN DASHBOARD

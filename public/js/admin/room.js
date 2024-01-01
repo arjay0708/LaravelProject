@@ -253,7 +253,7 @@ $(document).ready(function(){
               I read the notes and remarks before deactivating this.
               `,
               confirmButtonText: `
-                Continue&nbsp;<i class="fa fa-arrow-right"></i>
+                Continue&nbsp; <i class="fa fa-arrow-right"></i>
               `,
               inputValidator: (result) => {
                 return !result && "You need to read the notes and remarks before deactivating this";

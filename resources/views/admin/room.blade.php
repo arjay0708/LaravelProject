@@ -50,7 +50,7 @@
                                         <a class="nav-link" href="/adminNotAvailableRoom">Not Available Room</a>
                                     </li>
                                     <li class="nav-item ms-auto">
-                                        <a href="/addNewRoom" class="btn btn-primary ms-auto py-2 px-3 btn-sm rounded-0 mb-1">New Room <i class="bi bi-plus-circle"></i></a>
+                                        <a href="/addNewRoom" class="btn btn-primary ms-auto py-2 px-3 btn-sm rounded-0 mb-1">Add New Room <i class="bi bi-plus"></i></a>
                                     </li>
                                 </ul>
                                 <table id="availableRoom" class="table table-sm table-bordered text-center align-middle">

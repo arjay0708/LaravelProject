@@ -213,7 +213,7 @@ $(document).ready(function(){
             }else if(response == 3){
                 Swal.fire(
                 'Inactive Account',
-                'Your account is disable to access the A&S Application',
+                'Your account is disable to access the Hoss Application',
                 'error'
                 )
             }else if(response == 2){
