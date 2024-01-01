@@ -53,13 +53,13 @@ class Customer extends Controller
     // ROUTES
 
     // FUNCTION
-        // SHOW ROOM FOR CUSTOMER
-        public function getCustomerRoom(Request $request)
-        {
-            $data = roomModel::where([['is_available', '!=', 0]])->orderBy('room_id')->get();
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    echo "
+    // SHOW ROOM FOR CUSTOMER
+    public function getCustomerRoom(Request $request)
+    {
+        $data = roomModel::where([['is_available', '!=', 0]])->orderBy('room_id')->get();
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                echo "
                                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
                                         <div class='row g-0'>
@@ -110,111 +110,121 @@ class Customer extends Controller
                                     </div>
                                 </div>
                             ";
-                }
-            } else {
-                echo "
+            }
+        } else {
+            echo "
                         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                                 NO ROOM AVAILABLE
                             </div>
                         </div>
                         ";
-            }
         }
-        // SHOW ROOM FOR CUSTOMER
+    }
+    // SHOW ROOM FOR CUSTOMER
 
-        // BOOK RESERVATION
-        public function bookReservation(Request $request)
-        {
-            $checkInDateTime = Carbon::parse($request->checkInDate . '14:00:00');
-            $formattedCheckIn = $checkInDateTime->format('Y-m-d H:i:s');
-            $checkOutDateTime = Carbon::parse($request->checkOutDate . '12:00:00');
-            $formattedCheckOut = $checkOutDateTime->format('Y-m-d H:i:s');
+    // BOOK RESERVATION
+    public function bookReservation(Request $request)
+    {
+        $checkInDateTime = Carbon::parse($request->checkInDate . '14:00:00');
+        $formattedCheckIn = $checkInDateTime->format('Y-m-d H:i:s');
+        $checkOutDateTime = Carbon::parse($request->checkOutDate . '12:00:00');
+        $formattedCheckOut = $checkOutDateTime->format('Y-m-d H:i:s');
 
-            $currentDateTime = now();
-            $random = Carbon::now()->format('YmdHis') . rand(001, 999);
+        $currentDateTime = now();
+        $random = Carbon::now()->format('YmdHis') . rand(001, 999);
 
-            $user = auth()->guard('userModel')->user();
+        $user = auth()->guard('userModel')->user();
 
-            if (empty($user->lastname) || empty($user->firstname)) {
-                return response()->json(5);
-            }
+        if (empty($user->lastname) || empty($user->firstname)) {
+            return response()->json(5);
+        }
 
-            $existingReservation = ReservationModel::where('room_id', $request->roomId)
-                ->where('status', 'Pending')
-                ->where(function ($query) use ($user, $formattedCheckIn, $formattedCheckOut) {
+        $existingReservation = ReservationModel::where('room_id', $request->roomId)
+            ->where('status', 'Pending')
+            ->where(function ($query) use ($user, $formattedCheckIn, $formattedCheckOut) {
+                $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
                     $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
-                        $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
-                            $query->where('start_dataTime', '<', $formattedCheckOut)
-                                ->where('end_dateTime', '>', $formattedCheckIn);
-                        })
-                            ->orWhere(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
-                                $query->where('start_dataTime', $formattedCheckIn)
-                                    ->where('end_dateTime', $formattedCheckOut);
-                            });
-                    });
-                })
-                ->exists();
+                        $query->where('start_dataTime', '<', $formattedCheckOut)
+                            ->where('end_dateTime', '>', $formattedCheckIn);
+                    })
+                        ->orWhere(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                            $query->where('start_dataTime', $formattedCheckIn)
+                                ->where('end_dateTime', $formattedCheckOut);
+                        });
+                });
+            })
+            ->exists();
 
-            if ($existingReservation) {
-                return response()->json(6);
-            }
-
-            if ($currentDateTime > $formattedCheckIn) {
-                return response()->json(4);
-            } elseif ($formattedCheckIn == $formattedCheckOut) {
-                return response()->json(2);
-            } elseif ($formattedCheckOut < $formattedCheckIn) {
-                return response()->json(3);
-            }
-
-            $bookRoom = ReservationModel::create([
-                'book_code' => $random,
-                'user_id' => $user->user_id,
-                'room_id' => $request->roomId,
-                'start_dataTime' => $formattedCheckIn,
-                'end_dateTime' => $formattedCheckOut,
-                'status' => 'Unpaid',
-                'is_archived' => 0
-            ]);
-
-            if ($bookRoom) {
-                return response()->json(['status' => 1, 'book_code' => $bookRoom->book_code]);
-            } else {
-                return response()->json(['status' => 0]);
-            }
+        if ($existingReservation) {
+            return response()->json(6);
         }
 
-        public function payment($book_code)
-        {
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where([['book_code', '=', $book_code]])->select(
-                    'roomTable.room_id','roomTable.photos','roomTable.room_number','roomTable.floor','roomTable.type_of_room','roomTable.number_of_bed',
-                    'roomTable.details','roomTable.price_per_hour','reservationTable.book_code','reservationTable.start_dataTime','reservationTable.end_dateTime')->get();
-            return view('customer/payment', compact('data'));
+        if ($currentDateTime > $formattedCheckIn) {
+            return response()->json(4);
+        } elseif ($formattedCheckIn == $formattedCheckOut) {
+            return response()->json(2);
+        } elseif ($formattedCheckOut < $formattedCheckIn) {
+            return response()->json(3);
         }
-        // BOOK RESERVATION
 
-        // PENDING RESERVATION PER USER
-        public function getBookPerUser(Request $request)
-        {
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where(
-                    [['reservationTable.status', '=', 'Pending'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
-                )->orderBy('reservationTable.reservation_id', 'ASC')->get();
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    // CALCULATE OF TOTAL HOURS
-                    $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
-                    $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
+        $bookRoom = ReservationModel::create([
+            'book_code' => $random,
+            'user_id' => $user->user_id,
+            'room_id' => $request->roomId,
+            'start_dataTime' => $formattedCheckIn,
+            'end_dateTime' => $formattedCheckOut,
+            'status' => 'Unpaid',
+            'is_archived' => 0
+        ]);
 
-                    $carbonStart = Carbon::parse($checkInDateTime);
-                    $carbonEnd = Carbon::parse($checkOutDateTime);
+        if ($bookRoom) {
+            return response()->json(['status' => 1, 'book_code' => $bookRoom->book_code]);
+        } else {
+            return response()->json(['status' => 0]);
+        }
+    }
 
-                    $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
+    public function payment($book_code)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            ->where([['book_code', '=', $book_code]])->select(
+                'roomTable.room_id',
+                'roomTable.photos',
+                'roomTable.room_number',
+                'roomTable.floor',
+                'roomTable.type_of_room',
+                'roomTable.number_of_bed',
+                'roomTable.details',
+                'roomTable.price_per_hour',
+                'reservationTable.book_code',
+                'reservationTable.start_dataTime',
+                'reservationTable.end_dateTime'
+            )->get();
+        return view('customer/payment', compact('data'));
+    }
+    // BOOK RESERVATION
 
-                    $totalPayment = $totalNights * $item->price_per_hour;
-                    echo "
+    // PENDING RESERVATION PER USER
+    public function getBookPerUser(Request $request)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            ->where(
+                [['reservationTable.status', '=', 'Pending'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
+            )->orderBy('reservationTable.reservation_id', 'ASC')->get();
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                // CALCULATE OF TOTAL HOURS
+                $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
+                $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
+
+                $carbonStart = Carbon::parse($checkInDateTime);
+                $carbonEnd = Carbon::parse($checkOutDateTime);
+
+                $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
+
+                $totalPayment = $totalNights * $item->price_per_hour;
+                echo "
                                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
                                         <div class='row g-0'>
@@ -277,44 +287,59 @@ class Customer extends Controller
                                     </div>
                                 </div>
                             ";
-                }
-            } else {
-                echo "
+            }
+        } else {
+            echo "
                         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                                 NO RESERVATION FOUND
                             </div>
                         </div>
                         ";
-            }
         }
-        // PENDING RESERVATION PER USER
+    }
+    // PENDING RESERVATION PER USER
 
-        // CANCEL RESERVATION PER USER
-        public function getCancelBookPerUser(Request $request){
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+    // CANCEL RESERVATION PER USER
+    public function getCancelBookPerUser(Request $request)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
             ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
-            ->where([['reservationTable.status', '=', 'Cancel'],['reservationTable.user_id', '=' ,auth()->guard('userModel')->user()->user_id]]
+            ->where(
+                [['reservationTable.status', '=', 'Cancel'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
             )->orderBy('reservationTable.reservation_id', 'ASC')
-            ->select('roomTable.room_id','roomTable.photos','roomTable.room_number','roomTable.floor','roomTable.type_of_room','roomTable.number_of_bed',
-            'roomTable.details','roomTable.max_person','roomTable.price_per_hour','reservationTable.book_code','reservationTable.start_dataTime','reservationTable.end_dateTime',
-            'reasonBackOutTable.reason','reasonBackOutTable.updated_at',)
+            ->select(
+                'roomTable.room_id',
+                'roomTable.photos',
+                'roomTable.room_number',
+                'roomTable.floor',
+                'roomTable.type_of_room',
+                'roomTable.number_of_bed',
+                'roomTable.details',
+                'roomTable.max_person',
+                'roomTable.price_per_hour',
+                'reservationTable.book_code',
+                'reservationTable.start_dataTime',
+                'reservationTable.end_dateTime',
+                'reasonBackOutTable.reason',
+                'reasonBackOutTable.updated_at',
+            )
             ->orderBy('reasonBackOutTable.updated_at', 'ASC')->get();
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    $currentDateTime = Carbon::now()->format('F d, Y g:i A');
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                $currentDateTime = Carbon::now()->format('F d, Y g:i A');
 
-                    $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
-                    $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
-                    $cancelDateTime = date('F d, Y', strtotime($item->updated_at));
+                $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
+                $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
+                $cancelDateTime = date('F d, Y', strtotime($item->updated_at));
 
-                    $carbonStart = Carbon::parse($checkInDateTime);
-                    $carbonEnd = Carbon::parse($checkOutDateTime);
+                $carbonStart = Carbon::parse($checkInDateTime);
+                $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                    $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
+                $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                    $totalPayment = $totalNights * $item->price_per_hour;
-                    echo "
+                $totalPayment = $totalNights * $item->price_per_hour;
+                echo "
                         <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                             <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
                                     <div class='row g-0'>
@@ -382,40 +407,40 @@ class Customer extends Controller
                                 </div>
                             </div>
                         ";
-                }
-            } else {
-                echo "
+            }
+        } else {
+            echo "
                     <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                         <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                             NO RESERVATION FOUND
                         </div>
                     </div>
                 ";
-            }
         }
-        // CANCEL RESERVATION PER USER
+    }
+    // CANCEL RESERVATION PER USER
 
-        // UNPAID RESERVATION PER USER
-        public function getUnpaidBooking(Request $request)
-        {
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where(
-                    [['reservationTable.status', '=', 'Unpaid'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
-                )->orderBy('reservationTable.reservation_id', 'ASC')->get();
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    $currentDateTime = Carbon::now()->format('F d, Y g:i A');
+    // UNPAID RESERVATION PER USER
+    public function getUnpaidBooking(Request $request)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            ->where(
+                [['reservationTable.status', '=', 'Unpaid'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
+            )->orderBy('reservationTable.reservation_id', 'ASC')->get();
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                $currentDateTime = Carbon::now()->format('F d, Y g:i A');
 
-                    $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
-                    $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
+                $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
+                $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
 
-                    $carbonStart = Carbon::parse($checkInDateTime);
-                    $carbonEnd = Carbon::parse($checkOutDateTime);
+                $carbonStart = Carbon::parse($checkInDateTime);
+                $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                    $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
+                $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                    $totalPayment = $totalNights * $item->price_per_hour;
-                    echo "
+                $totalPayment = $totalNights * $item->price_per_hour;
+                echo "
                                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
                                         <div class='row g-0'>
@@ -471,8 +496,8 @@ class Customer extends Controller
                                                     </li>
                                                     <li class='list-group-item text-center text-lg-end py-2'>
                                                     ";
-                    if ($currentDateTime > $checkInDateTime) {
-                        echo "
+                if ($currentDateTime > $checkInDateTime) {
+                    echo "
                                                             <div class='row mt-3'>
                                                                 <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
                                                                     <span class='fw-normal text-danger'> Notes: This reservation is expired because the book date has already passed.</span><br>
@@ -480,17 +505,17 @@ class Customer extends Controller
                                                             </div>
                                                             <button onclick='cancelReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-4 py-2 mt-2 rounded-0'>DELETE RESERVATION</button>
                                                         ";
-                    } else {
-                        echo "
+                } else {
+                    echo "
                                                             <div class='row mt-3'>
                                                                 <div class='col-12 col-lg-12 ps-0 ps-lg-4'>
                                                                     <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
                                                                 </div>
                                                             </div>
-                                                            <button type='button' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
+                                                            <button type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
                                                         ";
-                    }
-                    echo "
+                }
+                echo "
                                                     </li>
                                                 </ul>
                                             </div>
@@ -498,42 +523,55 @@ class Customer extends Controller
                                     </div>
                                 </div>
                             ";
-                    // Calculate total payment
-                    $typeOfRoom = $item->type_of_room;
-                }
-                return redirect()->route('stripePayment', ['total_payment' => $totalPayment, 'total_nights' => $totalNights, 'type_of_room' => $typeOfRoom]);
-            } else {
+
+
+                // Calculate total payment
+                $typeOfRoom = $item->type_of_room;
                 echo "
+                <script>
+                    document.getElementById('continueToPayBtn').addEventListener('click', function() {
+
+                        var roomId = " . $item->reservation_id . ";
+                        window.location.href = '" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => '']) . "' + roomId;
+
+
+                    });
+                </script>
+            ";
+            }
+            // return redirect()->route('stripePayment', ['total_payment' => $totalPayment]);
+        } else {
+            echo "
                         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                                 NO RESERVATION FOUND
                             </div>
                         </div>
                         ";
-            }
         }
-        // UNPAID RESERVATION PER USER
+    }
+    // UNPAID RESERVATION PER USER
 
-        // COMPLETE RESERVATION PER USER
-        public function getCompleteBookPerUser(Request $request)
-        {
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->where(
-                    [['reservationTable.status', '=', 'Complete'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
-                )->orderBy('reservationTable.reservation_id', 'ASC')->get();
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    // CALCULATE OF TOTAL HOURS
-                    $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
-                    $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
+    // COMPLETE RESERVATION PER USER
+    public function getCompleteBookPerUser(Request $request)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            ->where(
+                [['reservationTable.status', '=', 'Complete'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id]]
+            )->orderBy('reservationTable.reservation_id', 'ASC')->get();
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                // CALCULATE OF TOTAL HOURS
+                $checkInDateTime = date('F d, Y', strtotime($item->start_dataTime));
+                $checkOutDateTime = date('F d, Y', strtotime($item->end_dateTime));
 
-                    $carbonStart = Carbon::parse($checkInDateTime);
-                    $carbonEnd = Carbon::parse($checkOutDateTime);
+                $carbonStart = Carbon::parse($checkInDateTime);
+                $carbonEnd = Carbon::parse($checkOutDateTime);
 
-                    $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
+                $totalNights = ceil($carbonStart->diffInHours($carbonEnd) / 24);
 
-                    $totalPayment = $totalNights * $item->price_per_hour;
-                    echo "
+                $totalPayment = $totalNights * $item->price_per_hour;
+                echo "
                                 <div class='col-lg-6 col-sm-12 g-0 gx-lg-5 text-center text-lg-start'>
                                     <div class='card mb-3 shadow border-2 border rounded' style='width:100%'>
                                         <div class='row g-0'>
@@ -593,90 +631,90 @@ class Customer extends Controller
                                     </div>
                                 </div>
                             ";
-                }
-            } else {
-                echo "
+            }
+        } else {
+            echo "
                         <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
                             <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
                                 NO RESERVATION FOUND
                             </div>
                         </div>
                         ";
-            }
         }
-        // COMPLETE RESERVATION PER USER
+    }
+    // COMPLETE RESERVATION PER USER
 
-        // COUNT ROOM AVAILABLE
-        public function totalAvailableRoom(Request $request)
-        {
-            $data = roomModel::where('is_available', '=', 1)->get();
-            $countData = $data->count();
-            return response()->json($countData != '' ? $countData : '0');
-        }
-        // COUNT ROOM AVAILABLE
+    // COUNT ROOM AVAILABLE
+    public function totalAvailableRoom(Request $request)
+    {
+        $data = roomModel::where('is_available', '=', 1)->get();
+        $countData = $data->count();
+        return response()->json($countData != '' ? $countData : '0');
+    }
+    // COUNT ROOM AVAILABLE
 
-        // TOTAL PENDING RESERVATION
-        public function totalPendingReservation(Request $request)
-        {
-            $data = reservationModel::where([
-                ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-                ['status', '=', 'Pending']
-            ])->get();
-            $countData = $data->count();
-            return response()->json($countData != '' ? $countData : '0');
-        }
-        // TOTAL PENDING RESERVATION
+    // TOTAL PENDING RESERVATION
+    public function totalPendingReservation(Request $request)
+    {
+        $data = reservationModel::where([
+            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
+            ['status', '=', 'Pending']
+        ])->get();
+        $countData = $data->count();
+        return response()->json($countData != '' ? $countData : '0');
+    }
+    // TOTAL PENDING RESERVATION
 
-        // TOTAL ACCEPT RESERVATION
-        public function totalUnpaidReservation(Request $request)
-        {
-            $data = reservationModel::where([
-                ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-                ['status', '=', 'Unpaid']
-            ])->get();
-            $countData = $data->count();
-            return response()->json($countData != '' ? $countData : '0');
-        }
-        // TOTAL ACCEPT RESERVATION
+    // TOTAL ACCEPT RESERVATION
+    public function totalUnpaidReservation(Request $request)
+    {
+        $data = reservationModel::where([
+            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
+            ['status', '=', 'Unpaid']
+        ])->get();
+        $countData = $data->count();
+        return response()->json($countData != '' ? $countData : '0');
+    }
+    // TOTAL ACCEPT RESERVATION
 
-        // TOTAL DECLINE RESERVATION
-        public function totalCancelReservation(Request $request)
-        {
-            $data = reservationModel::where([
-                ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-                ['status', '=', 'Cancel']
-            ])->get();
-            $countData = $data->count();
-            return response()->json($countData != '' ? $countData : '0');
-        }
-        // TOTAL DECLINE RESERVATION
+    // TOTAL DECLINE RESERVATION
+    public function totalCancelReservation(Request $request)
+    {
+        $data = reservationModel::where([
+            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
+            ['status', '=', 'Cancel']
+        ])->get();
+        $countData = $data->count();
+        return response()->json($countData != '' ? $countData : '0');
+    }
+    // TOTAL DECLINE RESERVATION
 
-        // TOTAL COMPLETE RESERVATION
-        public function totalCompleteReservation(Request $request)
-        {
-            $data = reservationModel::where([
-                ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-                ['status', '=', 'Complete']
-            ])->get();
-            $countData = $data->count();
-            return response()->json($countData != '' ? $countData : '0');
-        }
-        // TOTAL COMPLETE RESERVATION
+    // TOTAL COMPLETE RESERVATION
+    public function totalCompleteReservation(Request $request)
+    {
+        $data = reservationModel::where([
+            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
+            ['status', '=', 'Complete']
+        ])->get();
+        $countData = $data->count();
+        return response()->json($countData != '' ? $countData : '0');
+    }
+    // TOTAL COMPLETE RESERVATION
 
-        // BACK OUT CONTENT
-        public function getBackOutContent(Request $request)
-        {
-            $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
-                ->where([['reservationTable.status', '=', 'BackOut'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id], ['reservationTable.is_archived', '=', 0], ['reasonBackOutTable.set_by_admin', '=', 1]])
-                ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime','reservationTable.end_dateTime','reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime', 'ASC')->get();
-                $customer = auth()->guard('userModel')->user()->firstname . ' ' .
-                auth()->guard('userModel')->user()->lastname . ' ' . auth()->guard('userModel')->user()->extention;
-            if ($data->isNotEmpty()) {
-                foreach ($data as $item) {
-                    $newStartDate = date('F d, Y - h:i: A', strtotime($item->start_dataTime));
-                    $newEndDate = date('F d, Y - h:i: A', strtotime($item->end_dateTime));
-                    echo "
+    // BACK OUT CONTENT
+    public function getBackOutContent(Request $request)
+    {
+        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+            ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
+            ->where([['reservationTable.status', '=', 'BackOut'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id], ['reservationTable.is_archived', '=', 0], ['reasonBackOutTable.set_by_admin', '=', 1]])
+            ->select('roomTable.room_number', 'roomTable.floor', 'reasonBackOutTable.reservation_id', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime', 'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+        $customer = auth()->guard('userModel')->user()->firstname . ' ' .
+            auth()->guard('userModel')->user()->lastname . ' ' . auth()->guard('userModel')->user()->extention;
+        if ($data->isNotEmpty()) {
+            foreach ($data as $item) {
+                $newStartDate = date('F d, Y - h:i: A', strtotime($item->start_dataTime));
+                $newEndDate = date('F d, Y - h:i: A', strtotime($item->end_dateTime));
+                echo "
                                 <div class='col-12'>
                                     <div class='card mb-2 shadow'>
                                         <div class='card-body'>
@@ -689,75 +727,75 @@ class Customer extends Controller
                                     </div>
                                 </div>
                             ";
-                }
-            } else {
-                echo "
+            }
+        } else {
+            echo "
                         <div class='row applicantNoSchedule' style='margin-top:1.5rem; color: #303030;'>
                             <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
                                 NO CANCELLED RESERVATION
                             </div>
                         </div>
                         ";
-            }
         }
-        // BACK OUT CONTENT
+    }
+    // BACK OUT CONTENT
 
-        // ARCHIVED CANCELLED RESERVATION
-        public function archivedCancelledReservation(Request $request)
-        {
-            $archive = reservationModel::where([['reservation_id', '=', $request->reservationId]])
-                ->update(['is_archived' => 1]);
-            return response()->json($archive ? 1 : 0);
+    // ARCHIVED CANCELLED RESERVATION
+    public function archivedCancelledReservation(Request $request)
+    {
+        $archive = reservationModel::where([['reservation_id', '=', $request->reservationId]])
+            ->update(['is_archived' => 1]);
+        return response()->json($archive ? 1 : 0);
+    }
+    // ARCHIVED CANCELLED RESERVATION
+
+    // CANCEL THE ACCEPTED RESERVATION
+    public function cancelReservation(Request $request)
+    {
+        $cancelReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'Cancel']);
+        if ($cancelReservation) {
+            $backOutReason = reasonBackOutModel::create([
+                'reservation_id' => $request->reservationId,
+                'user_id' => auth()->guard('userModel')->user()->user_id,
+                'reason' => $request->reason,
+                'set_by_admin' => 0,
+            ]);
+            return response()->json($backOutReason ? 1 : 0);
         }
-        // ARCHIVED CANCELLED RESERVATION
+    }
+    // CANCEL THE ACCEPTED RESERVATION
 
-        // CANCEL THE ACCEPTED RESERVATION
-        public function cancelReservation(Request $request)
-        {
-            $cancelReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'Cancel']);
-            if ($cancelReservation) {
-                $backOutReason = reasonBackOutModel::create([
-                    'reservation_id' => $request->reservationId,
-                    'user_id' => auth()->guard('userModel')->user()->user_id,
-                    'reason' => $request->reason,
-                    'set_by_admin' => 0,
-                ]);
-                return response()->json($backOutReason ? 1 : 0);
-            }
+    // FETCH ACCOUNT PER USER
+    public function getUserInfo(Request $request)
+    {
+        $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
+        return response()->json($data);
+    }
+    // FETCH ACCOUNT PER USER
+
+    // FETCH UPDATE ACCOUNT PER USER
+    public function updateUserAccount(Request $request)
+    {
+        $update = userModel::find($request->userUniqueId);
+        if ($request->hasFile('userProfile')) {
+            $filename = $request->file('userProfile');
+            $imageName = time() . rand() . '.' . $filename->getClientOriginalExtension();
+            $path = $request->file('userProfile')->storeAs('userPhotos', $imageName, 'public');
+            $update->photos = '/storage/' . $path;
         }
-        // CANCEL THE ACCEPTED RESERVATION
 
-        // FETCH ACCOUNT PER USER
-        public function getUserInfo(Request $request)
-        {
-            $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
-            return response()->json($data);
-        }
-        // FETCH ACCOUNT PER USER
+        $update->lastname = $request->input('userLastName');
+        $update->firstname = $request->input('userFirstName');
+        $update->middlename = $request->input('userMiddleName');
+        $update->extention = $request->input('userExtension');
+        $update->email = $request->input('userEmail');
+        $update->phoneNumber = $request->input('userPhoneNumber');
+        $update->birthday = $request->input('userBirthday');
+        $update->age = $request->input('userAge');
+        $update->save();
 
-        // FETCH UPDATE ACCOUNT PER USER
-        public function updateUserAccount(Request $request)
-        {
-            $update = userModel::find($request->userUniqueId);
-            if ($request->hasFile('userProfile')) {
-                $filename = $request->file('userProfile');
-                $imageName = time() . rand() . '.' . $filename->getClientOriginalExtension();
-                $path = $request->file('userProfile')->storeAs('userPhotos', $imageName, 'public');
-                $update->photos = '/storage/' . $path;
-            }
-
-            $update->lastname = $request->input('userLastName');
-            $update->firstname = $request->input('userFirstName');
-            $update->middlename = $request->input('userMiddleName');
-            $update->extention = $request->input('userExtension');
-            $update->email = $request->input('userEmail');
-            $update->phoneNumber = $request->input('userPhoneNumber');
-            $update->birthday = $request->input('userBirthday');
-            $update->age = $request->input('userAge');
-            $update->save();
-
-            return response()->json(1);
-        }
-        // FETCH UPDATE ACCOUNT PER USER
+        return response()->json(1);
+    }
+    // FETCH UPDATE ACCOUNT PER USER
     // FUNCTION
 }

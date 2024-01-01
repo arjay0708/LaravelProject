@@ -100,10 +100,11 @@ Route::get('/customerAccount', [Customer::class, 'customerAccount'])->name('cust
 Route::get('/payment/{book_code}', [Customer::class, 'payment'])->name('payment');
 
 
-//Stripe
+// Stripe
 // Route::post('/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
-// Route::get('/success', [Stripe::class, 'success'])->name('success');
-// Route::get('/success', [Stripe::class, 'success'])->name('success');
+Route::match(['get', 'post'], '/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
+Route::get('/success', [Stripe::class, 'success'])->name('success');
+Route::get('/cancel', [Stripe::class, 'cancel'])->name('cancel');
 
 
 
