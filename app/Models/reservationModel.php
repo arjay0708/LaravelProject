@@ -25,6 +25,7 @@ class reservationModel extends Model
         'end_dateTime',
         'status',
         'is_archived',
+        'is_noted',
     ];
     protected $hidden = [
         'token',

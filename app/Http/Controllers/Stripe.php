@@ -29,7 +29,7 @@ class Stripe extends Controller
             'line_items' => [
                 [
                     'price_data' => [
-                        'currency' => 'usd',
+                        'currency' => 'PHP',
                         'product_data' => [
                             'name' => 'Total Value',
                             // 'type_of_room' => $typeOfRoom,
@@ -55,10 +55,8 @@ class Stripe extends Controller
         $reservation = reservationModel::where('reservation_id', $reservedId)->first();
 
         if ($reservation) {
-
             $reservation->update(['status' => 'Complete']);
         } else {
-
             return redirect()->route('cancel')->with('message', 'Reservation not found.');
         }
 

@@ -50,7 +50,7 @@
                                     <a class="nav-link active" href="#">&nbsp;&nbsp;Information&nbsp;&nbsp;</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminCredentials">Credentials</a>
+                                    <a class="nav-link" href="/customerCredentials">Credentials</a>
                                 </li>
                             </ul>
                             {{-- INFO --}}
@@ -63,7 +63,7 @@
                                                 <input class="form-control shadow-sm bg-body rounded-0" type="file" name="userProfile" accept="image/png, image/jpg, image/jpeg, image/gif, image/svg">
                                             </div>
                                         </div>
-                                        <div class="col-3 text-center">
+                                        <div class="col-3 text-start ps-4">
                                             <div class="mb-3">
                                                 <img class="img-thumbnail border-0 profilePicture" id="userProfile" style="height:170px;" src="">
                                             </div>
@@ -73,20 +73,20 @@
                                         <div class="col-3">
                                             <div class="mb-3">
                                                 <label class="form-label">First Name:</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="userFirstName" name="userFirstName">
+                                                <input readonly required class="form-control shadow-sm rounded-0" type="text"  id="userFirstName" name="userFirstName">
                                                 <input required class="form-control shadow-sm rounded-0" type="hidden" id="userUniqueId" name="userUniqueId">
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="mb-3">
                                                 <label class="form-label">Middle Name:</label>
-                                                <input class="form-control shadow-sm rounded-0" type="text"  id="userMiddleName"  name="userMiddleName" >
+                                                <input readonly class="form-control shadow-sm rounded-0" type="text"  id="userMiddleName"  name="userMiddleName" >
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="mb-3">
                                                 <label class="form-label">Last Name:</label>
-                                                <input required class="form-control shadow-sm rounded-0" type="text"  id="userLastName"  name="userLastName" >
+                                                <input readonly required class="form-control shadow-sm rounded-0" type="text"  id="userLastName"  name="userLastName" >
                                             </div>
                                         </div>
                                         <div class="col-2">
@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label">Birthday: </label>
-                                            <input type="date" class="form-control shadow-sm rounded-0" onchange="calculateAge()"  id="userBirthday" name="userBirthday">
+                                            <input readonly type="date" class="form-control shadow-sm rounded-0" onchange="calculateAge()"  id="userBirthday" name="userBirthday">
                                         </div>
                                         <div class="col-2">
                                             <label class="form-label">Age:</label>

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->datetime('end_dateTime');
             $table->string('status');
             $table->string('is_archived');
+            $table->integer('is_noted');
             $table->timestamps();
         });
     }

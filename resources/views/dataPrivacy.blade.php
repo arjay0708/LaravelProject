@@ -164,7 +164,7 @@
                                         <li><a href="/dataPrivacy">Data Privacy</li>
                                         <li><a href="#">Contact Us</a></li>
                                         <li><a href="/adminLogin">Administrator</a></li>
-                                        <li><a href="/privacyPolicy">Terms & Policy</a></li>
+                                        <li><a href="/privacyPolicy">Terms / Policy</a></li>
 
                                     </ul>
                                 </div>

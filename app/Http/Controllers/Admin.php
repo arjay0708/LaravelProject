@@ -179,7 +179,7 @@ class Admin extends Controller
                 ->where([['reservationTable.status', '=', 'Cancel']])
                 ->orderBy('reservationTable.reservation_id', 'ASC')
                 ->select(
-                    'reservationTable.reservation_id', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
+                    'reservationTable.reservation_id','reservationTable.is_noted', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
                     'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
                 )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
 
@@ -296,47 +296,26 @@ class Admin extends Controller
                 }
             }
 
-            // BACK OUT RESERVATION
-            public function adminBackOutReservationFunction(Request $request){
-                $backOutReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])
-                ->update(['status' => 'BackOut']);
-                if($backOutReservation){
-                    $backOutReason = reasonBackOutModel::create([
-                        'reservation_id' => $request->reservationId,
-                        'user_id' => $request->userId,
-                        'reason' => $request->reason,
-                        'set_by_admin' => 1
-                    ]);
-                    return response()->json($backOutReason ? 1 : 0);
-                }
-            }
+            // GET ALL TOTAL
+            public function getAllTotalForAdmin(Request $request){
+                $pending = reservationModel::where([['status', '=' ,'Pending']])->get();
+                $totalPendingReservation = $pending->count();
 
-            // TOTAL PENDING RESERVATION
-            public function totalPendingReservationForAdmin(Request $request){
-                $data = reservationModel::where([['status', '=' ,'Pending']])->get();
-                $countData = $data->count();
-                return response()->json($countData != '' ? $countData : '0');
-            }
+                $onGoingReservation = reservationModel::where([['status', '=' ,'OnGoing']])->get();
+                $totalOnGoingReservation = $onGoingReservation->count();
 
-            // TOTAL ON-GOING RESERVATION
-            public function totalOnGoingReservationForAdmin(Request $request){
-                $data = reservationModel::where([['status', '=' ,'OnGoing']])->get();
-                $countData = $data->count();
-                return response()->json($countData != '' ? $countData : '0');
-            }
+                $completeReservation = reservationModel::where([['status', '=' ,'Completed']])->get();
+                $totalCompletedReservation = $completeReservation->count();
 
-            // TOTAL COMPLETED RESERVATION
-            public function totalCompletedReservationForAdmin(Request $request){
-                $data = reservationModel::where([['status', '=' ,'Completed']])->get();
-                $countData = $data->count();
-                return response()->json($countData != '' ? $countData : '0');
-            }
+                $customer = userModel::where([['is_active', '=' ,1], ['is_admin', '=' ,0]])->get();
+                $totalCustomer = $customer->count();
 
-            // TOTAL CUSTOMER
-            public function totalCustomerForAdmin(Request $request){
-                $data = userModel::where([['is_active', '=' ,1], ['is_admin', '=' ,0]])->get();
-                $countData = $data->count();
-                return response()->json($countData != '' ? $countData : '0');
+                return response()->json([
+                    'totalPendingReservation' => $totalPendingReservation,
+                    'totalOnGoingReservation' => $totalOnGoingReservation,
+                    'totalCompletedReservation' => $totalCompletedReservation,
+                    'totalCustomer' => $totalCustomer,
+                ]);
             }
 
             // VIEW DETAILS OF ROOM
@@ -450,6 +429,18 @@ class Admin extends Controller
                 $currentDateTime = Carbon::now()->toDateTimeString();
                 ReservationModel::where([['status', '=', 'Unpaid'],['end_dateTime', '<', $currentDateTime],])->delete();
                 return response()->json(1);
+            }
+
+            //  NOTE CANCELED RESERVATION
+            public function noteCancelReservation(Request $request) {
+                reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['is_noted' => 1]);
+                return response()->json(1);
+            }
+
+            // CHECK CANCELLED RESERVATION
+            public function checkCancelledReservation(Request $request) {
+                $check = reservationModel::where([['is_noted', '=', 0]])->get();
+                return response()->json($check->isNotEmpty() ? 1 : 0);
             }
     // FUNCTION
 }

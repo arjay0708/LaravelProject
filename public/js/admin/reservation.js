@@ -186,7 +186,11 @@ $(document).ready(function(){
                     return "₱"+data.balance+ ".00" ;
                 }},
                 { "mData": function (data, type, row) {
-                    return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button>'
+                    if(data.is_noted != 1){
+                        return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button> <button type="button" data-title="Note This?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="noteCancelReservation('+data.reservation_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-journal-check"></i></button>'
+                    }else{
+                        return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" onclick="viewReason(' + data.reservation_id + ', ' + data.room_id + ')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button>';
+                    }
                 }},
             ],
             order: [[1, 'asc']],
@@ -420,3 +424,41 @@ $(document).ready(function(){
         })
     }
 // VIEW CANCELLED REASON
+
+// NOTE CANCEL RESERVATION
+    function noteCancelReservation(id){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to NOTE this BOOKING?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Continue'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                url: '/noteCancelReservation',
+                type: 'GET',
+                dataType: 'json',
+                data: {reservationId: id},
+                success: function(response) {
+                    if(response == 1){
+                        Swal.fire({
+                            title: 'SUCCESSFULLY NOTED',
+                            text: "Reservation was completely noted",
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then((result) => {
+                        if (result) {
+                            $('#cancelledReservationTable').DataTable().ajax.reload();
+                        }
+                        });
+                    }
+                }
+            });
+            }
+            });
+    }
+// NOTE CANCEL RESERVATION

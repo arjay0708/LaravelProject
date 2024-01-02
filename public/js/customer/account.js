@@ -73,7 +73,6 @@ $(document).ready(function(){
                 });
             }
         }
-
     });
 // MANAGE EMPLOYEES
 

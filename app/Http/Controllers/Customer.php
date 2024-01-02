@@ -10,49 +10,58 @@ use App\Models\userModel;
 use App\Models\roomModel;
 use App\Models\reservationModel;
 use App\Models\reasonBackOutModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+
 
 class Customer extends Controller
 {
     // ROUTES
-    public function customerDashboard()
-    {
-        return view('customer/dashboard');
-    }
-    public function customerRoom()
-    {
-        return view('customer/room');
-    }
-    public function customerReservation()
-    {
-        return view('customer/reservation');
-    }
-    public function customerAcceptReservation()
-    {
-        return view('customer/acceptReservation');
-    }
-    public function customerCancelReservation()
-    {
-        return view('customer/cancelReservation');
-    }
-    public function customerDeclinedReservation()
-    {
-        return view('customer/declinedReservation');
-    }
-    public function customerUnpaidReservation()
-    {
-        return view('customer/unpaidReservation');
-    }
-    public function customerCompleted()
-    {
-        return view('customer/complete');
-    }
-    public function customerAccount()
-    {
-        return view('customer/account');
-    }
+        public function customerDashboard()
+        {
+            return view('customer/dashboard');
+        }
+        public function customerRoom()
+        {
+            return view('customer/room');
+        }
+        public function customerReservation()
+        {
+            return view('customer/reservation');
+        }
+        public function customerAcceptReservation()
+        {
+            return view('customer/acceptReservation');
+        }
+        public function customerCancelReservation()
+        {
+            return view('customer/cancelReservation');
+        }
+        public function customerDeclinedReservation()
+        {
+            return view('customer/declinedReservation');
+        }
+        public function customerUnpaidReservation()
+        {
+            return view('customer/unpaidReservation');
+        }
+        public function customerCompleted()
+        {
+            return view('customer/complete');
+        }
+        public function customerAccount()
+        {
+            return view('customer/account');
+        }
+        public function customerCredentials()
+        {
+            return view('customer/credentials');
+        }
     // ROUTES
 
     // FUNCTION
+
     // SHOW ROOM FOR CUSTOMER
     public function getCustomerRoom(Request $request)
     {
@@ -121,7 +130,6 @@ class Customer extends Controller
                         ";
         }
     }
-    // SHOW ROOM FOR CUSTOMER
 
     // BOOK RESERVATION
     public function bookReservation(Request $request)
@@ -175,7 +183,8 @@ class Customer extends Controller
             'start_dataTime' => $formattedCheckIn,
             'end_dateTime' => $formattedCheckOut,
             'status' => 'Unpaid',
-            'is_archived' => 0
+            'is_archived' => 0,
+            'is_noted' => 0
         ]);
 
         if ($bookRoom) {
@@ -203,7 +212,6 @@ class Customer extends Controller
             )->get();
         return view('customer/payment', compact('data'));
     }
-    // BOOK RESERVATION
 
     // PENDING RESERVATION PER USER
     public function getBookPerUser(Request $request)
@@ -298,7 +306,6 @@ class Customer extends Controller
                         ";
         }
     }
-    // PENDING RESERVATION PER USER
 
     // CANCEL RESERVATION PER USER
     public function getCancelBookPerUser(Request $request)
@@ -418,7 +425,6 @@ class Customer extends Controller
                 ";
         }
     }
-    // CANCEL RESERVATION PER USER
 
     // UNPAID RESERVATION PER USER
     public function getUnpaidBooking(Request $request)
@@ -501,22 +507,15 @@ class Customer extends Controller
                                                     <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
                                                 </div>
                                             </div>
-                                            <button type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</button>
+                                            <a href='" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => $item->reservation_id]) . "' type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <script>
-                    document.getElementById('continueToPayBtn').addEventListener('click', function() {
-                        var roomId = " . $item->reservation_id . ";
-                        window.location.href = '" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => '']) . "' + roomId;
-                    });
-                    </script>
                 ";
             }
-            // return redirect()->route('stripePayment', ['total_payment' => $totalPayment]);
         } else {
             echo "
                 <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
@@ -527,7 +526,6 @@ class Customer extends Controller
                 ";
         }
     }
-    // UNPAID RESERVATION PER USER
 
     // COMPLETE RESERVATION PER USER
     public function getCompleteBookPerUser(Request $request)
@@ -619,112 +617,35 @@ class Customer extends Controller
                         ";
         }
     }
-    // COMPLETE RESERVATION PER USER
 
-    // COUNT ROOM AVAILABLE
-    public function totalAvailableRoom(Request $request)
-    {
-        $data = roomModel::where('is_available', '=', 1)->get();
-        $countData = $data->count();
-        return response()->json($countData != '' ? $countData : '0');
-    }
-    // COUNT ROOM AVAILABLE
+    // GET ALL TOTAL
+    public function getAllTotalForCustomer(Request $request){
+        $pendingReservation = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],['status', '=', 'Pending']])->get();
+        $totalPendingReservation = $pendingReservation->count();
 
-    // TOTAL PENDING RESERVATION
-    public function totalPendingReservation(Request $request)
-    {
-        $data = reservationModel::where([
-            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-            ['status', '=', 'Pending']
-        ])->get();
-        $countData = $data->count();
-        return response()->json($countData != '' ? $countData : '0');
-    }
-    // TOTAL PENDING RESERVATION
+        $unpaidReservation = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],['status', '=', 'Unpaid']])->get();
+        $totalUnpaidReservation = $unpaidReservation->count();
 
-    // TOTAL ACCEPT RESERVATION
-    public function totalUnpaidReservation(Request $request)
-    {
-        $data = reservationModel::where([
-            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-            ['status', '=', 'Unpaid']
-        ])->get();
-        $countData = $data->count();
-        return response()->json($countData != '' ? $countData : '0');
-    }
-    // TOTAL ACCEPT RESERVATION
+        $cancelledReservation = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],['status', '=', 'Cancel']])->get();
+        $totalCancelReservation = $cancelledReservation->count();
 
-    // TOTAL DECLINE RESERVATION
-    public function totalCancelReservation(Request $request)
-    {
-        $data = reservationModel::where([
-            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-            ['status', '=', 'Cancel']
-        ])->get();
-        $countData = $data->count();
-        return response()->json($countData != '' ? $countData : '0');
-    }
-    // TOTAL DECLINE RESERVATION
+        $completeReservation = reservationModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id],['status', '=', 'Complete']])->get();
+        $totalCompleteReservation = $completeReservation->count();
 
-    // TOTAL COMPLETE RESERVATION
-    public function totalCompleteReservation(Request $request)
-    {
-        $data = reservationModel::where([
-            ['user_id', '=', auth()->guard('userModel')->user()->user_id],
-            ['status', '=', 'Complete']
-        ])->get();
-        $countData = $data->count();
-        return response()->json($countData != '' ? $countData : '0');
+        return response()->json([
+            'totalPendingReservation' => $totalPendingReservation,
+            'totalUnpaidReservation' => $totalUnpaidReservation,
+            'totalCancelReservation' => $totalCancelReservation,
+            'totalCompleteReservation' => $totalCompleteReservation,
+        ]);
     }
-    // TOTAL COMPLETE RESERVATION
-
-    // BACK OUT CONTENT
-    public function getBackOutContent(Request $request)
-    {
-        $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-            ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
-            ->where([['reservationTable.status', '=', 'BackOut'], ['reservationTable.user_id', '=', auth()->guard('userModel')->user()->user_id], ['reservationTable.is_archived', '=', 0], ['reasonBackOutTable.set_by_admin', '=', 1]])
-            ->select('roomTable.room_number', 'roomTable.floor', 'reasonBackOutTable.reservation_id', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime', 'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime', 'ASC')->get();
-        $customer = auth()->guard('userModel')->user()->firstname . ' ' .
-            auth()->guard('userModel')->user()->lastname . ' ' . auth()->guard('userModel')->user()->extention;
-        if ($data->isNotEmpty()) {
-            foreach ($data as $item) {
-                $newStartDate = date('F d, Y - h:i: A', strtotime($item->start_dataTime));
-                $newEndDate = date('F d, Y - h:i: A', strtotime($item->end_dateTime));
-                echo "
-                                <div class='col-12'>
-                                    <div class='card mb-2 shadow'>
-                                        <div class='card-body'>
-                                            <h5 class='card-title'>Dear $customer,</h5>
-                                            <p class='card-text mb-3'>Your Reservation for <span class='fw-bold'>$item->floor Room Number $item->room_number From
-                                            $newStartDate to $newEndDate </span> has been cancelled due to $item->reason. We apologize for the inconvenience i hope you understand.
-                                            Please book another room, Thank You And God Bless.</p>
-                                            <button onclick=noteBackOutContent('$item->reservation_id') class='btn btn-success btn-sm px-3 rounded-0'>Noted</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ";
-            }
-        } else {
-            echo "
-                        <div class='row applicantNoSchedule' style='margin-top:1.5rem; color: #303030;'>
-                            <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
-                                NO CANCELLED RESERVATION
-                            </div>
-                        </div>
-                        ";
-        }
-    }
-    // BACK OUT CONTENT
 
     // ARCHIVED CANCELLED RESERVATION
     public function archivedCancelledReservation(Request $request)
     {
-        $archive = reservationModel::where([['reservation_id', '=', $request->reservationId]])
-            ->update(['is_archived' => 1]);
+        $archive = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['is_archived' => 1]);
         return response()->json($archive ? 1 : 0);
     }
-    // ARCHIVED CANCELLED RESERVATION
 
     // CANCEL THE ACCEPTED RESERVATION
     public function cancelReservation(Request $request)
@@ -740,7 +661,6 @@ class Customer extends Controller
             return response()->json($backOutReason ? 1 : 0);
         }
     }
-    // CANCEL THE ACCEPTED RESERVATION
 
     // FETCH ACCOUNT PER USER
     public function getUserInfo(Request $request)
@@ -748,9 +668,8 @@ class Customer extends Controller
         $data = userModel::where([['user_id', '=', auth()->guard('userModel')->user()->user_id]])->first();
         return response()->json($data);
     }
-    // FETCH ACCOUNT PER USER
 
-    // FETCH UPDATE ACCOUNT PER USER
+    // UPDATE ACCOUNT PER USER
     public function updateUserAccount(Request $request)
     {
         $update = userModel::find($request->userUniqueId);
@@ -770,9 +689,22 @@ class Customer extends Controller
         $update->birthday = $request->input('userBirthday');
         $update->age = $request->input('userAge');
         $update->save();
-
         return response()->json(1);
     }
-    // FETCH UPDATE ACCOUNT PER USER
+
+    // UPDATE CREDS PER USER
+    public function updateUserCredentials(Request $request)
+    {
+        $user = auth()->guard('userModel')->user();
+        $userData = userModel::where('user_id', $user->user_id)->first(['password']);
+        if (!Hash::check($request->userOldPassword, $userData->password)) {
+            return response()->json(2); 
+        }
+        userModel::where('user_id', $user->user_id)->update(['password' => Hash::make($request->userNewPassword)]);
+        Session::flush();
+        Auth::guard('userModel')->logout();
+        return response()->json(1); 
+    }
+
     // FUNCTION
 }
