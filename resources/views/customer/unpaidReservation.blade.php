@@ -9,7 +9,7 @@
     {{-- CSS --}}
         <link href="{{ asset('/css/customerDashboard.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/sideBar.css') }}" rel="stylesheet">
-        <link rel="shortcut icon" href="{{ URL('/img/whitelogo.png')}}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ URL('/img/icon.png')}}" type="image/x-icon">
     {{-- CSS --}}
     <title>HOSS</title>
 </head>
@@ -59,16 +59,60 @@
                     }
                 });
                 showUnpaidBookingPerUser();
-                function showUnpaidBookingPerUser(){
-                    $.ajax({
-                        url: "/getUnpaidBooking",
-                        method: 'GET',
-                        success : function(data) {
-                            $("#showUnpaidReservation").html(data);
-                        }
-                    })
-                }
             });
+            function showUnpaidBookingPerUser(){
+                $.ajax({
+                    url: "/getUnpaidBooking",
+                    method: 'GET',
+                    success : function(data) {
+                        $("#showUnpaidReservation").html(data);
+                    }
+                })
+            }
+            function deleteReservation(id){
+                async function showNotesAndRemarks() {
+                    const { value: accept } = await Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Do you want to continue to cancel this booking?",
+                        icon: 'question',
+                        input: "checkbox",
+                        inputValue: 1,
+                        inputPlaceholder: `
+                        I read the <a href='notesRemarks'>notes and remarks</a>.
+                        `,
+                        confirmButtonText: `
+                        Continue&nbsp;<i class="fa fa-arrow-right"></i>
+                        `,
+                        inputValidator: (result) => {
+                            return !result && "You need to read the notes and remarks before cancel this";
+                        }
+                    });
+                    if (accept) {
+                        $.ajax({
+                            url: "/deleteReservation",
+                            type: 'GET',
+                            dataType: 'text',
+                            data: {reservationId: id},
+                            success: function(response) {
+                                if(response == 1){
+                                    Swal.fire({
+                                        title: 'CANCEL SUCCESSFULLY',
+                                        text: "Please, Book another reservation",
+                                        icon: 'success',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                    }).then((result) => {if (result) {showUnpaidBookingPerUser()}});
+                                }
+                            },
+
+                            error:function(error){
+                                console.log(error)
+                            }
+                        })
+                    }
+                }
+                showNotesAndRemarks();
+            }
         </script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>

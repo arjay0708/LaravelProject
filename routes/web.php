@@ -20,6 +20,7 @@ Route::get('/registration', [Authentication::class, 'registration'])->name('regi
 Route::get('/adminLogin', [Authentication::class, 'adminLogin'])->name('adminLogin');
 Route::get('/privacyPolicy', [Authentication::class, 'privacyPolicy'])->name('privacyPolicy');
 Route::get('/dataPrivacy', [Authentication::class, 'dataPrivacy'])->name('dataPrivacy');
+Route::get('/notesRemarks', [Authentication::class, 'notesRemarks'])->name('notesRemarks');
 
 Route::post('/registrationFunction', [Authentication::class, 'registrationFunction'])->name('registrationFunction');
 Route::post('/userLoginFunction', [Authentication::class, 'userLoginFunction'])->name('userLoginFunction');
@@ -117,6 +118,7 @@ Route::get('/getUnpaidBooking', [Customer::class, 'getUnpaidBooking'])->name('ge
 Route::get('/getCompleteBookPerUser', [Customer::class, 'getCompleteBookPerUser'])->name('getCompleteBookPerUser');
 Route::get('/archivedCancelledReservation', [Customer::class, 'archivedCancelledReservation'])->name('archivedCancelledReservation');
 Route::get('/cancelReservation', [Customer::class, 'cancelReservation'])->name('cancelReservation');
+Route::get('/deleteReservation', [Customer::class, 'deleteReservation'])->name('deleteReservation');
 Route::get('/getUserInfo', [Customer::class, 'getUserInfo'])->name('getUserInfo');
 Route::post('/updateUserAccount', [Customer::class, 'updateUserAccount'])->name('updateUserAccount');
 Route::post('/updateUserCredentials', [Customer::class, 'updateUserCredentials'])->name('updateUserCredentials');

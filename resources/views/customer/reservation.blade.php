@@ -69,56 +69,65 @@
                         }
                     })
                 }
-            function cancelReservation(id){
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "Do you want to cancel this reservation?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d72323',
-                    confirmButtonText: 'Yes, Continue'
-                    }).then((result) => {
-                    if (result.isConfirmed) {
-                    (async () => {
-                        const { value: reason } = await Swal.fire({
-                            input: 'textarea',
-                            title: 'Reason for Cancelling?',
-                            text: "Once you submit, You agree to continue to cancel this booking and you won't be able to revert this",
-                            inputPlaceholder: 'Type your reason here...',
-                            inputAttributes: {
-                            'aria-label': 'Type your message here'
-                            },
-                            showCancelButton: true
-                        })
-                        if(reason){
-                            $.ajax({
-                                url: '/cancelReservation',
-                                type: 'GET',
-                                dataType: 'text',
-                                data: {reason: reason, reservationId: id},
-                                success: function(response) {
-                                    if(response == 1){
-                                        Swal.fire({
-                                            title: 'CANCEL SUCCESSFULLY',
-                                            icon: 'success',
-                                            showConfirmButton: false,
-                                            timer: 1000,
-                                        }).then((result) => {if (result) {showBookingPerUser()}});
-                                    }else if(response == 0){
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Back Out Failed',
-                                            text: 'Something wrong at the backend',
-                                        })
-                                    }
+                function cancelReservation(id){
+                    async function cancelReservation() {
+                        const { value: accept } = await Swal.fire({
+                            title: 'Are you sure?',
+                            text: "Do you want to continue to cancel this booking?",
+                            icon: 'question',
+                            input: "checkbox",
+                            inputValue: 1,
+                            inputPlaceholder: `
+                            I read the <a href='notesRemarks'>notes and remarks</a>.
+                            `,
+                            confirmButtonText: `
+                            Continue&nbsp;<i class="fa fa-arrow-right"></i>
+                            `,
+                            inputValidator: (result) => {
+                                return !result && "You need to read the notes and remarks before cancel this";
+                            }
+                        });
+                        if (accept) {
+                            (async () => {
+                                const { value: reason } = await Swal.fire({
+                                    input: 'textarea',
+                                    title: 'Reason for Cancelling?',
+                                    text: "Once you submit, You agree to continue to cancel this booking and you won't be able to revert this",
+                                    inputPlaceholder: 'Type your reason here...',
+                                    inputAttributes: {
+                                    'aria-label': 'Type your message here'
+                                    },
+                                    showCancelButton: true
+                                })
+                                if(reason){
+                                    $.ajax({
+                                        url: '/cancelReservation',
+                                        type: 'GET',
+                                        dataType: 'text',
+                                        data: {reason: reason, reservationId: id},
+                                        success: function(response) {
+                                            if(response == 1){
+                                                Swal.fire({
+                                                    title: 'CANCEL SUCCESSFULLY',
+                                                    icon: 'success',
+                                                    showConfirmButton: false,
+                                                    timer: 1000,
+                                                }).then((result) => {if (result) {showBookingPerUser()}});
+                                            }else if(response == 0){
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Back Out Failed',
+                                                    text: 'Something wrong at the backend',
+                                                })
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            })()
                         }
-                    })()
                     }
-                });
-            }
+                    cancelReservation();
+                }
         </script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>

@@ -53,88 +53,89 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="section-title text-center">
-                                <h2>Data Privacy</h2>
+                                <h2>Notes and Remarks</h2>
                             </div>
                             <div class="terms">
-                                <h1 style="color: #ffffff">Data Privacy for Hotel Appointment System</h1>
+                                <h1 style="color: #ffffff">Notes And Remarks for Hotel Appointment System</h1>
 
-                                <p style="color: #ffffff">Harbor View places a high priority on protecting your personal
-                                    information by implementing strong organizational and technical controls. In
-                                    compliance with relevant legal restrictions, we employ security mechanisms including
-                                    firewalls and a user ID/password system to thwart unauthorized access, alteration,
-                                    or disclosure of personal data. Furthermore, as part of our commitment, we use SSL
-                                    encryption technology to ensure secure transactions while handling sensitive data,
-                                    such as credit card information, during reservations. These initiatives are a
-                                    component of our all-encompassing plan to preserve the privacy, reliability,
-                                    availability, and integrity of our services and processing infrastructure.
+                                <p style="color: #ffffff">Welcome to our Hotel Appointment System Notes And Remarks. This
+                                    document outlines how
+                                    we, Harbor View Beach Resort, collect, use, disclose,
+                                    and protect your personal information. By using our services and providing your
+                                    information, you consent to the practices described in
+                                    this Notes And Remarks.</p>
 
-                                    Organizational safeguards that guarantee the overall security of the processing and
-                                    provide a safeguard against unauthorized access, accidental loss, or abuse of your
-                                    personal data serve as further evidence of our dedication to data privacy.
-                                </p>
+                                <h2 style="color: #ffffff">Compliance with Data Privacy Laws:</h2>
+                                <p style="color: #ffffff">Harbor View Beach Resort is committed to complying with
+                                    Republic Act No. 10173, also
+                                    known as the "Data Privacy Act of 2012," and adhering to international data privacy
+                                    standards.
+                                    <br>
+                                    <br>
+                                    We collect and use personal information to provide exceptional services
+                                    to our guests and individuals or
+                                    entities with whom we do business. This includes reservations, events, promotions,
+                                    inquiries, and other interactions via our
+                                    website or other platforms.
+                                    <br>
+                                    <br>
 
-                                <h1 style="color: #ffffff">Data Collection</h1>
+                                    The Harbor View Beach Resort places a strong emphasis on seclusion. We are dedicated
+                                    to upholding the highest standards for the security and
+                                    protection of personal data in order to gain and keep your trust. Regardless of the
+                                    kind of reservations or contractual arrangement,
+                                    the hotel uses personal information to give its esteemed patrons—or any individual
+                                    or entities with whom it does business—a wonderful
+                                    experience of the unmatched Service from efficient and courteous hotel personnel, as
+                                    well as comfort, luxury, and impeccable service in
+                                    every visit.
 
-                                <p style="color: #ffffff">
-                                <h2 style="color: #ffffff">Hotel Activities:</h2>
-                                <ul style="color: #ffffff">
-                                    <li>Booking a room</li>
-                                    <li>Checking-in and paying</li>
-                                    <li>Hotel stays and services provided during a stay</li>
-                                    <li>Eating/drinking at the hotel bar or restaurant during a stay</li>
-                                    <li>Handling requests, complaints, and/or disputes</li>
-                                </ul>
+                                    This Notes And Remarks acts as a framework for Harbor View Beach Resort to follow and
+                                    carries out our commitment to
+                                    safeguarding your personal information as part of that endeavor.
 
-                                <h2 style="color: #ffffff">Participation in Marketing Programs or Events:</h2>
-                                <ul style="color: #ffffff">
-                                    <li>Signing up for loyalty programs</li>
-                                    <li>Participation in customer surveys (e.g., the Guest Satisfaction Survey)</li>
-                                    <li>Engagement in online games or competitions</li>
-                                    <li>Subscription to newsletters for receiving offers and promotions via email</li>
-                                </ul>
 
-                                <h2 style="color: #ffffff"> Transmission of Information from Third Parties:</h2>
-                                <ul style="color: #ffffff">
-                                    <li>Involvement with tour operators, travel agencies (online or not), GDS
-                                        reservation systems, and others</li>
-                                </ul>
+                                    <br>
+                                    <br>
 
-                                <h2 style="color: #ffffff">Internet Activities:</h2>
-                                <ul style="color: #ffffff">
-                                    <li>Connection to Harbor View websites (IP address, cookies following our Policy
-                                        about the
-                                        use of tracers)</li>
-                                    <li>Online forms (e.g., online reservations, questionnaires, interactions on Harbor
-                                        View
-                                        pages on social networks)</li>
-                                    <li>Utilization of social network login devices such as Facebook login and
-                                        conversations with chatbots</li>
-                                </ul>
+                                    We uphold the principles of transparency, legitimate purpose, and proportionality as
+                                    mandated by the Data Privacy Act of 2012. Your privacy rights are respected and
+                                    protected in all aspects of our data processing activities.
+                                    <br>
+                                    <br>
 
-                                <p style="color: #ffffff">We prioritize the protection and responsible use of your data
-                                    in all these
-                                    interactions to ensure a secure and personalized experience with our Hotel
-                                    Reservation System.</p>
+                                    Regardless of the kind of reservation or contractual arrangement, you are expected
+                                    to understand, agree to,
+                                    and consent to the Hotel collecting, using, and disclosing personal data or
+                                    information in compliance with the laws as the Hotel's valued guests or any
+                                    individual or entities with whom the Hotel does business.
+
 
                                 </p>
 
-                                <p style="color: #ffffff"> To fully understand your interests and needs, we may also
-                                    acquire information from other
-                                    sources, including tour operators, offline and online travel agencies, GDS
-                                    reservation
-                                    systems, and others. Technologies like IP addresses and cookies are used in internet
-                                    activities, including connecting to our websites (as per our policy regarding the
-                                    use of
-                                    tracers). We may also obtain the required information through online forms, such as
-                                    those used for online reservations, questionnaires, interactions on Harbor View
-                                    pages on
-                                    social media, and the use of social network login tools like Facebook login. In
-                                    order to
-                                    provide a safe and customized experience with our hotel reservation system, we place
-                                    a
-                                    high priority on the safety and appropriate use of your data.
-                                </p>
+                                <!-- Add more sections as needed -->
 
+                                <h2 style="color: #ffffff">Contact Information:</h2>
+                                <address>
+                                    <p style="color: #ffffff">Harbor View Beach Resort<br>
+                                        123 Beachwood Side, Zambales<br>
+                                        Data Protection Officer: Noel John Ervas<br>
+                                        Email: <a>harborview@gmail.com</a></p>
+                                </address>
+
+                                <h2 style="color: #ffffff">Changes to Notes And Remarks:</h2>
+                                <p style="color: #ffffff">We reserve the right to update and modify this Notes And Remarks
+                                    as needed. Any changes
+                                    will be communicated through our website, and it is your responsibility to review
+                                    this policy periodically.</p>
+
+
+                                <p style="color: #ffffff">Your trust is important to us, and we are dedicated to
+                                    protecting your personal
+                                    information. Thank you for choosing Harbor View Beach Resort. If you have any
+                                    inquiries or
+                                    need further clarification, please don't hesitate to reach out to our Data
+                                    Protection Officer.</p>
 
                             </div>
                         </div>
@@ -166,7 +167,6 @@
                                         <li><a href="/privacyPolicy">Terms / Policy</a></li>
                                         <li><a href="/notesRemarks">Remarks</a></li>
                                         <li><a href="/adminLogin">Administrator</a></li>
-
 
                                     </ul>
                                 </div>

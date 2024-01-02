@@ -1,11 +1,12 @@
 $(document).ready(function(){
     customerTable();
     inactiveCustomerTable();
+    checkCancelledReservation();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    }); 
+    });
 });
 
 // FETCH ACTIVE APPLICANTS FOR TABLES
@@ -52,7 +53,6 @@ $(document).ready(function(){
         });
     }).draw();
     }
-// FETCH ACTIVE APPLICANTS FOR TABLES
 
 // INACTIVE APPLICANTS FOR TABLE
     function inactiveCustomerTable(){
@@ -97,7 +97,6 @@ $(document).ready(function(){
             });
         }).draw();
     }
-// INACTIVE APPLICANTS FOR TABLE
 
 // FETCH DATA FOR UPDATE OPERATION
     function viewCustomer(id){
@@ -110,17 +109,16 @@ $(document).ready(function(){
         })
         .done(function(response) {
             $('#photo').attr("src",response.photos)
-            $('#lastname').val(response.lastname)           
-            $('#firstname').val(response.firstname)           
+            $('#lastname').val(response.lastname)
+            $('#firstname').val(response.firstname)
             $('#middlename').val(response.middlename)
-            $('#extention').val(response.extention)           
-            $('#age').val(response.age)           
-            $('#birthdate').val(response.birthday)           
-            $('#phone').val(response.phoneNumber)           
-            $('#email').val(response.email)           
+            $('#extention').val(response.extention)
+            $('#age').val(response.age)
+            $('#birthdate').val(response.birthday)
+            $('#phone').val(response.phoneNumber)
+            $('#email').val(response.email)
         })
     }
-// FETCH DATA FOR UPDATE OPERATION
 
 // DEACTIVATE APPLICANTS ACCOUNT
     function deactivateCustomer(id){
@@ -153,8 +151,7 @@ $(document).ready(function(){
         });
         }
         });
-    } 
-// DEACTIVATE APPLICANTS ACCOUNT
+    }
 
 // ACTIVATE APPLICANTS ACCOUNT
     function activateCustomer(id){
@@ -187,5 +184,23 @@ $(document).ready(function(){
         });
         }
         });
-    } 
-// ACTIVATE APPLICANTS ACCOUNT
+    }
+
+// CHECK CANCELLED RESERVATION
+function checkCancelledReservation(){
+    $.ajax({
+        url: '/checkCancelledReservation',
+        type: 'GET',
+        dataType: 'json',
+    })
+    .done(function(response) {
+        if(response === 1){
+            Swal.fire({
+                position: "top-center",
+                icon: "warning",
+                title: "SOMEONE CANCELLED THEIR BOOKING",
+                footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
+            });
+        }
+    })
+}

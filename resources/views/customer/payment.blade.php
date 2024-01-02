@@ -95,6 +95,8 @@
                                             </ul>
                                         </div>
                                         <div class="card-footer bg-white text-end">
+                                            <a onclick="deleteReservation({{$item->reservation_id}})" type='button' class='btn btn-sm btn-danger px-3 py-2 rounded-0 mt-2 text-white'>Cancel Booking</a>
+                                            <a type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</a>
                                             <a href="{{ route('stripePayment', [
                                                 'total_payment' =>
                                                     $item->price_per_hour *
@@ -107,7 +109,7 @@
                                                 ),
                                                 'reservation_id' => $item->reservation_id,
                                             ]) }}"
-                                                class="btn btn-sm btn-primary px-4 py-2 rounded-0">Continue to Pay</a>
+                                                class="btn btn-sm btn-primary px-3 py-2 rounded-0 mt-2 text-white">Continue to Pay</a>
                                         </div>
                                     </div>
                                 </div>
@@ -122,6 +124,54 @@
     </div>
 
     {{-- JS --}}
+    <script>
+        function deleteReservation(id){
+            async function showNotesAndRemarks() {
+                const { value: accept } = await Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to continue to cancel this booking?",
+                    icon: 'question',
+                    input: "checkbox",
+                    inputValue: 1,
+                    inputPlaceholder: `
+                    I read the <a href='notesRemarks'>notes and remarks</a>.
+                    `,
+                    confirmButtonText: `
+                    Continue&nbsp;<i class="fa fa-arrow-right"></i>
+                    `,
+                    inputValidator: (result) => {
+                        return !result && "You need to read the notes and remarks before cancel this";
+                    }
+                });
+                if (accept) {
+                    $.ajax({
+                        url: "/deleteReservation",
+                        type: 'GET',
+                        dataType: 'text',
+                        data: {reservationId: id},
+                        success: function(response) {
+                            if(response == 1){
+                                Swal.fire({
+                                    title: 'CANCEL SUCCESSFULLY',
+                                    text: "Please, Book another reservation",
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                }).then((result) => {if (result) {
+                                    window.location.replace("/customerRoom");
+                                }});
+                            }
+                        },
+
+                        error:function(error){
+                            console.log(error)
+                        }
+                    })
+                }
+            }
+            showNotesAndRemarks();
+        }
+    </script>
     <script src="{{ asset('/js/dateTime.js') }}"></script>
     <script src="{{ asset('/js/logout.js') }}"></script>
     {{-- END JS --}}

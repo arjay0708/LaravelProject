@@ -23,7 +23,7 @@ body {
     transition: left 0.8s, top 0.8s;
     z-index: 2;
     object-fit: cover;
-    filter: brightness(90%);
+    filter: brightness(70%);
 }
 
 
@@ -229,14 +229,14 @@ body.signup .left .register {
 
 .homeButton i, .homeButton2 i{
     font-size: 20px;
-    color: #17171E;
-    border-bottom: 1px solid #17171E;
+    color: #403f3a;
+    border-bottom: 1px solid #403f3a;
     padding: 10px 14px;
     transition: 0.2s;
 }
 
 .homeButton i:hover , .homeButton2 i:hover{
-    background-color: #17171E;
+    background-color: #403f3a;
     color: #fff;
     border-radius: 50%;
 }
@@ -248,7 +248,7 @@ body.signup .left .register {
 }
 [data-title]:after {
     content: attr(data-title);
-    background-color: #4d4c4c;
+    background-color: #403f3a;
     letter-spacing: 1px ;
     color: #ffffff;
     font-size: 12px;

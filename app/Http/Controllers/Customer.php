@@ -122,8 +122,8 @@ class Customer extends Controller
             }
         } else {
             echo "
-                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #8d8a85;'>
+                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #8d8a85;'>
                                 NO ROOM AVAILABLE
                             </div>
                         </div>
@@ -206,6 +206,7 @@ class Customer extends Controller
                 'roomTable.number_of_bed',
                 'roomTable.details',
                 'roomTable.price_per_hour',
+                'reservationTable.reservation_id',
                 'reservationTable.book_code',
                 'reservationTable.start_dataTime',
                 'reservationTable.end_dateTime'
@@ -298,8 +299,8 @@ class Customer extends Controller
             }
         } else {
             echo "
-                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #8d8a85;'>
+                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #8d8a85;'>
                                 NO RESERVATION FOUND
                             </div>
                         </div>
@@ -417,8 +418,8 @@ class Customer extends Controller
             }
         } else {
             echo "
-                    <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                        <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                    <div class='row applicantNoSchedule' style='margin-top:20rem; color: #8d8a85;'>
+                        <div class='alert alert-light text-center fs-4' role='alert' style='color: #8d8a85;'>
                             NO RESERVATION FOUND
                         </div>
                     </div>
@@ -507,7 +508,9 @@ class Customer extends Controller
                                                     <span class='fw-normal text-dark'>Notes: To proceed this booking, the payment for the reservation is required. </span><br>
                                                 </div>
                                             </div>
-                                            <a href='" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => $item->reservation_id]) . "' type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-4 py-2 rounded-0 mt-2'>CONTINUE TO PAY</a>
+                                            <a onclick='deleteReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-3 py-2 rounded-0 mt-2 text-white'>Cancel Booking</a>
+                                            <a type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</a>
+                                            <a href='" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => $item->reservation_id]) . "' type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-3 py-2 rounded-0 mt-2'>Continue to Pay</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -518,8 +521,8 @@ class Customer extends Controller
             }
         } else {
             echo "
-                <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                    <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                <div class='row applicantNoSchedule' style='margin-top:20rem; color: #8d8a85;'>
+                    <div class='alert alert-light text-center fs-4' role='alert' style='color: #8d8a85;'>
                         NO RESERVATION FOUND
                     </div>
                 </div>
@@ -609,8 +612,8 @@ class Customer extends Controller
             }
         } else {
             echo "
-                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #303030;'>
-                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #303030;'>
+                        <div class='row applicantNoSchedule' style='margin-top:20rem; color: #8d8a85;'>
+                            <div class='alert alert-light text-center fs-4' role='alert' style='color: #8d8a85;'>
                                 NO RESERVATION FOUND
                             </div>
                         </div>
@@ -662,6 +665,13 @@ class Customer extends Controller
         }
     }
 
+    // DELETE UNPAID RESERVATION
+    public function deleteReservation(Request $request)
+    {
+        $deleteReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->delete();
+        return response()->json($deleteReservation ? 1 : 0);
+    }
+
     // FETCH ACCOUNT PER USER
     public function getUserInfo(Request $request)
     {
@@ -698,12 +708,12 @@ class Customer extends Controller
         $user = auth()->guard('userModel')->user();
         $userData = userModel::where('user_id', $user->user_id)->first(['password']);
         if (!Hash::check($request->userOldPassword, $userData->password)) {
-            return response()->json(2); 
+            return response()->json(2);
         }
         userModel::where('user_id', $user->user_id)->update(['password' => Hash::make($request->userNewPassword)]);
         Session::flush();
         Auth::guard('userModel')->logout();
-        return response()->json(1); 
+        return response()->json(1);
     }
 
     // FUNCTION

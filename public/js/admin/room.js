@@ -1,6 +1,7 @@
 $(document).ready(function(){
     availableRoom();
     notAvailableRoom();
+    checkCancelledReservation();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -173,7 +174,6 @@ $(document).ready(function(){
             $('#roomPhoto').attr("src",response.photos)
         })
     }
-// VIEW DETAILS OF ROOM
 
 // UPDATE ROOM
     $(document).ready(function () {
@@ -209,7 +209,6 @@ $(document).ready(function(){
             })
         });
     });
-// UPDATE ROOM
 
 // DEACTIVATE ROOM
     function deactivateRoom(id){
@@ -250,13 +249,13 @@ $(document).ready(function(){
               input: "checkbox",
               inputValue: 1,
               inputPlaceholder: `
-              I read the notes and remarks before deactivating this.
+              I read the <a href='notesRemarks'>notes and remarks</a> before deactivating this.
               `,
               confirmButtonText: `
                 Continue&nbsp; <i class="fa fa-arrow-right"></i>
               `,
               inputValidator: (result) => {
-                return !result && "You need to read the notes and remarks before deactivating this";
+                return !result && "You need to read the <a href='notesRemarks'>notes and remarks</a> before deactivating this";
               }
             });
 
@@ -281,7 +280,6 @@ $(document).ready(function(){
           }
           showTermsAndConditions();
     }
-// DEACTIVATE ROOM
 
 // ACTIVATE ROOM
     function activateRoom(id){
@@ -314,6 +312,25 @@ $(document).ready(function(){
         }
     });
     }
-// ACTIVATE ROOM
+
+// CHECK CANCELLED RESERVATION
+    function checkCancelledReservation(){
+        $.ajax({
+            url: '/checkCancelledReservation',
+            type: 'GET',
+            dataType: 'json',
+        })
+        .done(function(response) {
+            if(response === 1){
+                Swal.fire({
+                    position: "top-center",
+                    icon: "warning",
+                    title: "SOMEONE CANCELLED THEIR BOOKING",
+                    footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
+                });
+            }
+        })
+    }
+
 
 

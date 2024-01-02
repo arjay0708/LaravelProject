@@ -506,6 +506,7 @@
                                         <li><a href="#">Contact Us</a></li>
                                         <li><a href="/dataPrivacy">Data Privacy</li>
                                         <li><a href="/privacyPolicy">Terms / Policy</a></li>
+                                        <li><a href="/notesRemarks">Remarks</a></li>
                                         <li><a href="/adminLogin">Administrator</a></li>
                                     </ul>
                                 </div>

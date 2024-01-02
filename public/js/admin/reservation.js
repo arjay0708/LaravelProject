@@ -4,6 +4,7 @@ $(document).ready(function(){
     cancelledReservationTable();
     unpaidReservationTable();
     completedReservationTable();
+    checkCancelledReservation();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -72,7 +73,6 @@ $(document).ready(function(){
         });
     }).draw();
     }
-// FETCH ALL PENDING RESERVATION FOR TABLES
 
 // FETCH ALL ACCEPT RESERVATION FOR TABLE
     function ongoingReservationTable(){
@@ -135,7 +135,6 @@ $(document).ready(function(){
             });
         }).draw();
     }
-// FETCH ALL ACCEPT RESERVATION FOR TABLE
 
 // FETCH ALL CANCELLED RESERVATION FOR TABLE
     function cancelledReservationTable(){
@@ -187,12 +186,18 @@ $(document).ready(function(){
                 }},
                 { "mData": function (data, type, row) {
                     if(data.is_noted != 1){
+
                         return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="viewReason('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button> <button type="button" data-title="Note This?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="noteCancelReservation('+data.reservation_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-journal-check"></i></button>'
                     }else{
                         return '<button type="button" data-title="View Reason?" data-bs-toggle="tooltip" data-bs-placement="top" onclick="viewReason(' + data.reservation_id + ', ' + data.room_id + ')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-chat-dots"></i></button>';
                     }
                 }},
             ],
+            "createdRow": function(row, data, dataIndex) {
+                if (data.is_noted != 1) {
+                    $(row).addClass('highlighted-row');
+                }
+            },
             order: [[1, 'asc']],
         });
         table.on('order.dt search.dt', function () {
@@ -202,7 +207,6 @@ $(document).ready(function(){
             });
         }).draw();
     }
-// FETCH ALL CANCELLED RESERVATION FOR TABLE
 
 // FETCH ALL DECLINE RESERVATION FOR TABLE
     function unpaidReservationTable(){
@@ -262,7 +266,6 @@ $(document).ready(function(){
             });
         }).draw();
     }
-// FETCH ALL DECLINE RESERVATION FOR TABLE
 
 // FETCH ALL COMPLETED TRANSACTION
     function completedReservationTable(){
@@ -319,7 +322,6 @@ $(document).ready(function(){
         });
     }).draw();
     }
-// FETCH ALL COMPLETED TRANSACTION
 
 // SET RESERVATION
     function ongoingReservation(reservationId , roomId){
@@ -363,7 +365,6 @@ $(document).ready(function(){
         }
         });
     }
-// SET RESERVATION
 
 // COMPLETE TRANSACTION
     function completeTransaction(reservationId){
@@ -407,7 +408,6 @@ $(document).ready(function(){
         }
         });
     }
-// COMPLETE TRANSACTION
 
 // VIEW CANCELLED REASON
     function viewReason(id){
@@ -423,7 +423,6 @@ $(document).ready(function(){
             $('#cancelledLast').text(moment(response.created_at).format('MMM DD, YYYY | hh:mm A'));
         })
     }
-// VIEW CANCELLED REASON
 
 // NOTE CANCEL RESERVATION
     function noteCancelReservation(id){
@@ -461,4 +460,22 @@ $(document).ready(function(){
             }
             });
     }
-// NOTE CANCEL RESERVATION
+
+ // CHECK CANCELLED RESERVATION
+    function checkCancelledReservation(){
+        $.ajax({
+            url: '/checkCancelledReservation',
+            type: 'GET',
+            dataType: 'json',
+        })
+        .done(function(response) {
+            if(response === 1){
+                Swal.fire({
+                    position: "top-center",
+                    icon: "warning",
+                    title: "SOMEONE CANCELLED THEIR BOOKING",
+                    footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
+                });
+            }
+        })
+    }

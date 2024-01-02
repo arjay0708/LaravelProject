@@ -177,11 +177,11 @@ class Admin extends Controller
                 $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
                 ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
                 ->where([['reservationTable.status', '=', 'Cancel']])
-                ->orderBy('reservationTable.reservation_id', 'ASC')
+                ->orderBy('reservationTable.is_noted', 'ASC')->orderBy('reservationTable.start_dataTime', 'DESC')
                 ->select(
                     'reservationTable.reservation_id','reservationTable.is_noted', 'userTable.user_id', 'userTable.lastname', 'userTable.firstname', 'userTable.middlename',
                     'userTable.extention', 'roomTable.room_number', 'roomTable.floor', 'roomTable.price_per_hour', 'reservationTable.start_dataTime', 'reservationTable.end_dateTime',
-                )->orderBy('reservationTable.start_dataTime', 'ASC')->get();
+                )->get();
 
                 foreach ($data as $reservation) {
                     $startDateTime = Carbon::parse($reservation->start_dataTime);
@@ -244,20 +244,6 @@ class Admin extends Controller
 
                     $reservation->totalPayment = $totalPayment;
                 }
-                return response()->json($data);
-            }
-
-            // ALL BACK OUT RESERVATION
-            public function getAllBackOutReservation(Request $request){
-                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
-                ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
-                ->where([['reservationTable.status', '=', 'BackOut'], ['reasonBackOutTable.set_by_admin', '=', 0]
-                ])->orderBy('reservationTable.reservation_id', 'ASC')
-                ->select(
-                    'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
-                    'roomTable.room_number','roomTable.floor','reservationTable.start_dataTime','reservationTable.end_dateTime'
-                )->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
                 return response()->json($data);
             }
 
@@ -359,45 +345,6 @@ class Admin extends Controller
                 return response()->json(1);
             }
 
-            // GET ALL BACK OUT RESERVATION
-            public function getBackOutContentForAdmin(Request $request){
-                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
-                ->join('reasonBackOutTable', 'reservationTable.reservation_id', '=', 'reasonBackOutTable.reservation_id')
-                ->join('userTable', 'reasonBackOutTable.user_id', '=', 'userTable.user_id')
-                ->where([['reservationTable.status', '=', 'BackOut'],['reservationTable.is_archived', '=', 0],
-                ['reasonBackOutTable.set_by_admin', '=', 0]])
-                ->select('roomTable.room_number','roomTable.floor','reasonBackOutTable.reservation_id','reservationTable.start_dataTime',
-                'reservationTable.end_dateTime', 'userTable.lastname',  'userTable.firstname', 'userTable.extention',
-                'reasonBackOutTable.reason')->orderBy('reservationTable.start_dataTime' , 'ASC')->get();
-                if($data->isNotEmpty()){
-                    foreach($data as $item){
-                        $newStartDate = date('F d, Y - h:i: A',strtotime($item->start_dataTime));
-                        $newEndDate = date('F d, Y - h:i: A',strtotime($item->end_dateTime));
-                        $customer = $item->firstname.''.$item->lastname.''.$item->extention;
-                        echo"
-                            <div class='col-12'>
-                                <div class='card mb-2 shadow'>
-                                    <div class='card-body'>
-                                        <h5 class='card-title'>Dear Admin,</h5>
-                                        <p class='card-text mb-3'><span class='fw-bold'> Mr/Ms. $customer </span> has been cancelled the reservation for <span class='fw-bold'>$item->floor Room Number $item->room_number From
-                                        $newStartDate to $newEndDate </span> due to $item->reason.</p>
-                                        <button onclick=noteBackOutContent('$item->reservation_id') class='btn btn-success btn-sm px-3 rounded-0'>Noted</button>
-                                    </div>
-                                </div>
-                            </div>
-                        ";
-                    }
-                }else{
-                    echo "
-                    <div class='row' style='margin-top:1.5rem; color: #303030;'>
-                        <div class='alert alert-light text-center' role='alert' style='color: #303030; font-size:18px; font-weight:bold'>
-                            NO CANCELLED RESERVATION
-                        </div>
-                    </div>
-                    ";
-                }
-            }
-
             // FETCH THE CANCELLED REASON
             public function viewReasonCancelled(Request $request){
                 $data = reasonBackOutModel::where([['reservation_id', '=', $request->reservationId]])->select('reason','created_at')->first();
@@ -439,8 +386,8 @@ class Admin extends Controller
 
             // CHECK CANCELLED RESERVATION
             public function checkCancelledReservation(Request $request) {
-                $check = reservationModel::where([['is_noted', '=', 0]])->get();
-                return response()->json($check->isNotEmpty() ? 1 : 0);
+                $check = reservationModel::where([['status', '=', 'Cancel'],['is_noted', '=', 0]])->get();
+                return response()->json($check->count() > 0 ? 1 : 0);
             }
     // FUNCTION
 }

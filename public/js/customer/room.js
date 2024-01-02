@@ -51,7 +51,7 @@ $(document).ready(function(){
                             input: "checkbox",
                             inputValue: 1,
                             inputPlaceholder: `
-                              Before book this you need to read the <a href="#">notes and remarks</a>.
+                              Before book this you need to read the <a href="notesRemarks">notes and remarks</a>.
                             `,
                             confirmButtonText: `
                               Continue&nbsp;<i class="fa fa-arrow-right"></i>
@@ -109,60 +109,3 @@ $(document).ready(function(){
 
     }
 // FUNCTION FOR BOOKING
-
-// FUNCTION FOR BOOKING
-    function cancelReservation(id){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to CANCELs this RESERVATION?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d72323',
-            confirmButtonText: 'Yes, Cancel it'
-            }).then((result) => {
-            if (result.isConfirmed) {
-                async function cancelReservation() {
-                    const { value: accept } = await Swal.fire({
-                        title: 'Are you sure?',
-                        text: "Do you want to continue to cancelling this reservation?",
-                        icon: 'question',
-                        input: "checkbox",
-                        inputValue: 1,
-                        inputPlaceholder: `
-                        I read the notes and remark before cancelling my reservation.
-                        `,
-                        confirmButtonText: `
-                        Continue;
-                        `,
-                        inputValidator: (result) => {
-                            return !result && "You need to read the notes and remarks before cancelling your reservation";
-                        }
-                    });
-                    if (accept) {
-                        $.ajax({
-                            url: '/cancelReservation',
-                            type: 'GET',
-                            dataType: 'json',
-                            data: {reservationID: id},
-                        });
-                        Swal.fire({
-                            title: 'CANCEL SUCCESSFULLY',
-                            icon: 'success',
-                            showConfirmButton: false,
-                            timer: 1000,
-                        }).then((result) => {
-                        if (result) {
-                            showTotalRoom();
-                        }
-                    });
-                    }
-                }
-                cancelReservation();
-            }
-        });
-    }
-// FUNCTION FOR BOOKING
-
-
-

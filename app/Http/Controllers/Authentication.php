@@ -14,8 +14,8 @@ use App\Models\userModel;
 use App\Models\userVerify;
 use App\Mail\userVerifyMail;
 use Illuminate\Support\Str;
-use Auth;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 
 class Authentication extends Controller
@@ -43,6 +43,10 @@ class Authentication extends Controller
     public function dataPrivacy()
     {
         return view('dataPrivacy');
+    }
+    public function notesRemarks()
+    {
+        return view('notedAndRemarks');
     }
     // ROUTING
 

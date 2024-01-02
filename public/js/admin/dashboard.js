@@ -1,6 +1,7 @@
 $(document).ready(function(){
     getAllTotalForAdmin();
     chart();
+    checkCancelledReservation();
 });
 
     function getAllTotalForAdmin(){
@@ -70,7 +71,7 @@ $(document).ready(function(){
                     position: "top-center",
                     icon: "warning",
                     title: "SOMEONE CANCELLED THEIR BOOKING",
-                    footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>' 
+                    footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
                 });
             }
         })
