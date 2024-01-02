@@ -52,20 +52,24 @@ class Stripe extends Controller
 
         ]);
 
-        $reservation = reservationModel::where('reservation_id', $reservedId)->first();
+        // $reservation = reservationModel::where('reservation_id', $reservedId)->first();
 
-        if ($reservation) {
-            $reservation->update(['status' => 'Complete']);
-        } else {
-            return redirect()->route('cancel')->with('message', 'Reservation not found.');
-        }
+        // if ($reservation) {
+        //     $reservation->update(['status' => 'Complete']);
+        // } else {
+        //     return redirect()->route('cancel')->with('message', 'Reservation not found.');
+        // }
 
 
         // dd($response);
         if (isset($response->id) && $response->id != '') {
+
             session()->put('total_payment', $request->total_payment);
+            session()->put('reservation_id', $request->reservation_id);
+
             return redirect($response->url);
         } else {
+
             return redirect()->route('cancel');
         }
     }
@@ -85,10 +89,19 @@ class Stripe extends Controller
             $payment->payment_status = $response->status;
             $payment->payment_method = "Stripe";
 
-            // dd($response);
+            $payment->save();
+
+            $reservedId = session()->get('reservation_id');
+            $reservation = reservationModel::where('reservation_id', $reservedId)->first();
+
+            if ($reservation) {
+                $reservation->update(['status' => 'Pending']);
+            } else {
+                return redirect()->route('cancel')->with('message', 'Reservation not found.');
+            }
+
             return redirect()->route('customerUnpaidReservation')->with('message', 'Payment is successful');
         } else {
-
             return redirect()->route('cancel');
         }
     }

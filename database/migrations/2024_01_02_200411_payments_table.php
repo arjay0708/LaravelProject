@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('payment_id');
             $table->string('amount');
-            $table->string('customer_name');
             $table->string('customer_email');
             $table->string('payment_status');
             $table->string('payment_method');
