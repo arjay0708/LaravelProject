@@ -96,7 +96,7 @@
                                         </div>
                                         <div class="card-footer bg-white text-end">
                                             <a onclick="deleteReservation({{$item->reservation_id}})" type='button' class='btn btn-sm btn-danger px-3 py-2 rounded-0 mt-2 text-white'>Cancel Booking</a>
-                                            <a type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</a>
+                                            <button data-bs-toggle="modal" data-bs-target="#updateUnpaidReservationModal" type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</button>
                                             <a href="{{ route('stripePayment', [
                                                 'total_payment' =>
                                                     $item->price_per_hour *
@@ -117,11 +117,42 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
             {{-- MAIN CONTENT --}}
         </div>
         {{-- END MAIN CONTENT --}}
     </div>
+
+    <div class="modal fade" id="updateUnpaidReservationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">UPDATE BOOK</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form id="updateUnpaidReservation" name="updateUnpaidReservation">
+                @csrf
+                    <div class="row gap-0">
+                        <div class="col-6 my-2">
+                            <label class="form-label">CHECK IN:</label>
+                            <input type="hidden" id="reservationId" name="reservationId" value="{{$item->reservation_id}}">
+                            <input required type="date" class="form-control shadow-sm bg-body rounded-0" id="checkInDate" name="checkInDate" value="{{ \Carbon\Carbon::parse($item->start_dataTime)->format('Y-m-d') }}">
+                        </div>
+                        <div class="col-6 my-2">
+                            <label class="form-label">CHECK OUT:</label>
+                            <input required type="date" class="form-control shadow-sm rounded-0" id="checkOutDate" name="checkOutDate" value="{{ \Carbon\Carbon::parse($item->end_dateTime)->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary rounded-0 px-4">Update</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
 
     {{-- JS --}}
     <script>
@@ -171,6 +202,53 @@
             }
             showNotesAndRemarks();
         }
+
+        $('#updateUnpaidReservation').on( 'submit' , function(e){
+            e.preventDefault();
+            var currentForm = $('#updateUnpaidReservation')[0];
+            var data = new FormData(currentForm);
+            $.ajax({
+                url: "/updateUnpaidReservation",
+                type: "post",
+                method: "post",
+                dataType: "text",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response == 1) {
+                        $('#updateUnpaidReservationModal').modal('hide')
+                        Swal.fire({
+                            title: 'Update Successfully',
+                            text: "New Reservation Booked",
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then((result) => {
+                        if (result) {
+                            location.reload();
+                        }
+                        });
+                    } else if (response == 0) {
+                        Swal.fire('Update Failed', 'Sorry, the operation has not been stored', 'error');
+                    } else if (response == 4) {
+                        Swal.fire('Invalid Check In', 'Please check the date and time of the CHECK IN', 'error');
+                    } else if (response == 3) {
+                        Swal.fire('Invalid Check Out', 'Please check the date and time of the CHECK OUT', 'error');
+                    } else if (response == 2) {
+                        Swal.fire('Invalid Date and Time', 'The date of both CHECK IN and CHECK OUT must not be the same', 'error');
+                    } else if (response == 6) {
+                        Swal.fire('Update FAILED', 'A reservation for the given time has already been made.', 'error');
+                    } else {
+                        Swal.fire('Unknown Response', 'An unexpected response was received', 'error');
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
     </script>
     <script src="{{ asset('/js/dateTime.js') }}"></script>
     <script src="{{ asset('/js/logout.js') }}"></script>

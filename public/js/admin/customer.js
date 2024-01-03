@@ -187,20 +187,20 @@ $(document).ready(function(){
     }
 
 // CHECK CANCELLED RESERVATION
-function checkCancelledReservation(){
-    $.ajax({
-        url: '/checkCancelledReservation',
-        type: 'GET',
-        dataType: 'json',
-    })
-    .done(function(response) {
-        if(response === 1){
-            Swal.fire({
-                position: "top-center",
-                icon: "warning",
-                title: "SOMEONE CANCELLED THEIR BOOKING",
-                footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
-            });
-        }
-    })
-}
+    function checkCancelledReservation(){
+        $.ajax({
+            url: '/checkCancelledReservation',
+            type: 'GET',
+            dataType: 'json',
+        })
+        .done(function(response) {
+            if(response === 1){
+                Swal.fire({
+                    position: "top-center",
+                    icon: "warning",
+                    title: "SOMEONE CANCELLED THEIR BOOKING",
+                    footer: '<a href="/adminCancelledReservation">REDIRECT TO CANCELLED RESERVATION PAGE?</a>'
+                });
+            }
+        })
+    }

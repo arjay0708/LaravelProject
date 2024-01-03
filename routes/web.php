@@ -7,12 +7,9 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\Customer;
 use App\Http\Controllers\Stripe;
 
-
 // LANDING PAGE
 Route::get('/', [Home::class, 'harborView'])->name('harborView');
 Route::get('/harborView', [Home::class, 'harborView'])->name('harborView');
-
-// LANDING PAGE
 
 // AUTHENTICATION
 Route::get('/login', [Authentication::class, 'login'])->name('login');
@@ -27,7 +24,6 @@ Route::post('/userLoginFunction', [Authentication::class, 'userLoginFunction'])-
 Route::post('/adminLoginFunction', [Authentication::class, 'adminLoginFunction'])->name('adminLoginFunction');
 Route::get('/logoutFunction', [Authentication::class, 'logoutFunction'])->name('logoutFunction');
 Route::get('/userVerify/{token}', [Authentication::class, 'userVerify'])->name('userVerify');
-// AUTHENTICATION
 
 // ADMIN DASHBOARD
 // ROUTES
@@ -44,7 +40,6 @@ Route::get('/adminCompletedReservation', [Admin::class, 'adminCompletedReservati
 Route::get('/adminCustomer', [Admin::class, 'adminCustomer'])->name('adminCustomer');
 Route::get('/adminInActiveCustomer', [Admin::class, 'adminInActiveCustomer'])->name('adminInActiveCustomer');
 Route::get('/adminAccount', [Admin::class, 'adminAccount'])->name('adminAccount');
-// ROUTES
 
 // FUNCTION
 Route::get('/getActiveCustomer', [Admin::class, 'getActiveCustomer'])->name('getActiveCustomer');
@@ -77,10 +72,8 @@ Route::get('/checkCancelledReservation', [Admin::class, 'checkCancelledReservati
 Route::get('/getAllTotalForAdmin', [Admin::class, 'getAllTotalForAdmin'])->name('getAllTotalForAdmin');
 
 
-// FUNCTION
-// ADMIN DASHBOARD
-
 // CUSTOMER DASHBOARD
+
 // ROUTES
 Route::get('/customerDashboard', [Customer::class, 'customerDashboard'])->name('customerDashboard');
 Route::get('/customerRoom', [Customer::class, 'customerRoom'])->name('customerRoom');
@@ -95,16 +88,12 @@ Route::get('/customerCredentials', [Customer::class, 'customerCredentials'])->na
 Route::get('/payment/{book_code}', [Customer::class, 'payment'])->name('payment');
 
 
-// Stripe
+// STRIPE
 // Route::post('/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
 Route::match(['get', 'post'], '/stripePayment', [Stripe::class, 'stripePayment'])->name('stripePayment');
 Route::get('/success', [Stripe::class, 'success'])->name('success');
 Route::get('/cancel', [Stripe::class, 'cancel'])->name('cancel');
 
-
-
-
-// ROUTES
 
 // FUNCTION
 Route::get('/getCustomerRoom', [Customer::class, 'getCustomerRoom'])->name('getCustomerRoom');
@@ -123,5 +112,5 @@ Route::get('/getUserInfo', [Customer::class, 'getUserInfo'])->name('getUserInfo'
 Route::post('/updateUserAccount', [Customer::class, 'updateUserAccount'])->name('updateUserAccount');
 Route::post('/updateUserCredentials', [Customer::class, 'updateUserCredentials'])->name('updateUserCredentials');
 Route::get('/getAllTotalForCustomer', [Customer::class, 'getAllTotalForCustomer'])->name('getAllTotalForCustomer');
-// FUNCTION
-// CUSTOMER DASHBOARD
+Route::post('/updateUnpaidReservation', [Customer::class, 'updateUnpaidReservation'])->name('updateUnpaidReservation');
+Route::get('/viewUnpaidReservation', [Customer::class, 'viewUnpaidReservation'])->name('viewUnpaidReservation');

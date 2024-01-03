@@ -50,6 +50,39 @@
         {{-- END MAIN CONTENT --}}
     </div>
 
+    {{-- MODAL --}}
+        <div class="modal fade" id="updateUnpaidReservationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">UPDATE BOOK</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <form id="updateUnpaidReservation" name="updateUnpaidReservation">
+                    @csrf
+                        <div class="row gap-0">
+                            <div class="col-6 my-2">
+                                <label class="form-label">CHECK IN:</label>
+                                <input type="hidden" id="reservationId" name="reservationId">
+                                <input required type="date" class="form-control shadow-sm bg-body rounded-0" id="checkInDate" name="checkInDate">
+                            </div>
+                            <div class="col-6 my-2">
+                                <label class="form-label">CHECK OUT:</label>
+                                <input required type="date" class="form-control shadow-sm rounded-0" id="checkOutDate" name="checkOutDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary rounded-0 px-4">Update</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {{-- MODAL --}}
+
     {{-- JS --}}
         <script>
             $(document).ready(function(){
@@ -113,6 +146,65 @@
                 }
                 showNotesAndRemarks();
             }
+            function getUpdateUnpaidReservation(id){
+                $('#updateUnpaidReservationModal').modal('show')
+                $.ajax({
+                    url: '/viewUnpaidReservation',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {reservationId: id},
+                })
+                .done(function(response) {
+                    $('#checkInDate').val(moment(response.start_dataTime).format('YYYY-MM-DD')),
+                    $('#checkOutDate').val(moment(response.end_dateTime).format('YYYY-MM-DD'))
+                })
+            }
+            $('#updateUnpaidReservation').on( 'submit' , function(e){
+                e.preventDefault();
+                var currentForm = $('#updateUnpaidReservation')[0];
+                var data = new FormData(currentForm);
+                $.ajax({
+                    url: "/updateUnpaidReservation",
+                    type: "post",
+                    method: "post",
+                    dataType: "text",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response == 1) {
+                            $('#updateUnpaidReservationModal').modal('hide')
+                            Swal.fire({
+                                title: 'Update Successfully',
+                                text: "New Reservation Booked",
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                            }).then((result) => {
+                            if (result) {
+                                location.reload();
+                            }
+                            });
+                        } else if (response == 0) {
+                            Swal.fire('Update Failed', 'Sorry, the operation has not been stored', 'error');
+                        } else if (response == 4) {
+                            Swal.fire('Invalid Check In', 'Please check the date and time of the CHECK IN', 'error');
+                        } else if (response == 3) {
+                            Swal.fire('Invalid Check Out', 'Please check the date and time of the CHECK OUT', 'error');
+                        } else if (response == 2) {
+                            Swal.fire('Invalid Date and Time', 'The date of both CHECK IN and CHECK OUT must not be the same', 'error');
+                        } else if (response == 6) {
+                            Swal.fire('Update FAILED', 'A reservation for the given time has already been made.', 'error');
+                        } else {
+                            Swal.fire('Unknown Response', 'An unexpected response was received', 'error');
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
         </script>
         <script src="{{ asset('/js/dateTime.js') }}"></script>
         <script src="{{ asset('/js/logout.js') }}"></script>

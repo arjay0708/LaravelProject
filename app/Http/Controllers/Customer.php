@@ -509,7 +509,7 @@ class Customer extends Controller
                                                 </div>
                                             </div>
                                             <a onclick='deleteReservation($item->reservation_id)' type='button' class='btn btn-sm btn-danger px-3 py-2 rounded-0 mt-2 text-white'>Cancel Booking</a>
-                                            <a type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</a>
+                                            <a onclick='getUpdateUnpaidReservation($item->reservation_id)' type='button' class='btn btn-sm btn-secondary px-3 py-2 rounded-0 mt-2 text-white'>Update Booking</a>
                                             <a href='" . route('stripePayment', ['total_payment' => $totalPayment, 'type_of_room' => $typeOfRoom, 'reservation_id' => $item->reservation_id]) . "' type='button' id='continueToPayBtn' class='btn btn-sm btn-primary px-3 py-2 rounded-0 mt-2'>Continue to Pay</a>
                                         </li>
                                     </ul>
@@ -714,6 +714,62 @@ class Customer extends Controller
         Session::flush();
         Auth::guard('userModel')->logout();
         return response()->json(1);
+    }
+
+    // UPDATE UNPAID RESERVATION
+    public function updateUnpaidReservation(Request $request){
+        $checkInDateTime = Carbon::parse($request->checkInDate . '14:00:00');
+        $formattedCheckIn = $checkInDateTime->format('Y-m-d H:i:s');
+        $checkOutDateTime = Carbon::parse($request->checkOutDate . '12:00:00');
+        $formattedCheckOut = $checkOutDateTime->format('Y-m-d H:i:s');
+
+        $currentDateTime = now()->format('Y-m-d H:i:s');
+        $random = Carbon::now()->format('YmdHis') . rand(001, 999);
+
+        $user = auth()->guard('userModel')->user();
+
+        if (empty($user->lastname) || empty($user->firstname)) {
+            return response()->json(5);
+        }
+
+        $existingReservation = ReservationModel::where('room_id', $request->roomId)
+            ->where('status', 'Pending')
+            ->where(function ($query) use ($user, $formattedCheckIn, $formattedCheckOut) {
+                $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                    $query->where(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                        $query->where('start_dataTime', '<', $formattedCheckOut)
+                            ->where('end_dateTime', '>', $formattedCheckIn);
+                    })
+                        ->orWhere(function ($query) use ($formattedCheckIn, $formattedCheckOut) {
+                            $query->where('start_dataTime', $formattedCheckIn)
+                                ->where('end_dateTime', $formattedCheckOut);
+                        });
+                });
+            })
+            ->exists();
+
+        if ($existingReservation) {
+            return response()->json(6);
+        }
+        if ($currentDateTime > $formattedCheckIn) {
+            return response()->json(4);
+        } elseif ($formattedCheckIn == $formattedCheckOut) {
+            return response()->json(2);
+        } elseif ($formattedCheckOut < $formattedCheckIn) {
+            return response()->json(3);
+        }
+
+        $update = ReservationModel::find($request->reservationId);
+        $update->start_dataTime = $formattedCheckIn;
+        $update->end_dateTime = $formattedCheckOut;
+        $update->save();
+        return response()->json(1);
+    }
+
+    // VIEW UNPAID RESERVATION
+    public function viewUnpaidReservation(Request $request){
+        $data = ReservationModel::where([['reservation_id', '=', $request->reservationId]])->select('start_dataTime', 'end_dateTime')->first();
+        return response()->json($data);
     }
 
     // FUNCTION

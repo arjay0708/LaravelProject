@@ -11,17 +11,20 @@ body{
     overflow-x: hidden;
 }
 
-.highlighted-row {
-    background-color: #8d8a85 !important;
-}
-
 .highlighted-row td{
-    color: #ffffff !important;
+    color: #B70404 !important;
 }
 
 .highlighted-row td button{
-    border: 1px solid #ffffff !important;
+    border: 1px solid #B70404;    
+    background-color: #B70404;
     color: #ffffff !important;
+}
+ 
+.highlighted-row td button:hover{
+    background-color: #ffffff;
+    border: 1px solid #B70404;
+    color: #B70404 !important;
 }
 
 .navbar {

@@ -50,7 +50,6 @@ $(document).ready(function(){
         });
     }).draw();
     }
-// FETCH AVAILABLE ROOM FOR TABLE
 
 // FETCH AVAILABLE ROOM FOR TABLE
     function notAvailableRoom(){
@@ -91,7 +90,6 @@ $(document).ready(function(){
         });
     }).draw();
     }
-// FETCH AVAILABLE ROOM FOR TABLE
 
 // ADD ROOM
     $(document).ready(function () {
@@ -149,7 +147,6 @@ $(document).ready(function(){
             }
         });
     });
-// ADD ROOM
 
 // VIEW DETAILS OF ROOM
     function viewRoomDetails(id){
@@ -331,6 +328,3 @@ $(document).ready(function(){
             }
         })
     }
-
-
-

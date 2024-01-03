@@ -17,7 +17,6 @@ $(document).ready(function(){
                 'error'
             )
         }else {
-            manageAccount();
             const firstName = $('#userFirstName').val();
             const middleName = $('#userMiddleName').val();
             const lastName = $('#userLastName').val();
@@ -25,18 +24,21 @@ $(document).ready(function(){
 
             var regex = /[0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
             if (regex.test(firstName) || regex.test(middleName) || regex.test(lastName)) {
+                manageAccount();
                 Swal.fire(
                     'Update Failed',
                     'First name, middle name, and last name must not contain digits or special characters.',
                     'error'
                 );
             }else if (firstName.length < 3 || middleName.length < 3 || lastName.length < 3) {
+                manageAccount();
                 Swal.fire(
                     'Update Failed',
                     'The first name, middle name, and last name must be at least 3 characters long.',
                     'error'
                 );
             } else if (age < 18) {
+                manageAccount();
                 Swal.fire(
                     'Update Failed',
                     'Age restriction: No minors allowed at the hotel.',
@@ -56,14 +58,16 @@ $(document).ready(function(){
                     processData: false,
                     success: function (response) {
                         if (response == 1) {
-                            manageAccount();
-                            $("#updateUserAccount").trigger("reset");
                             Swal.fire({
-                                position: 'center',
+                                title: 'Update Successfully',
+                                text: "New information has stored",
                                 icon: 'success',
-                                title: 'INFORMATION HAS BEEN UPDATED SUCCESSFULLY',
                                 showConfirmButton: false,
-                                timer: 1500
+                                timer: 1500,
+                            }).then((result) => {
+                            if (result) {
+                                manageAccount();
+                            }
                             });
                         }
                     },
