@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\userModel;
 use App\Models\roomModel;
 use App\Models\reservationModel;
-use App\Models\reasonDeclineModel;
 use App\Models\reasonBackOutModel;
+use App\Models\Payment;
 
 class Admin extends Controller
 {
@@ -38,6 +38,9 @@ class Admin extends Controller
         }
         public function adminUnpaidReservation(){
             return view('admin/unpaidReservation');
+        }
+        public function adminUnattendedReservation(){
+            return view('admin/unattendedReservation');
         }
         public function adminCompletedReservation(){
             return view('admin/completedReservation');
@@ -247,10 +250,39 @@ class Admin extends Controller
                 return response()->json($data);
             }
 
-            // ACCEPT RESERVATION
-            public function acceptReservation(Request $request){
-                reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'Accept']);
-                return response()->json(1);
+            public function getAllUnattendedReservation(Request $request){
+                $data = reservationModel::join('roomTable', 'reservationTable.room_id', '=', 'roomTable.room_id')
+                ->join('userTable', 'reservationTable.user_id', '=', 'userTable.user_id')
+                ->where([['reservationTable.status', '=', 'UnAttended']])->orderBy('reservationTable.reservation_id', 'ASC')
+                ->select(
+                    'reservationTable.reservation_id','userTable.user_id','userTable.lastname','userTable.firstname','userTable.middlename','userTable.extention',
+                    'roomTable.room_id', 'roomTable.room_number','roomTable.floor','roomTable.price_per_hour','reservationTable.start_dataTime','reservationTable.end_dateTime',
+                )->orderBy('reservationTable.end_dateTime' , 'ASC')->get();
+                foreach ($data as $reservation) {
+                    $startDateTime = Carbon::parse($reservation->start_dataTime);
+                    $endDateTime = Carbon::parse($reservation->end_dateTime);
+
+                    $totalNights = ceil($startDateTime->diffInHours($endDateTime) / 24);
+                    $totalPayment = $totalNights * $reservation->price_per_hour;
+
+                    $reservation->totalPayment = $totalPayment;
+                }
+                return response()->json($data);
+            }
+
+            // NOT ATTEND RESERVATION
+            public function unAttendedReservation(Request $request){
+                date_default_timezone_set('Asia/Manila');
+                $currentDate = date('m-d-Y h:i A', strtotime(now()));
+                $data = reservationModel::where([['reservation_id', '=', $request->reservationId]])->first();
+                $checkInDateTime = date('m-d-Y h:i A',strtotime($data->start_dataTime));
+                $checkOutDateTime = date('m-d-Y h:i A',strtotime($data->end_dateTime));
+                if($currentDate >= $checkInDateTime && $currentDate <= $checkOutDateTime){
+                    $ongoingReservation = reservationModel::where([['reservation_id', '=', $request->reservationId]])->update(['status' => 'UnAttended']);
+                    return response()->json($ongoingReservation ? 1 : 0);
+                }else{
+                    return response()->json(2);
+                }
             }
 
             // ON-GOING RESERVATION
@@ -389,5 +421,23 @@ class Admin extends Controller
                 $check = reservationModel::where([['status', '=', 'Cancel'],['is_noted', '=', 0]])->get();
                 return response()->json($check->count() > 0 ? 1 : 0);
             }
+
+            // FUNCTION FOR CHART
+            public function paymentGraph(Request $request){
+                $monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+
+                $orders = Payment::selectRaw('DATE_FORMAT(created_at, "%M") as monthName,  SUM(amount) as totalSales')
+                    ->groupBy('monthName')->orderByRaw('MONTH(created_at)')->get()->keyBy('monthName')->map(fn($data) => $data->totalSales)->toArray();
+
+                $formattedOrders = array_replace(array_fill_keys($monthNames, 0), $orders);
+
+                $response = ['months' => $monthNames,'sales' => array_values($formattedOrders),];
+
+                return response()->json($response);
+            }
+
     // FUNCTION
 }

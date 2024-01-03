@@ -35,6 +35,7 @@ Route::get('/adminReservation', [Admin::class, 'adminReservation'])->name('admin
 Route::get('/adminCancelledReservation', [Admin::class, 'adminCancelledReservation'])->name('adminCancelledReservation');
 Route::get('/adminOnGoingReservation', [Admin::class, 'adminOnGoingReservation'])->name('adminOnGoingReservation');
 Route::get('/adminUnpaidReservation', [Admin::class, 'adminUnpaidReservation'])->name('adminUnpaidReservation');
+Route::get('/adminUnattendedReservation', [Admin::class, 'adminUnattendedReservation'])->name('adminUnattendedReservation');
 Route::get('/getAllUnpaidReservation', [Admin::class, 'getAllUnpaidReservation'])->name('getAllUnpaidReservation');
 Route::get('/adminCompletedReservation', [Admin::class, 'adminCompletedReservation'])->name('adminCompletedReservation');
 Route::get('/adminCustomer', [Admin::class, 'adminCustomer'])->name('adminCustomer');
@@ -53,6 +54,7 @@ Route::get('/getAllOnGoingReservation', [Admin::class, 'getAllOnGoingReservation
 Route::get('/getAllCancelledReservation', [Admin::class, 'getAllCancelledReservation'])->name('getAllCancelledReservation');
 Route::get('/getAllDeclineReservation', [Admin::class, 'getAllDeclineReservation'])->name('getAllDeclineReservation');
 Route::get('/getAllCompletedReservation', [Admin::class, 'getAllCompletedReservation'])->name('getAllCompletedReservation');
+Route::get('/getAllUnattendedReservation', [Admin::class, 'getAllUnattendedReservation'])->name('getAllUnattendedReservation');
 Route::get('/acceptReservation', [Admin::class, 'acceptReservation'])->name('acceptReservation');
 Route::get('/declineReservation', [Admin::class, 'declineReservation'])->name('declineReservation');
 Route::get('/ongoingReservation', [Admin::class, 'ongoingReservation'])->name('ongoingReservation');
@@ -70,6 +72,8 @@ Route::get('/deleteUnpaidReservation', [Admin::class, 'deleteUnpaidReservation']
 Route::get('/noteCancelReservation', [Admin::class, 'noteCancelReservation'])->name('noteCancelReservation');
 Route::get('/checkCancelledReservation', [Admin::class, 'checkCancelledReservation'])->name('checkCancelledReservation');
 Route::get('/getAllTotalForAdmin', [Admin::class, 'getAllTotalForAdmin'])->name('getAllTotalForAdmin');
+Route::get('/paymentGraph', [Admin::class, 'paymentGraph'])->name('paymentGraph');
+Route::get('/unAttendedReservation', [Admin::class, 'unAttendedReservation'])->name('unAttendedReservation');
 
 
 // CUSTOMER DASHBOARD

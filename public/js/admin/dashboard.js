@@ -19,32 +19,43 @@ $(document).ready(function(){
     }
 
     function chart(){
-        const ctx = document.getElementById('myChart');
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-              label: 'Sales Per Month',
-              data: [12000, 19000, 3000, 5000, 2000, 3000, 15000, 22000, 13000, 7000, 9000, 13000],
-              borderWidth: 1,
-              backgroundColor: [
-                '#f8d38d',
-              ],
-                borderColor: [
-                    '#f8d38d',
-                ],
-            }]
-          },
-          options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max:30000
-                },
+        $.ajax({
+            url: 'paymentGraph',
+            method: 'GET',
+            success : function(data) {
+                if(data != ""){
+                    const ctx = document.getElementById('myChart');
+                    new Chart(ctx, {
+                      type: 'line',
+                      data: {
+                        labels: data.months,
+                        datasets: [{
+                          label: 'Sales Per Month',
+                          data : data.sales,
+                          borderWidth: 1,
+                          backgroundColor: [
+                            '#f8d38d',
+                          ],
+                            borderColor: [
+                                '#f8d38d',
+                            ],
+                        }]
+                      },
+                      options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max:30000
+                            },
+                        }
+                        }
+                    });
+                }else{
+                    var target = document.getElementById("visualization");
+                    target.innerHTML += "<div class='text-danger fs-4 text-center' style='position:absolute; top:19rem; width:100%' role='alert'>NO DATA AVAILABLE</div>";
+                }
             }
-            }
-        });
+        })
     }
 
     // AUTOMATIC DELETE THE UNPAID RESERVATION

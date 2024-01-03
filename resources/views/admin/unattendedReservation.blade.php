@@ -51,7 +51,7 @@
                                     <a class="nav-link" href="/adminOnGoingReservation">On-Going Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#">Cancelled Reservation</a>
+                                    <a class="nav-link" href="/adminCancelledReservation">Cancelled Reservation</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/adminUnpaidReservation">Unpaid Reservation</a>
@@ -60,10 +60,10 @@
                                     <a class="nav-link" href="/adminCompletedReservation">Completed Reservation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/adminUnattendedReservation">Unattended Reservation</a>
+                                    <a class="nav-link active" href="#">Unattended Reservation</a>
                                 </li>
                             </ul>
-                            <table id="cancelledReservationTable" class="table table-sm table-bordered text-center align-middle">
+                            <table id="unattendedReservationTable" class="table table-sm table-bordered text-center align-middle">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -71,8 +71,7 @@
                                         <th class="text-center">Room</th>
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
-                                        <th class="text-center">Total Payments</th>
-                                        <th class="text-center">Actions</th>
+                                        <th class="text-center">Total Payment</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -84,29 +83,10 @@
         <!-- MAIN CONTENT -->
     </div>
 
-    <!-- JS -->
-        <script src="{{ asset('/js/admin/reservation.js') }}"></script>
-        <script src="{{ asset('/js/dateTime.js') }}"></script>
-        <script src="{{ asset('/js/logout.js') }}"></script>
-    <!-- JS -->
-
-    {{-- MODAL --}}
-    <div class="modal fade" id="cancelledReasonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5">REASON</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center mt-3">
-                <p id="cancelledReason"></p>
-            </div>
-            <div class="modal-footer">
-                <p class="card-text"><small class="text-body-secondary">Cancelled Last: <span id="cancelledLast"></span></small></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    {{-- MODAL --}}
+        <!-- JS -->
+            <script src="{{ asset('/js/admin/reservation.js') }}"></script>
+            <script src="{{ asset('/js/dateTime.js') }}"></script>
+            <script src="{{ asset('/js/logout.js') }}"></script>
+        <!-- JS -->
 </body>
 </html>

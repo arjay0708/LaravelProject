@@ -157,6 +157,7 @@
                 .done(function(response) {
                     $('#checkInDate').val(moment(response.start_dataTime).format('YYYY-MM-DD')),
                     $('#checkOutDate').val(moment(response.end_dateTime).format('YYYY-MM-DD'))
+                    $('#reservationId').val(response.reservation_id)
                 })
             }
             $('#updateUnpaidReservation').on( 'submit' , function(e){
@@ -183,7 +184,7 @@
                                 timer: 1500,
                             }).then((result) => {
                             if (result) {
-                                location.reload();
+                                showUnpaidBookingPerUser();
                             }
                             });
                         } else if (response == 0) {

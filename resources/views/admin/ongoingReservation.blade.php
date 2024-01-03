@@ -59,6 +59,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="/adminCompletedReservation">Completed Reservation</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminUnattendedReservation">Unattended Reservation</a>
+                                </li>
                             </ul>
                             <table id="ongoingReservationTable" class="table table-sm table-bordered text-center align-middle">
                                 <thead>
@@ -69,7 +72,6 @@
                                         <th class="text-center">Check In</th>
                                         <th class="text-center">Check Out</th>
                                         <th class="text-center">Total Payment</th>
-                                        <th class="text-center">Advance Payment</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>

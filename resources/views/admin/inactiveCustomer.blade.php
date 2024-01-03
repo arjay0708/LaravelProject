@@ -56,8 +56,8 @@
                                             <tr>
                                                 <th class="text-center">#</th>
                                                 <th class="text-center">Customer Name</th>
-                                                <th class="text-center">Phone Number</th>
                                                 <th class="text-center">Email</th>
+                                                <th class="text-center">Phone Number</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>

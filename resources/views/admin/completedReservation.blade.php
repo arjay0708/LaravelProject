@@ -59,6 +59,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" href="#">Completed Reservation</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/adminUnattendedReservation">Unattended Reservation</a>
+                                </li>
                             </ul>
                             <table id="completedReservationTable" class="table table-sm table-bordered text-center align-middle">
                                 <thead>

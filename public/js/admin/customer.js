@@ -80,7 +80,8 @@ $(document).ready(function(){
                     }else{
                         return data.firstname+ " " +data.lastname;
                     }
-                }},                {"data":"email"},
+                }},
+                {"data":"email"},
                 {"data":"phoneNumber"},
                 {"data": "user_id",
                     mRender: function (data, type, row) {

@@ -86,9 +86,6 @@
                                                 <li class="list-group-item fw-bold">Total Payment: <span
                                                         class="fw-normal">₱{{ $item->price_per_hour * ceil(\Carbon\Carbon::parse($item->start_dataTime)->diffInHours(\Carbon\Carbon::parse($item->end_dateTime)) / 24) }}.00</span>
                                                 </li>
-                                                <li class="list-group-item fw-bold">Advance Payment: <span
-                                                        class="fw-normal">₱{{ ($item->price_per_hour * ceil(\Carbon\Carbon::parse($item->start_dataTime)->diffInHours(\Carbon\Carbon::parse($item->end_dateTime)) / 24)) / 2 }}.00</span>
-                                                </li>
                                                 <p class="card-text pt-3 ms-3 fw-bold">Notes: To proceed with securing
                                                     this reservation, you are required to make the necessary payment.
                                                 </p>

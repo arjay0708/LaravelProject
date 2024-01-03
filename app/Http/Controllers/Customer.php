@@ -403,7 +403,7 @@ class Customer extends Controller
                                                 </li>
                                                 <li class='list-group-item fw-bold' style='color:#'>
                                                 <div class='col-12'>
-                                                    Reason: <span class='fw-normal'>$item->details</span>
+                                                    Reason: <span class='fw-normal'>$item->reason</span>
                                                 </div>
                                                 </li>
                                                 <li class='list-group-item text-center text-lg-end py-2'>
@@ -760,7 +760,7 @@ class Customer extends Controller
         }
 
         $update = ReservationModel::find($request->reservationId);
-        $update->start_dataTime = $formattedCheckIn;
+        $update->start_dataTime = $formattedCheckIn; // Corrected property name
         $update->end_dateTime = $formattedCheckOut;
         $update->save();
         return response()->json(1);
@@ -768,7 +768,7 @@ class Customer extends Controller
 
     // VIEW UNPAID RESERVATION
     public function viewUnpaidReservation(Request $request){
-        $data = ReservationModel::where([['reservation_id', '=', $request->reservationId]])->select('start_dataTime', 'end_dateTime')->first();
+        $data = ReservationModel::where([['reservation_id', '=', $request->reservationId]])->select('reservation_id','start_dataTime', 'end_dateTime')->first();
         return response()->json($data);
     }
 
