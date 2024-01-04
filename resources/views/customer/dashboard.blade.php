@@ -106,8 +106,9 @@
                             </div>
                         </div>
                         <div class="mb-3 mt-2 border-2 shadow">
-                            <div class="card p-lg-4 p-0 rounded-0"></canvas></div>
-                        </div>
+                            <div class="card p-lg-4 p-0 rounded">
+                                <iframe width="100%" height="500" src="https://www.youtube.com/embed/qemqQHaeCYo?si=7a6RTPnFeYQMCo_W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
                     </div>
                 {{-- MAIN CONTENT --}}
             </div>

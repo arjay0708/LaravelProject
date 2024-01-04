@@ -58,7 +58,7 @@ $(document).ready(function(){
                 return "₱"+data.totalPayment+ ".00" ;
             }},
             { "mData": function (data, type, row) {
-                return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button></button> <button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="unAttendedReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-danger btn-sm py-2 px-3"><i class="bi bi-x-square"></i></button></button>'
+                return '<button type="button" data-title="Set Reservation?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="ongoingReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-secondary btn-sm py-2 px-3"><i class="bi bi-check2-square"></i></button></button> <button type="button" data-title="Not Attend?" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top" onclick="unAttendedReservation('+data.reservation_id+', '+data.room_id+')" class="btn rounded-0 btn-outline-danger btn-sm py-2 px-3"><i class="bi bi-x-square"></i></button></button>'
             }},
         ],
         order: [[1, 'asc']],
@@ -71,7 +71,7 @@ $(document).ready(function(){
     }).draw();
     }
 
-// FETCH ALL ACCEPT RESERVATION FOR TABLE
+// FETCH ALL ONGOING RESERVATION FOR TABLE
     function ongoingReservationTable(){
         var table = $('#ongoingReservationTable').DataTable({
             "language": {
@@ -199,7 +199,7 @@ $(document).ready(function(){
         }).draw();
     }
 
-// FETCH ALL DECLINE RESERVATION FOR TABLE
+// FETCH ALL UNPAID RESERVATION FOR TABLE
     function unpaidReservationTable(){
         var table = $('#unpaidReservationTable').DataTable({
             "language": {

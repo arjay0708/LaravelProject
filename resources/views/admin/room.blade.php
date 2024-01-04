@@ -118,7 +118,7 @@
                                         </select>
                                     </div>
                                     <div class="col-4">
-                                        <label class="form-label">Price Per Hour</label>
+                                        <label class="form-label">Price Per Night</label>
                                         <input required class="form-control shadow-sm rounded-0" type="text"  id="roomPricePerHour" name="roomPricePerHour">
                                     </div>
                                 </div>
@@ -126,12 +126,10 @@
                                     <div class="col-4">
                                         <label class="form-label">Type of Room:</label>
                                         <select class="form-select shadow-sm rounded-0" aria-label="Default select example" id="roomType" name="roomType">
-                                            <option value="Single Room" selected>Single Room</option>
-                                            <option value="Twin Room">Twin Room</option>
-                                            <option value="Double Room">Double Room</option>
-                                            <option value="Triple Room">Triple Room</option>
-                                            <option value="Quad Room">Quad Room</option>
-                                            <option value="Interconnecting Room">Interconnecting Room</option>
+                                            <option value="Standard Room" selected>Standard Room</option>
+                                            <option value="Superior Double Room">Superior Double Room</option>
+                                            <option value="Single Deluxe Room">Single Deluxe Room</option>
+                                            <option value="Executive Deluxe King Room">Executive Deluxe King Room</option>
                                         </select>
                                     </div>
                                     <div class="col-4">
