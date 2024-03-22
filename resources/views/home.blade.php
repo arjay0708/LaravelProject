@@ -416,7 +416,7 @@
                                     &ldquo;If you’re looking for a top quality hotel look no further. We were upgraded
                                     free of charge to the Premium Suite, thanks so much&rdquo;
                                 </blockquote>
-                                <p class="author"><cite>Jan Remiel Menor</cite></p>
+                                <p class="author"><cite>Noel John Ervas</cite></p>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -434,7 +434,7 @@
                                     &ldquo;If you’re looking for a top quality hotel look no further. We were upgraded
                                     free of charge to the Premium Suite, thanks so much&rdquo;
                                 </blockquote>
-                                <p class="author"><cite>Vince Erwin Evangelista</cite></p>
+                                <p class="author"><cite>Maxine Ogale</cite></p>
                             </div>
                         </div>
                     </div>
